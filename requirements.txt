@@ -1,0 +1,8 @@
+# Base fijada para Python 3.11 a 3.13. Verificacion local pendiente de instalar.
+streamlit==1.50.0
+pandas==2.3.3
+scikit-learn==1.7.2
+numpy==2.3.3
+scipy==1.16.2
+joblib==1.5.2
+openpyxl==3.1.5

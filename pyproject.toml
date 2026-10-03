@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=75,<81"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "messi-escolar"
+version = "0.1.0"
+description = "Prototipo de alerta y acompañamiento escolar MESSI"
+requires-python = ">=3.11,<3.14"
+dynamic = ["dependencies"]
+
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}
+
+[tool.setuptools.packages.find]
+where = ["src"]

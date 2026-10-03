@@ -1,0 +1,16 @@
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.qa/
+.tools/
+data/private/*
+!data/private/.gitkeep
+models/*
+!models/README.md
+!models/.gitkeep
+.streamlit/secrets.toml
+*.log
+*.sqlite3
+*.sqlite3-*
+*.joblib
