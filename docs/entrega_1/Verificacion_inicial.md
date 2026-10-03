@@ -29,8 +29,18 @@ con sus originales de Descargas. No se agregó una entrada a la bitácora.
 Ejecutar INSTALAR_MESSI.bat para instalar las versiones fijadas en un entorno
 privado. Después comprobar la interfaz real, teclado y mensajes; ejecutar
 ENTRENAR_DEMO.bat y PROBAR_MESSI.bat; registrar las métricas sintéticas y el
-recorrido completo. La instalación conjunta, la MLP real, el piloto escolar
-y la publicación en GitHub no se presentan como verificados.
+recorrido completo. La instalación en el equipo local, la ejecución visual,
+el entrenamiento local de la demostración y el piloto escolar siguen pendientes.
+
+## Comprobación de la base publicada
+
+La base se publicó en main mediante el commit
+5a2216a851319586bebb89996ac626fa4ee39bde. La ejecución de
+[GitHub Actions](https://github.com/a3524110303-cpu/M.E.S.S.I-/actions/runs/37148971608)
+terminó correctamente: instaló requirements.txt en Windows con Python 3.13,
+ejecutó la suite automatizada y comprobó la sintaxis. Esta comprobación confirma
+la instalación conjunta en ese entorno; no sustituye el recorrido visual ni
+la evaluación escolar del modelo.
 
 Este registro prepara evidencia de la primera entrega. El informe QA 03 se
 elaborará siguiendo su plantilla y reflejará las ejecuciones de la versión

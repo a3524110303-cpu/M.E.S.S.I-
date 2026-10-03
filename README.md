@@ -178,7 +178,8 @@ comprender, revisar y comprobar el código asignado antes de entregar.
 ## Dependencias y licencias
 
 Versiones directas fijadas y publicaciones comprobadas en PyPI. La instalación
-conjunta está pendiente de verificar. Las licencias de dependencias no otorgan
+conjunta se comprobó en GitHub Actions con Windows y Python 3.13; la instalación
+en el equipo local sigue pendiente. Las licencias de dependencias no otorgan
 automáticamente una licencia al código del equipo; ésta queda por acordar.
 
 | Dependencia | Versión | Licencia | Fuente |

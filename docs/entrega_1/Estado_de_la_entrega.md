@@ -8,7 +8,7 @@ pendiente de indicar por el equipo.
 | Documento del proyecto 1 | 01_Documento_del_proyecto_MESSI.docx | Documento existente conservado; los apartados de instalación deben actualizarse tras verificar el prototipo |
 | Esqueleto del sistema | app.py y src/messi | Preparado; ejecución de interfaz e IA pendiente de instalar dependencias |
 | Repositorio | .git y remoto del equipo | Base de la primera versión en main; contribuciones individuales y revisión del equipo pendientes |
-| Dependencias | requirements.txt e INSTALAR_MESSI.bat | Versiones directas fijadas; instalación conjunta pendiente |
+| Dependencias | requirements.txt e INSTALAR_MESSI.bat | Instalación conjunta verificada en GitHub Actions Windows Python 3.13; instalación local pendiente |
 | Datos de prueba | data/synthetic | Ficticios y reproducibles; no acreditan eficacia escolar |
 | Pruebas | tests | Consultar Verificacion_inicial.md; repetir con las dependencias instaladas |
 | Historial de todos los integrantes | Git | Pendiente de contribuciones reales y revisadas de cada integrante |
