@@ -1,0 +1,86 @@
+test_bad_paste_clears_previous_predictions (test_app.AppRegressionTests.test_bad_paste_clears_previous_predictions) ... ok
+test_changing_source_clears_old_data_and_predictions (test_app.AppRegressionTests.test_changing_source_clears_old_data_and_predictions) ... ok
+test_example_remains_selected_on_prediction_rerun (test_app.AppRegressionTests.test_example_remains_selected_on_prediction_rerun) ... ok
+test_invalid_manual_addition_preserves_captured_rows (test_app.AppRegressionTests.test_invalid_manual_addition_preserves_captured_rows) ... ok
+test_locked_storage_is_reported_to_tutor (test_app.AppRegressionTests.test_locked_storage_is_reported_to_tutor) ... ok
+test_manual_counts_create_same_percentage_contract (test_app.AppRegressionTests.test_manual_counts_create_same_percentage_contract) ... ok
+test_storage_failure_does_not_block_teacher (test_app.AppRegressionTests.test_storage_failure_does_not_block_teacher) ... ok
+test_boundaries_and_column_order_are_supported (test_data.DataContractTests.test_boundaries_and_column_order_are_supported) ... ok
+test_byte_and_row_limits_are_enforced (test_data.DataContractTests.test_byte_and_row_limits_are_enforced) ... ok
+test_bytes_content_and_file_normalize_to_same_records (test_data.DataContractTests.test_bytes_content_and_file_normalize_to_same_records) ... ok
+test_committed_synthetic_datasets_meet_contract (test_data.DataContractTests.test_committed_synthetic_datasets_meet_contract) ... ok
+test_empty_malformed_and_bad_encoding_are_rejected (test_data.DataContractTests.test_empty_malformed_and_bad_encoding_are_rejected) ... ok
+test_ids_and_duplicates_are_rejected (test_data.DataContractTests.test_ids_and_duplicates_are_rejected) ... ok
+test_invalid_values_and_ranges_are_rejected (test_data.DataContractTests.test_invalid_values_and_ranges_are_rejected) ... ok
+test_plain_string_is_content_and_missing_path_is_handled (test_data.DataContractTests.test_plain_string_is_content_and_missing_path_is_handled) ... ok
+test_sensitive_extra_missing_and_duplicate_headers_are_rejected (test_data.DataContractTests.test_sensitive_extra_missing_and_duplicate_headers_are_rejected) ... ok
+test_training_target_is_separate_and_binary (test_data.DataContractTests.test_training_target_is_separate_and_binary) ... ok
+test_ambiguous_delimiters_bad_headers_and_invalid_rows_are_rejected (test_data.ManualAndPastedTests.test_ambiguous_delimiters_bad_headers_and_invalid_rows_are_rejected) ... ok
+test_blank_rows_are_ignored_and_limits_apply_to_pasted_and_manual_input (test_data.ManualAndPastedTests.test_blank_rows_are_ignored_and_limits_apply_to_pasted_and_manual_input) ... ok
+test_counts_convert_exactly_to_percentage_contract (test_data.ManualAndPastedTests.test_counts_convert_exactly_to_percentage_contract) ... ok
+test_friendly_and_canonical_headers_allow_column_reordering (test_data.ManualAndPastedTests.test_friendly_and_canonical_headers_allow_column_reordering) ... ok
+test_invalid_counts_note_and_id_are_rejected (test_data.ManualAndPastedTests.test_invalid_counts_note_and_id_are_rejected) ... ok
+test_manual_empty_and_duplicate_ids_are_rejected (test_data.ManualAndPastedTests.test_manual_empty_and_duplicate_ids_are_rejected) ... ok
+test_manual_records_use_same_ranges_and_reject_extra_columns (test_data.ManualAndPastedTests.test_manual_records_use_same_ranges_and_reject_extra_columns) ... ok
+test_semicolon_four_columns_and_blank_ids_avoid_later_collisions (test_data.ManualAndPastedTests.test_semicolon_four_columns_and_blank_ids_avoid_later_collisions) ... ok
+test_three_columns_without_headers_generate_ids_and_accept_decimal_comma (test_data.ManualAndPastedTests.test_three_columns_without_headers_generate_ids_and_accept_decimal_comma) ... ok
+test_invalid_and_empty_workbooks_are_rejected_without_optional_import (test_excel.ExcelEnvelopeTests.test_invalid_and_empty_workbooks_are_rejected_without_optional_import) ... ok
+test_ambiguous_sheets_are_rejected (test_excel.ExcelInputTests.test_ambiguous_sheets_are_rejected) ... ok
+test_byte_row_and_expansion_limits_apply (test_excel.ExcelInputTests.test_byte_row_and_expansion_limits_apply) ... ok
+test_formulas_are_rejected_even_in_extra_cells (test_excel.ExcelInputTests.test_formulas_are_rejected_even_in_extra_cells) ... ok
+test_friendly_headers_blank_rows_and_temporary_ids (test_excel.ExcelInputTests.test_friendly_headers_blank_rows_and_temporary_ids) ... ok
+test_missing_duplicate_extra_headers_and_data_are_rejected (test_excel.ExcelInputTests.test_missing_duplicate_extra_headers_and_data_are_rejected) ... ok
+test_only_sheet_is_allowed_without_datos_and_canonical_headers_work (test_excel.ExcelInputTests.test_only_sheet_is_allowed_without_datos_and_canonical_headers_work) ... ok
+test_external_model_is_rejected_before_deserialization (test_model.ModelContractTests.test_external_model_is_rejected_before_deserialization) ... ok
+test_integrity_and_metadata_are_checked_before_deserialization (test_model.ModelContractTests.test_integrity_and_metadata_are_checked_before_deserialization) ... ok
+test_invalid_probability_and_reversed_classes_fail_closed (test_model.ModelContractTests.test_invalid_probability_and_reversed_classes_fail_closed) ... ok
+test_missing_model_has_actionable_pending_message (test_model.ModelContractTests.test_missing_model_has_actionable_pending_message) ... ok
+test_missing_optional_dependency_returns_actionable_error (test_model.ModelContractTests.test_missing_optional_dependency_returns_actionable_error) ... ok
+test_non_demo_metadata_and_target_leakage_are_rejected (test_model.ModelContractTests.test_non_demo_metadata_and_target_leakage_are_rejected) ... ok
+test_only_features_reach_model_and_original_records_are_unchanged (test_model.ModelContractTests.test_only_features_reach_model_and_original_records_are_unchanged) ... ok
+test_local_pipeline_roundtrip (test_model.RealPipelineTests.test_local_pipeline_roundtrip) ... ERROR
+test_empty_non_text_and_oversized_content_is_rejected (test_storage.SupportStoreTests.test_empty_non_text_and_oversized_content_is_rejected) ... ok
+test_failure_rolls_back_both_followup_and_support_status (test_storage.SupportStoreTests.test_failure_rolls_back_both_followup_and_support_status) ... ok
+test_filtering_and_newest_first_order (test_storage.SupportStoreTests.test_filtering_and_newest_first_order) ... ok
+test_foreign_keys_are_enforced_on_store_connections (test_storage.SupportStoreTests.test_foreign_keys_are_enforced_on_store_connections) ... ok
+test_invalid_student_ids_are_rejected_for_writes_and_filters (test_storage.SupportStoreTests.test_invalid_student_ids_are_rejected_for_writes_and_filters) ... ok
+test_request_needs_no_csv_or_prediction (test_storage.SupportStoreTests.test_request_needs_no_csv_or_prediction) ... ok
+test_requests_and_supports_survive_reopening (test_storage.SupportStoreTests.test_requests_and_supports_survive_reopening) ... ok
+test_sql_like_text_is_stored_as_text (test_storage.SupportStoreTests.test_sql_like_text_is_stored_as_text) ... ok
+test_types_and_statuses_are_validated (test_storage.SupportStoreTests.test_types_and_statuses_are_validated) ... ok
+test_unknown_or_invalid_support_cannot_create_followup (test_storage.SupportStoreTests.test_unknown_or_invalid_support_cannot_create_followup) ... ok
+
+======================================================================
+ERROR: test_local_pipeline_roundtrip (test_model.RealPipelineTests.test_local_pipeline_roundtrip)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Vixman Suarez\M.E.S.S.I-\tests\test_model.py", line 130, in test_local_pipeline_roundtrip
+    from sklearn.neural_network import MLPClassifier
+  File "C:\Users\Vixman Suarez\M.E.S.S.I-\.venv\Lib\site-packages\sklearn\__init__.py", line 73, in <module>
+    from .base import clone  # noqa: E402
+    ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vixman Suarez\M.E.S.S.I-\.venv\Lib\site-packages\sklearn\base.py", line 19, in <module>
+    from .utils._metadata_requests import _MetadataRequester, _routing_enabled
+  File "C:\Users\Vixman Suarez\M.E.S.S.I-\.venv\Lib\site-packages\sklearn\utils\__init__.py", line 9, in <module>
+    from ._chunking import gen_batches, gen_even_slices
+  File "C:\Users\Vixman Suarez\M.E.S.S.I-\.venv\Lib\site-packages\sklearn\utils\_chunking.py", line 11, in <module>
+    from ._param_validation import Interval, validate_params
+  File "C:\Users\Vixman Suarez\M.E.S.S.I-\.venv\Lib\site-packages\sklearn\utils\_param_validation.py", line 17, in <module>
+    from .validation import _is_arraylike_not_scalar
+  File "C:\Users\Vixman Suarez\M.E.S.S.I-\.venv\Lib\site-packages\sklearn\utils\validation.py", line 21, in <module>
+    from ..utils._array_api import _asarray_with_order, _is_numpy_namespace, get_namespace
+  File "C:\Users\Vixman Suarez\M.E.S.S.I-\.venv\Lib\site-packages\sklearn\utils\_array_api.py", line 20, in <module>
+    from .fixes import parse_version
+  File "C:\Users\Vixman Suarez\M.E.S.S.I-\.venv\Lib\site-packages\sklearn\utils\fixes.py", line 421, in <module>
+    import pyarrow
+  File "C:\Users\Vixman Suarez\M.E.S.S.I-\.venv\Lib\site-packages\pyarrow\__init__.py", line 71, in <module>
+    from pyarrow.lib import (BuildInfo, CppBuildInfo, RuntimeInfo, set_timezone_db_path,
+    ...<3 lines>...
+                             io_thread_count, is_opentelemetry_enabled, set_io_thread_count)
+ImportError: DLL load failed while importing lib: Una directiva de Control de aplicaciones bloqueó este archivo.
+
+----------------------------------------------------------------------
+Ran 51 tests in 11.231s
+
+FAILED (errors=1)
+Presione una tecla para continuar . . .
