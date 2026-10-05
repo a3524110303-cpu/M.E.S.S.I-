@@ -166,7 +166,7 @@ class MySQLDatabase:
             try:
                 resultado = db.execute("SELECT VERSION() AS version").fetchone()["version"]
                 version = tuple(int(p) for p in resultado.split("-")[0].split(".")[:3])
-                if version < (8, 0, 0) and "MariaDB" not in resultado:
+                if version < (8, 0, 16) and "MariaDB" not in resultado:
                     raise DatabaseError("MESSI requiere MySQL 8.0.16 o MariaDB equivalente.")
                 bloqueado = db.execute("SELECT GET_LOCK(%s, 10) AS adquirido", (lock_name,)).fetchone()["adquirido"] == 1
                 if not bloqueado:
