@@ -7,6 +7,8 @@ estudiante puede solicitar ayuda aunque no haya alerta ni modelo disponible.
 Documento vigente de la primera entrega:
 [Documento del proyecto 01](docs/entrega_1/01_Documento_del_proyecto_MESSI.md).
 La copia DOCX anterior conserva el diseño original como referencia histórica.
+La descripción de los roles, los datos y el flujo funcional está en
+[Funcionalidad del proyecto](docs/funcionalidad.md).
 
 El prototipo es una demostración local con datos sintéticos. El selector de
 roles sirve para demostrar los flujos; la autenticación y los permisos de un
