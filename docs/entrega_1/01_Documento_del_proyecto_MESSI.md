@@ -12,6 +12,19 @@ MESSI permite ingresar indicadores del primer parcial, calcular una puntuación 
 | Repositorio | https://github.com/a3524110303-cpu/M.E.S.S.I- |
 | Ejecución | Aplicación web local mediante Streamlit y MySQL |
 
+## Responsabilidades del equipo para esta entrega
+
+| Integrante | Responsabilidad principal |
+| --- | --- |
+| Marco Antonio Osorio Hernandez | Integración, almacenamiento y correcciones QA-03 a QA-05 |
+| Ismael Hernández Jiménez | Datos sintéticos, modelo y evaluación de demostración |
+| Víctor Manuel Jiménez Suárez | Pruebas, registro de defectos, evidencias y revalidación |
+| Yokio Yosafat Vazquez Carrillo | Escenario, guion y demostración |
+| Salomón Alvarez Gomez | Guía, instrucciones y capturas de la versión comprobada |
+
+Todos pueden aportar código. Este reparto organiza el cierre de los entregables;
+cada autor revisa y comprueba sus cambios y Marco integra las aportaciones revisadas.
+
 ## 1 Problemática a resolver
 
 Al terminar el primer parcial, docentes y tutores necesitan reconocer qué estudiantes podrían requerir apoyo antes del cierre del curso. Revisar por separado calificación, asistencia y tareas dificulta organizar el seguimiento oportuno.

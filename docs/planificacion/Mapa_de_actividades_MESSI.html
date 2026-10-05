@@ -14,25 +14,25 @@ p{margin-bottom:6pt}h3{margin-top:10pt;margin-bottom:4pt}table{font-size:9pt}th,
 </style></head><body><main>
 <section>
 <h1>Mapa de actividades MESSI Primera entrega</h1>
-<p>Fecha de preparación 3 de octubre de 2026. Proyecto MESSI Alerta y acompañamiento escolar.</p>
-<p>Conservamos los roles acordados en la ficha del proyecto y distribuimos la primera entrega con ocho horas orientativas por integrante. Cada persona tendrá una contribución técnica identificable, pruebas de su trabajo, documentación breve y revisión de un compañero. El reparto organiza el trabajo próximo; el equipo podrá ajustar las estimaciones después de su primera sesión.</p>
+<p>Fecha de preparación 3 de octubre de 2026; reparto actualizado el 5 de octubre de 2026. Proyecto MESSI Alerta y acompañamiento escolar.</p>
+<p>El reparto organiza las responsabilidades principales para cerrar la primera entrega, con ocho horas orientativas por integrante. Todos pueden aportar código; cada autor revisa y comprueba sus cambios. Marco coordina la integración y las correcciones, Víctor valida y Salomón concentra la documentación. Ismael conserva datos y modelo, y Yokio la demostración. Las actividades indican el trabajo y la evidencia esperados; su asignación no acredita que estén terminados.</p>
 <h2>Roles y carga propuesta</h2>
 <table><thead><tr><th scope="col">Integrante</th><th scope="col">Rol acordado</th><th scope="col">Próximo aporte técnico</th><th scope="col">Esfuerzo</th></tr></thead><tbody>
-<tr><td>Marco Antonio Osorio Hernandez</td><td>Líder técnico y desarrollador</td><td>Integración del contrato común, modelo y persistencia</td><td>8 h</td></tr>
+<tr><td>Marco Antonio Osorio Hernandez</td><td>Líder técnico y desarrollador</td><td>Integración, persistencia y correcciones QA-03 a QA-05</td><td>8 h</td></tr>
 <tr><td>Ismael Hernández Jiménez</td><td>Investigador y analista</td><td>Normalización de datos crudos, Excel y modelo de demostración</td><td>8 h</td></tr>
 <tr><td>Víctor Manuel Jiménez Suárez</td><td>QA y pruebas</td><td>Equivalencia de entradas, validaciones, alertas y errores</td><td>8 h</td></tr>
 <tr><td>Yokio Yosafat Vazquez Carrillo</td><td>Vocero principal</td><td>Plantilla docente y demostración sin lenguaje técnico</td><td>8 h</td></tr>
-<tr><td>Salomón Alvarez Gomez</td><td>Desarrollo y documentación</td><td>Captura directa, pegado de Excel y guía de uso</td><td>8 h</td></tr>
+<tr><td>Salomón Alvarez Gomez</td><td>Documentación</td><td>Guía de uso, instrucciones y capturas comprobadas</td><td>8 h</td></tr>
 </tbody></table>
 <h2>Cómo mantener un reparto justo</h2>
-<p>Las ocho horas de cada persona se reparten en cuatro de construcción, dos de pruebas y dos de documentación y revisión. Son estimaciones de esfuerzo, no fechas ni compromisos de disponibilidad. La coordinación, la exposición y las pruebas cuentan como trabajo; el número de commits no mide por sí solo la aportación.</p>
+<p>Las ocho horas de cada persona se reparten en cuatro de preparación de su entregable, dos de comprobación y dos de documentación y revisión. En el caso de Salomón, corresponden a elaborar la guía, comprobar sus instrucciones y revisar el material de demostración. Son estimaciones de esfuerzo, no fechas ni compromisos de disponibilidad. La coordinación, la exposición y las pruebas cuentan como trabajo; el número de commits no mide por sí solo la aportación.</p>
 <p>Si una tarea supera la estimación o queda bloqueada, Marco facilita su división con el responsable. El equipo acuerda el traslado de trabajo y registra la nueva carga. La función secundaria de cada integrante es la revisión cruzada asignada más adelante; este apoyo conserva los roles acordados y no supone aptitudes que no se han evaluado.</p>
 <h2>Punto de partida</h2>
 <p>El usuario reporta preparados el documento 01 y la bitácora 06. Se conservan como referencias. El cierre de la primera entrega todavía exige comprobar el prototipo, instalar y verificar dependencias, publicar el trabajo acordado y reunir contribuciones reales de los cinco integrantes. Este mensaje de arranque no se agrega a la bitácora.</p>
 </section>
 <section>
 <h2>Próximas sesiones y dependencias</h2>
-<p>La fecha límite queda pendiente de confirmar. Las sesiones siguientes son una propuesta de secuencia; su duración puede repartirse en varios encuentros o trabajo individual. Cada tarea comienza cuando estén disponibles sus entradas.</p>
+<p>La fecha acordada de entrega es el 5 de octubre de 2026 durante la clase. Las sesiones siguientes describen la secuencia de trabajo propuesta; su duración puede repartirse en varios encuentros o trabajo individual. Cada tarea comienza cuando estén disponibles sus entradas.</p>
 <table><thead><tr><th scope="col">Sesión</th><th scope="col">Trabajo y condición de avance</th><th scope="col">Carga por persona</th></tr></thead><tbody>
 <tr><td>1</td><td>Revisar el esqueleto, acordar formatos de ingreso y criterios de la entrega. Cada integrante confirma su tarea y acceso al repositorio.</td><td>1 h</td></tr>
 <tr><td>2</td><td>Construir los módulos en paralelo. Captura, CSV, Excel y datos crudos siguen un contrato común; Marco conecta modelo y almacenamiento.</td><td>3 h</td></tr>
@@ -49,7 +49,7 @@ p{margin-bottom:6pt}h3{margin-top:10pt;margin-bottom:4pt}table{font-size:9pt}th,
 <p>Marco mantiene la integración técnica y apoya la persistencia. Ismael mantiene la investigación, el análisis del caso y los datos. Ambos comparten la preparación del manual del programador para la segunda entrega.</p>
 <article><h3>E1 T01 Integración y persistencia</h3>
 <p><strong>Asignación</strong> Responsable Marco. Esfuerzo 4 h. Prioridad P0. Depende de Contrato E1 T04 y estructura inicial.</p>
-<p>Integrar captura, pegado, CSV y XLSX con el contrato común de datos, evaluación opcional y vistas; completar MySQL para estudiantes, indicadores, predicciones, solicitudes, apoyos y seguimiento. Preparar configuración local, inicialización explícita del esquema y migración opcional del SQLite anterior de MESSI. Acordar interfaces con Ismael y Salomón.</p>
+<p>Integrar captura, pegado, CSV y XLSX con el contrato común de datos, evaluación opcional y vistas; completar MySQL para estudiantes, indicadores, predicciones, solicitudes, apoyos y seguimiento. Preparar configuración local, inicialización explícita del esquema y migración opcional del SQLite anterior de MESSI. Marco atiende las correcciones QA-03 a QA-05 reportadas por Víctor y coordina los cambios de código de todos los integrantes.</p>
 <p><strong>Evidencia</strong> Código integrado, esquema MySQL inicializado y una solicitud con apoyo y seguimiento guardados usando datos de prueba. Si se importa SQLite, registrar conteos comprobados y conservación del original.</p>
 <p><strong>Aceptación</strong> Las vías de ingreso usan la misma validación; indicadores, predicciones y apoyos se recuperan de MySQL al reiniciar; la solicitud funciona sin modelo. Los errores recuperables muestran una explicación útil. La cuenta del runtime no requiere privilegios administrativos ni creación de tablas.</p></article>
 <article><h3>E1 T02 Comprobación de integración</h3>
@@ -93,7 +93,7 @@ p{margin-bottom:6pt}h3{margin-top:10pt;margin-bottom:4pt}table{font-size:9pt}th,
 <p><strong>Aceptación</strong> Ningún caso no ejecutado se cuenta como aprobado; los fallos que impiden la demostración tienen corrección comprobada o bloquean el cierre.</p></article>
 <article><h3>E1 T09 Informe QA y revisión de interfaz</h3>
 <p><strong>Asignación</strong> Responsable Víctor. Esfuerzo 2 h. Prioridad P1. Depende de E1 T08 y E1 T13.</p>
-<p>Organizar evidencias de todos los módulos para el informe 03 y revisar interfaz y mensajes con Salomón. Preparar el protocolo de observación de una persona ajena para una entrega posterior.</p>
+<p>Organizar evidencias de todos los módulos para el informe 03 y revalidar las correcciones de Marco, incluidos QA-03 a QA-05, y los cambios de los demás autores. Comprobar con Salomón que las instrucciones coincidan con el comportamiento observado. Preparar el protocolo de observación de una persona ajena para una entrega posterior.</p>
 <p><strong>Evidencia</strong> Índice de evidencias, revisión registrada y cambio propio con autoría real.</p>
 <p><strong>Aceptación</strong> Cada defecto remite a su caso y cada resultado a una ejecución. La futura prueba externa se mantiene pendiente hasta realizarla.</p></article>
 <article><h3>E1 T10 Escenarios y comprobación de demostración</h3>
@@ -114,31 +114,31 @@ p{margin-bottom:6pt}h3{margin-top:10pt;margin-bottom:4pt}table{font-size:9pt}th,
 </section>
 <section>
 <h2>Actividades de Salomón y revisión cruzada</h2>
-<p>Salomón mantiene desarrollo y documentación: construye la interfaz y convierte su comportamiento comprobado en instrucciones de uso. La documentación técnica y las evidencias de pruebas se reparten entre sus responsables.</p>
-<article><h3>E1 T13 Interfaz y manejo de archivos</h3>
+<p>Salomón concentra la documentación para esta entrega: convierte el comportamiento comprobado de la aplicación en instrucciones y capturas. Puede contribuir código, como cualquier integrante. Marco coordina las correcciones y Víctor su validación; cada autor aporta las notas técnicas y evidencias de sus cambios.</p>
+<article><h3>E1 T13 Guía de ingreso y manejo de archivos</h3>
 <p><strong>Asignación</strong> Responsable Salomón. Esfuerzo 4 h. Prioridad P0. Depende de Contrato E1 T04 y acuerdos E1 T01.</p>
-<p>Completar captura directa, pegado desde Excel, carga CSV y XLSX, descarga de plantilla y mensajes claros. Presentar indicadores, alertas y ayuda; integrar la interfaz con los servicios de Marco.</p>
-<p><strong>Evidencia</strong> Código de interfaz y capturas del ingreso docente y recorrido con datos sintéticos.</p>
-<p><strong>Aceptación</strong> El docente comprende cómo ingresar sus datos y qué corregir; los controles tienen etiquetas claras. La ausencia del modelo no impide solicitar ni registrar ayuda.</p></article>
-<article><h3>E1 T14 Pruebas de interfaz y accesibilidad</h3>
+<p>Documentar captura directa, pegado desde Excel, carga CSV y XLSX, descarga de plantilla y mensajes de error. Explicar indicadores, alertas de demostración y ayuda con pasos sencillos en docs/entrega_1/Guia_rapida.md. Usar datos ficticios y capturas de la versión ejecutada.</p>
+<p><strong>Evidencia</strong> Guía de uso con instrucciones y capturas del ingreso docente y recorrido con datos sintéticos.</p>
+<p><strong>Aceptación</strong> Otra persona puede seguir las instrucciones para ingresar datos, corregir un error y solicitar ayuda; la guía coincide con las pantallas existentes y explica cuándo necesita MySQL o el modelo.</p></article>
+<article><h3>E1 T14 Comprobación de instrucciones y capturas</h3>
 <p><strong>Asignación</strong> Responsable Salomón. Esfuerzo 2 h. Prioridad P1. Depende de E1 T13 y casos de Víctor.</p>
-<p>Comprobar teclado, mensajes y orden del flujo en captura, pegado, CSV y XLSX válidos e inválidos. Probar guardar y consultar seguimiento con Marco.</p>
-<p><strong>Evidencia</strong> Lista de comprobación ejecutada, problemas detectados y correcciones verificadas.</p>
-<p><strong>Aceptación</strong> Las acciones principales se reconocen sin depender sólo del color; cada flujo tiene una respuesta visible y los problemas pendientes están documentados.</p></article>
-<article><h3>E1 T15 Guía inicial y revisión de demostración</h3>
+<p>Repetir los pasos de la guía con el escenario de Yokio y comprobar que las capturas y explicaciones coincidan con la aplicación. Registrar diferencias o instrucciones confusas; comunicar defectos a Víctor y Marco para su validación y corrección.</p>
+<p><strong>Evidencia</strong> Lista de instrucciones comprobadas, capturas actualizadas y diferencias reportadas con su estado.</p>
+<p><strong>Aceptación</strong> Cada paso documentado corresponde a una acción disponible; los requisitos y problemas pendientes están visibles y las capturas usan datos ficticios.</p></article>
+<article><h3>E1 T15 Revisión documental y de demostración</h3>
 <p><strong>Asignación</strong> Responsable Salomón. Esfuerzo 2 h. Prioridad P1. Depende de E1 T14 y E1 T10.</p>
-<p>Preparar instrucciones de uso iniciales para el README y material de la futura guía 04. Revisar el guion y la comprobación de ejecución de Yokio, con lenguaje claro y capturas pertinentes.</p>
+<p>Revisar la coherencia entre README, guía rápida y guion de Yokio. Preparar el material de la futura guía 04 con lenguaje claro y capturas pertinentes; incorporar las observaciones de Víctor sobre el comportamiento comprobado.</p>
 <p><strong>Evidencia</strong> Guía inicial, observaciones de revisión y cambio propio con autoría real.</p>
 <p><strong>Aceptación</strong> Las instrucciones corresponden a pantallas existentes; el material de entregas posteriores se identifica como preparación, no como entrega terminada.</p></article>
 <h2>Circuito de revisión</h2>
 <table><thead><tr><th scope="col">Persona que revisa</th><th scope="col">Trabajo que verifica</th><th scope="col">Registro esperado</th></tr></thead><tbody>
 <tr><td>Marco</td><td>Pruebas de Víctor</td><td>Cobertura, resultados y errores relevantes</td></tr>
 <tr><td>Ismael</td><td>Integración de Marco</td><td>Contrato, variables y persistencia</td></tr>
-<tr><td>Víctor</td><td>Interfaz de Salomón</td><td>Errores, alertas y calidad de mensajes</td></tr>
+<tr><td>Víctor</td><td>Correcciones de Marco y guía de Salomón</td><td>Revalidación de defectos y coherencia entre instrucciones y aplicación</td></tr>
 <tr><td>Yokio</td><td>Datos y documentación de Ismael</td><td>Claridad y coherencia de escenarios</td></tr>
 <tr><td>Salomón</td><td>Demostración de Yokio</td><td>Correspondencia entre guion y aplicación</td></tr>
 </tbody></table>
-<p>Cada responsable atiende las observaciones de su módulo. Cada integrante escribe sus instrucciones y aporta la evidencia de sus pruebas; Víctor consolida resultados y Marco integra la versión. Nadie concentra toda la documentación ni todas las correcciones.</p>
+<p>Cada autor atiende las observaciones de sus cambios y aporta sus notas y evidencia. Salomón coordina la guía, Víctor consolida resultados y Marco integra la versión y cierra las correcciones. Todos pueden escribir código y apoyar entregables de otros integrantes, manteniendo la autoría y la revisión de cada aportación.</p>
 </section>
 <section>
 <h2>Condiciones para cerrar la primera entrega</h2>
@@ -153,9 +153,9 @@ p{margin-bottom:6pt}h3{margin-top:10pt;margin-bottom:4pt}table{font-size:9pt}th,
 <tr><td>Bitácora 06</td><td>Cada integrante aporta su uso posterior</td><td>Archivo existente conservado; este prompt de arranque queda excluido</td></tr>
 </tbody></table>
 <h2>Preparación de las entregas siguientes</h2>
-<ul><li>Entrega 2: manual del programador 02 a cargo de Marco e Ismael, con Salomón para interfaz y archivos. Informe de pruebas QA 03 a cargo de Víctor; todos aportan casos y evidencias de su módulo.</li><li>Entrega 3: manual de usuario 04 a cargo de Salomón con Yokio para claridad y recorrido. Nota de prueba 05 a cargo de Víctor, con Yokio para coordinar la sesión con una persona ajena real. Registrar lo observado en media página; no fabricar participante ni resultados.</li><li>Entrega 4: reflexión y bitácora 06 con aportaciones individuales de los cinco integrantes y consolidación acordada. Preservar el trabajo existente y registrar sólo el uso posterior que corresponda.</li></ul>
+<ul><li>Entrega 2: manual del programador 02 a cargo de Marco e Ismael, con Salomón para documentar interfaz y archivos. Informe de pruebas QA 03 a cargo de Víctor; todos aportan casos y evidencias de su módulo.</li><li>Entrega 3: manual de usuario 04 a cargo de Salomón con Yokio para claridad y recorrido. Nota de prueba 05 a cargo de Víctor, con Yokio para coordinar la sesión con una persona ajena real. Registrar lo observado en media página; no fabricar participante ni resultados.</li><li>Entrega 4: reflexión y bitácora 06 con aportaciones individuales de los cinco integrantes y consolidación acordada. Preservar el trabajo existente y registrar sólo el uso posterior que corresponda.</li></ul>
 <h2>Fuentes y decisiones vigentes</h2>
-<p>Los integrantes y el alcance provienen de 01_Documento_del_proyecto_MESSI.docx. Los roles provienen de MESSI_Riesgo_Escolar_Ficha_Bloque1_Parte_II.pdf, página 1, y fueron confirmados por el usuario. Las plantillas 01 a 06 orientan los entregables. La carga de ocho horas, las tareas y las sesiones son la propuesta operativa de este mapa.</p>
-<p>Repositorio de trabajo: https://github.com/a3524110303-cpu/M.E.S.S.I-.git. Carpeta local destinada al proyecto: C:\Users\user\Desktop\MESSI. Los permisos para contribuir al repositorio, las cuentas de los cinco integrantes, la fecha límite y el entorno de prueba final deben confirmarse antes del cierre.</p>
+<p>Los integrantes y el alcance provienen de 01_Documento_del_proyecto_MESSI.docx. La ficha MESSI_Riesgo_Escolar_Ficha_Bloque1_Parte_II.pdf, página 1, conserva los roles iniciales; el usuario ajustó el reparto el 5 de octubre: Salomón concentra documentación, Marco las correcciones y Víctor la validación, y todos pueden aportar código. Las plantillas 01 a 06 orientan los entregables. La carga de ocho horas, las tareas y las sesiones son la propuesta operativa de este mapa.</p>
+<p>Repositorio de trabajo: https://github.com/a3524110303-cpu/M.E.S.S.I-.git. Carpeta local destinada al proyecto: C:\Users\user\Desktop\MESSI. La entrega está acordada para el 5 de octubre durante la clase. Los permisos para contribuir al repositorio, las cuentas de los cinco integrantes y el entorno de prueba final deben confirmarse antes del cierre.</p>
 </section>
 </main></body></html>

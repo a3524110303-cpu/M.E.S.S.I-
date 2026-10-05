@@ -1,10 +1,14 @@
 # Siguientes pasos del equipo para la primera entrega
 
-Fecha: 3 de octubre de 2026. La base ya incluye los módulos de ingreso, el
+Actualización: 5 de octubre de 2026. La base ya incluye los módulos de ingreso, el
 entrenamiento de demostración, la interfaz y el almacenamiento. Las actividades
 de esta etapa consisten en revisar esa base, ejecutarla, corregir los problemas
 observados y completar las evidencias de la primera entrega. El mapa general
 mantiene las estimaciones y la revisión cruzada acordadas.
+
+Todos pueden aportar código. Las responsabilidades siguientes indican quién
+cierra cada entregable: Marco integra y corrige, Víctor valida y Salomón
+concentra la documentación; Ismael atiende datos y modelo, y Yokio la demostración.
 
 ## Inicio común para los cinco integrantes
 
@@ -35,15 +39,17 @@ revisado; no se crean contribuciones de relleno para completar la lista.
 
 ## Marco líder técnico y desarrollador
 
-Revisar la conexión entre app.py, data.py, model.py y storage.py. Ejecutar el
+Revisar la conexión entre app.py, data.py, model.py, database.py y mysql_storage.py. Ejecutar el
 recorrido de ingreso docente, solicitud de ayuda, registro de apoyo y
 seguimiento; comprobar que un apoyo siga disponible después de reiniciar y
 que se pueda pedir ayuda antes de entrenar la red. Corregir los fallos de
 integración observados y revisar las aportaciones que se incorporan a main.
+Las correcciones QA-03 a QA-05 ya se integraron como aportación de Marco;
+coordinar su revalidación con Víctor y conservar la evidencia publicada.
 
 Actualizar el documento 01 y el README con el enlace del repositorio y los
 pasos realmente comprobados de instalación y ejecución. El documento actual
-todavía describe el estado anterior al prototipo. Incorporar la versión
+ya refleja el prototipo; mantenerlo coherente con la versión presentada. Incorporar la versión
 completada de la bitácora 06 que el equipo ya tiene; el adjunto conservado es
 una plantilla. Acordar con el equipo la licencia del código propio.
 
@@ -70,15 +76,19 @@ una ejecución real de la demostración, con sus fuentes y limitaciones.
 ## Víctor QA y pruebas
 
 Ejecutar PROBAR_MESSI.bat después de instalar dependencias y registrar la
-salida y el entorno en docs/entrega_1/Evidencia_pruebas.md. La comprobación
-inicial obtuvo 50 aprobados y una integración MLP omitida; al instalar IA
-esa prueba debe ejecutarse. Un caso omitido sigue pendiente.
+salida y el entorno en docs/entrega_1/Evidencia_pruebas.md. La integración de
+Marco registró 138 pruebas aprobadas contra MySQL aislado, sin omisiones ni
+fallos esperados; ver Evidencia_integracion_Marco.md. Revalidar los defectos
+reportados contra la versión actual y adjuntar la propia evidencia de QA.
+Un caso omitido sigue pendiente.
 
 Comprobar también la interfaz real: archivo válido, Excel con fórmula, campo
 vacío, ID duplicado, nota o porcentaje fuera de rango, conteos con total cero,
 modelo ausente y solicitud sin alerta. Si encuentra un error, añadir una
 prueba que lo reproduzca, registrar el defecto y repetir el caso después de
-la corrección. Revisar los cambios de interfaz de Salomón.
+la corrección. Revisar las correcciones de Marco, incluidos QA-03 a QA-05,
+y los cambios de código que aporte cualquier integrante. Comprobar con
+Salomón que la guía corresponda al comportamiento observado.
 
 **Aporte esperado:** casos nuevos o mejoras de pruebas a partir de fallos
 reales, resultados ejecutados y defectos con su estado. Esta evidencia servirá
@@ -100,21 +110,21 @@ su eficacia escolar. Revisar la claridad del material de Ismael.
 instrucciones. La preparación técnica de la demostración cuenta como aporte;
 el rol de vocero no se limita a hablar durante la exposición.
 
-## Salomón desarrollo y documentación
-
-Recorrer la interfaz con el escenario de Yokio. Comprobar carga de Excel,
-captura directa por porcentajes o conteos y pegado de tabla. Revisar etiquetas,
-mensajes, navegación con teclado y corrección de datos. Implementar mejoras
-que permitan usar los flujos sin conocimientos de programación y sin perder
-filas capturadas al introducir una fila inválida.
+## Salomón documentación
 
 Completar docs/entrega_1/Guia_rapida.md con los pasos y capturas de la versión
-que haya ejecutado: abrir, ingresar datos, interpretar el resultado ficticio,
-solicitar ayuda y registrar seguimiento. Revisar el guion de Yokio. Ese material
-servirá para el futuro manual 04.
+que haya ejecutado: abrir, ingresar datos por Excel, CSV, pegado o captura,
+interpretar el resultado ficticio, solicitar ayuda y registrar seguimiento.
+Explicar los mensajes de error y cómo corregir los datos con lenguaje sencillo.
 
-**Aporte esperado:** mejora revisada de interfaz y guía basada en pantallas
-existentes y comprobadas.
+Repetir las instrucciones con el escenario de Yokio y revisar su guion.
+Comunicar diferencias entre guía y aplicación a Víctor y Marco para validación
+y corrección. Ese material servirá para el futuro manual 04. Salomón también
+puede aportar código, como los demás integrantes; su prioridad para esta
+entrega es la documentación.
+
+**Aporte esperado:** guía e instrucciones revisadas, con capturas de pantallas
+existentes y comprobadas y observaciones sobre el guion de demostración.
 
 ## Incorporar cada aporte
 
@@ -136,8 +146,8 @@ revisados; cada autor atiende las observaciones de su aportación.
 Confirmar en una misma versión: documento 01 coherente, prototipo ejecutado,
 red de demostración entrenada y probada, dependencias instaladas, ejemplos de
 datos, resultados de pruebas, créditos y licencias, bitácora existente y
-contribuciones reales de los cinco integrantes. El equipo confirma la fecha
-límite y decide la versión de main que presentará.
+contribuciones reales de los cinco integrantes. La fecha acordada es el 5 de
+octubre durante la clase; el equipo decide la versión de main que presentará.
 
 Los manuales 02 y 03 corresponden a la entrega 2; el manual 04 y la prueba
 con persona ajena 05 corresponden a la entrega 3. Se conserva el trabajo
