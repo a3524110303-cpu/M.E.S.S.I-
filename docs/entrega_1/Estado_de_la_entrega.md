@@ -13,9 +13,18 @@ Actualización: 5 de octubre de 2026. Fecha de entrega acordada: 5 de octubre du
 | Entrenamiento | resultados_entrenamiento.md y scripts/train_demo.py | Cifras reproducidas; interpretación y evidencia completa de Ismael pendientes |
 | Historial compartido | Git y [revisión inicial](Revision_del_equipo_2026-10-05.md) | Marco, Ismael y Víctor con aportación; Yokio y Salomón sin evidencia publicada localizada |
 | Guion y escenario | Responsabilidad de Yokio | Pendientes de evidencia |
-| Guía y revisión de interfaz | Responsabilidad de Salomón | Pendientes de evidencia; correcciones de Marco no sustituyen su contribución |
+| Guía, instrucciones y capturas | Responsabilidad principal de Salomón | Pendientes de evidencia; correcciones de Marco no sustituyen su contribución documental |
 | Créditos y licencias | README.md | Dependencias y asistencia de IA declaradas; licencia del código del equipo por acordar |
 | Bitácora 06 | [Registro de Marco](06_Bitacora_de_prompts_Marco.md) | Registro real de esta sesión preparado; falta consolidar las bitácoras existentes del equipo |
+
+## Responsabilidades para esta entrega
+
+Marco cierra la integración y las correcciones QA-03 a QA-05; Víctor registra
+defectos, evidencias y su revalidación; Salomón concentra la guía, las
+instrucciones y las capturas. Ismael conserva datos y modelo; Yokio prepara
+el escenario y el guion de demostración. Todos pueden aportar código y cada
+autor debe revisar y comprobar sus cambios. El reparto indica quién coordina
+el cierre de cada entregable; los pendientes de la tabla requieren evidencia.
 
 ## Cierre
 

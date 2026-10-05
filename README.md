@@ -65,7 +65,9 @@ interfaz en autenticación individual.
 
 ## Equipo y actividades
 
-Se conservan los roles confirmados de la ficha del Bloque 1 Parte II.
+El reparto para cerrar esta entrega se actualizó el 5 de octubre de 2026.
+Todos pueden aportar código; los roles indican la responsabilidad principal
+de cada integrante para reunir y revisar los entregables.
 El mapa completo contiene tareas, dependencias, revisores, criterios de aceptación
 y una estimación orientativa equivalente por integrante:
 [Mapa de actividades](docs/planificacion/Mapa_de_actividades_MESSI.md).
@@ -74,11 +76,11 @@ Para continuar sobre la base existente, consultar
 
 | Integrante | Rol confirmado | Trabajo inmediato |
 | --- | --- | --- |
-| Marco Antonio Osorio Hernandez | Líder técnico y desarrollador | Integración, almacenamiento y revisión del contrato de IA |
+| Marco Antonio Osorio Hernandez | Líder técnico y desarrollador | Integración, almacenamiento y correcciones QA-03 a QA-05 |
 | Ismael Hernández Jiménez | Investigador y analista | Datos sintéticos, fuentes, modelo y comparación con métodos base |
 | Víctor Manuel Jiménez Suárez | QA y pruebas | Casos válidos e inválidos, evidencia y revisión del flujo completo |
 | Yokio Yosafat Vazquez Carrillo | Vocero principal | Guion y escenarios de demostración, comprobación de instrucciones |
-| Salomón Alvarez Gomez | Desarrollo y documentación | Interfaz, mensajes de ayuda y guía del flujo |
+| Salomón Alvarez Gomez | Documentación | Guía del flujo, instrucciones y capturas de la versión comprobada |
 
 ## Estructura
 
