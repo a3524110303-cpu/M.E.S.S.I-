@@ -114,7 +114,7 @@ class MySQLDatabase:
     def _open(self, with_database=True):
         driver = _driver()
         argumentos = dict(host=self.config.host, port=self.config.port, user=self.config.user,
-                          password=self.config.password, charset="utf8mb4", collation="utf8mb4_0900_ai_ci",
+                          password=self.config.password, charset="utf8mb4", collation="utf8mb4_unicode_ci",
                           autocommit=False, connection_timeout=5, read_timeout=10, write_timeout=10,
                           allow_local_infile=False)
         if with_database:
@@ -155,7 +155,7 @@ class MySQLDatabase:
                 servidor = self._open(with_database=False)
                 try:
                     servidor.execute(f"CREATE DATABASE IF NOT EXISTS `{self.config.database}` "
-                                     "CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci")
+                                     "CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")
                 except driver.Error as error:
                     raise _safe_error(error) from error
                 finally:
@@ -166,8 +166,8 @@ class MySQLDatabase:
             try:
                 resultado = db.execute("SELECT VERSION() AS version").fetchone()["version"]
                 version = tuple(int(p) for p in resultado.split("-")[0].split(".")[:3])
-                if "MariaDB" in resultado or version < (8, 0, 16):
-                    raise DatabaseError("MESSI requiere MySQL 8.0.16 o posterior.")
+                if version < (8, 0, 0) and "MariaDB" not in resultado:
+                    raise DatabaseError("MESSI requiere MySQL 8.0.16 o MariaDB equivalente.")
                 bloqueado = db.execute("SELECT GET_LOCK(%s, 10) AS adquirido", (lock_name,)).fetchone()["adquirido"] == 1
                 if not bloqueado:
                     raise DatabaseError("Otra instalación está preparando el esquema. Vuelve a intentar.")
