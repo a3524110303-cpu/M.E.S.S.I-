@@ -14,3 +14,6 @@ models/*
 *.sqlite3
 *.sqlite3-*
 *.joblib
+.env
+.env.*
+!.env.example

@@ -1,7 +1,6 @@
-"""QA de Víctor: interacciones con Streamlit real, usando datos temporales.
+"""QA de Víctor e integración de Marco: Streamlit real con almacenamiento temporal.
 
-AppTest no sustituye la revisión visual en navegador. El fallo esperado
-documenta QA-03; no debe contarse como caso aprobado.
+Las operaciones MySQL reales se prueban por separado en la suite opt-in.
 """
 
 import importlib.util
@@ -10,11 +9,12 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 import app
+from messi.storage import SupportStore
 
 STREAMLIT_AVAILABLE = importlib.util.find_spec("streamlit") is not None
 
@@ -40,8 +40,17 @@ class StreamlitInteractionTests(unittest.TestCase):
         model_patch.start()
         self.addCleanup(model_patch.stop)
         self.AppTest = AppTest
+        self.store = SupportStore(self.root / "data" / "private" / "messi.sqlite3")
+        store_adapter = Mock(wraps=self.store)
+        store_adapter.list_indicators = Mock(return_value=[])
+        store_adapter.list_predictions = Mock(return_value=[])
+        store_patch = patch.object(app, "MySQLStore", return_value=store_adapter)
+        store_patch.start()
+        self.addCleanup(store_patch.stop)
+        config_patch = patch.object(app.MySQLConfig, "from_environment", return_value=object())
+        config_patch.start()
+        self.addCleanup(config_patch.stop)
         self.ui = self.new_session()
-        self.store = app.SupportStore(self.root / "data" / "private" / "messi.sqlite3")
 
     def new_session(self):
         return self.AppTest.from_string("import app\napp.main()", default_timeout=15).run()
@@ -66,7 +75,7 @@ class StreamlitInteractionTests(unittest.TestCase):
         self.ui.button[0].click().run()
         self.assert_no_exception()
         self.assertEqual(len(self.ui.dataframe[0].value), 8)
-        self.ui.button[1].click().run()
+        next(button for button in self.ui.button if button.label == "Calcular riesgo de demostración").click().run()
         self.assert_no_exception()
         self.assertIn("Modelo pendiente", self.ui.info[0].value)
         self.assertEqual(len(self.ui.session_state["records"]), 8)
@@ -153,11 +162,39 @@ class StreamlitInteractionTests(unittest.TestCase):
         self.assertEqual(len(self.ui.dataframe), 3)
         self.assertEqual(self.ui.dataframe[-1].value.iloc[0]["notes"], "Sesión ficticia QA realizada.")
 
-    @unittest.expectedFailure
     def test_qa03_followup_keeps_visible_success_confirmation(self):
-        """QA-03 abierto: st.rerun borra 'Seguimiento guardado.' inmediatamente."""
+        """QA-03: la confirmación debe sobrevivir a la actualización de pantalla."""
         self.create_request_support_and_followup()
         self.assertTrue(any(item.value == "Seguimiento guardado." for item in self.ui.success))
+
+    def test_invalid_capture_preserves_inputs_then_success_clears_them(self):
+        self.choose_source("Captura directa")
+        self.ui.text_input(key="capture_id").set_value("EST-904")
+        self.ui.number_input(key="capture_grade").set_value(6.0)
+        self.ui.number_input(key="capture_attendance").set_value(80.0)
+        self.ui.button[0].click().run()
+        self.assertTrue(self.ui.error)
+        self.assertEqual(self.ui.text_input(key="capture_id").value, "EST-904")
+        self.assertEqual(self.ui.number_input(key="capture_grade").value, 6.0)
+        self.ui.number_input(key="capture_homework").set_value(70.0)
+        self.ui.button[0].click().run()
+        self.assert_no_exception()
+        self.assertEqual(len(self.ui.session_state["records"]), 1)
+        self.assertEqual(self.ui.text_input(key="capture_id").value, "")
+        self.assertIsNone(self.ui.number_input(key="capture_grade").value)
+
+    def test_empty_request_preserves_id_and_success_clears_form(self):
+        self.ui.sidebar.radio[0].set_value("Estudiante").run()
+        self.ui.text_input(key="request_id").set_value("EST-905")
+        self.ui.button[0].click().run()
+        self.assertTrue(self.ui.error)
+        self.assertEqual(self.ui.text_input(key="request_id").value, "EST-905")
+        self.ui.text_area(key="request_message").set_value("Solicitud ficticia.")
+        self.ui.button[0].click().run()
+        self.assert_no_exception()
+        self.assertEqual(len(self.store.list_requests()), 1)
+        self.assertEqual(self.ui.text_input(key="request_id").value, "")
+        self.assertTrue(any("registrada" in item.value for item in self.ui.success))
 
 
 if __name__ == "__main__":

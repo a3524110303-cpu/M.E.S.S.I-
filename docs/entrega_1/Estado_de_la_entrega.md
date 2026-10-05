@@ -1,37 +1,26 @@
 # Estado de la primera entrega MESSI
 
-Fecha de preparación: 3 de octubre de 2026. La fecha límite de entrega está
-pendiente de indicar por el equipo.
+Actualización: 5 de octubre de 2026. Fecha de entrega acordada: 5 de octubre durante la clase.
 
-| Requisito | Evidencia local | Estado |
+| Requisito | Evidencia | Estado |
 | --- | --- | --- |
-| Documento del proyecto 1 | 01_Documento_del_proyecto_MESSI.docx | Documento existente conservado; los apartados de instalación deben actualizarse tras verificar el prototipo |
-| Esqueleto del sistema | app.py y src/messi | Preparado; ejecución de interfaz e IA pendiente de instalar dependencias |
-| Repositorio | .git y remoto del equipo | Base de la primera versión en main; contribuciones individuales y revisión del equipo pendientes |
-| Dependencias | requirements.txt e INSTALAR_MESSI.bat | Instalación conjunta verificada en GitHub Actions Windows Python 3.13; instalación local pendiente |
-| Datos de prueba | data/synthetic | Ficticios y reproducibles; no acreditan eficacia escolar |
-| Pruebas | tests | Consultar Verificacion_inicial.md; repetir con las dependencias instaladas |
-| Historial de todos los integrantes | Git | Pendiente de contribuciones reales y revisadas de cada integrante |
-| Créditos y licencias | README.md | Créditos y licencias de dependencias incluidos; licencia del código propio por acordar |
-| Bitácora 6 | docs/referencias/06_Bitacora_de_prompts_y_reflexion.docx | Copia intacta de la plantilla adjunta; versión completada mencionada por el equipo no localizada |
-| Mapa de actividades | docs/planificacion | Roles confirmados y tareas distribuidas |
+| Documento 01 | [Documento actualizado](01_Documento_del_proyecto_MESSI.md) | Funcionamiento, instalación y requisitos actualizados; DOCX anterior conservado como referencia |
+| Código | app.py y src/messi | MySQL y correcciones integrados; configuración habitual de .env todavía rechaza el acceso |
+| Dependencias | requirements.txt | Instaladas y comprobadas, incluida pyarrow 21.0.0; pip check correcto |
+| Datos de prueba | data/synthetic | Excel y CSV ficticios incluidos |
+| Pruebas | [Integración de Marco](Evidencia_integracion_Marco.md) | 138 aprobadas contra MySQL aislado, sin errores, omisiones ni fallos esperados |
+| QA-03 a QA-05 | app.py y tests/test_streamlit_ui.py | Corregidos por Marco; las capturas de Víctor conservan la observación inicial |
+| Entrenamiento | resultados_entrenamiento.md y scripts/train_demo.py | Cifras reproducidas; interpretación y evidencia completa de Ismael pendientes |
+| Historial compartido | Git y [revisión inicial](Revision_del_equipo_2026-10-05.md) | Marco, Ismael y Víctor con aportación; Yokio y Salomón sin evidencia publicada localizada |
+| Guion y escenario | Responsabilidad de Yokio | Pendientes de evidencia |
+| Guía y revisión de interfaz | Responsabilidad de Salomón | Pendientes de evidencia; correcciones de Marco no sustituyen su contribución |
+| Créditos y licencias | README.md | Dependencias y asistencia de IA declaradas; licencia del código del equipo por acordar |
+| Bitácora 06 | [Registro de Marco](06_Bitacora_de_prompts_Marco.md) | Registro real de esta sesión preparado; falta consolidar las bitácoras existentes del equipo |
 
-## Próximos pasos
+## Cierre
 
-Instalar dependencias con el archivo de Windows y ejecutar la demostración y
-las pruebas. Cada integrante revisa sus tareas del mapa y aporta su cambio con
-su identidad de Git. Después se actualiza el documento 1 con las versiones y
-pasos comprobados, se coloca la bitácora existente completada y se integran los
-aportes revisados en main. La primera entrega sólo se da por terminada al reunir
-estas evidencias y resolver los pendientes de su lista de verificación.
+Antes de presentar, configurar la cuenta y los permisos MySQL del equipo de demostración y repetir el recorrido con esa instalación. El servidor aislado de pruebas confirma el código y no acredita el acceso con las credenciales habituales. La migración de los registros habituales de SQLite es opcional y no se declara realizada.
 
-La asignación inmediata sobre el código existente está en
-[Siguientes pasos del equipo](Siguientes_pasos_del_equipo.md).
+El documento 01 ya refleja el prototipo. El registro de Marco reúne sus prompts reales de revisión y corrección; no se inventaron los de otras personas. Faltan aportes y revisiones cruzadas del equipo para considerar cerrada la entrega conjunta.
 
-## Entregas posteriores
-
-Entrega 2: manual del programador e informe QA con resultados realmente
-observados. Entrega 3: manual de usuario con capturas y prueba con una persona
-ajena; la nota de esa prueba debe ocupar como máximo media página. Entrega 4:
-reflexión final del uso de IA. Las plantillas se conservan en docs/referencias;
-los ejemplos de esas plantillas no se presentan como pruebas realizadas.
+Los manuales 02 y 03 corresponden a la entrega 2; el 04 y la prueba con una persona ajena del 05 corresponden a la entrega 3. Las plantillas originales se conservan en docs/referencias.

@@ -14,3 +14,33 @@ jobs:
       - run: python -m pip install -r requirements.txt
       - run: python -m unittest discover -s tests -v
       - run: python -m compileall -q app.py src scripts
+  mysql-integration:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: messi_ci_only
+          MYSQL_ROOT_HOST: '%'
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost -pmessi_ci_only"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=12
+    env:
+      MESSI_TEST_MYSQL: '1'
+      MESSI_MYSQL_HOST: 127.0.0.1
+      MESSI_MYSQL_PORT: '3306'
+      MESSI_MYSQL_USER: root
+      MESSI_MYSQL_PASSWORD: messi_ci_only
+      MESSI_MYSQL_DATABASE: messi_ci_test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: pip
+      - run: python -m pip install -r requirements.txt
+      - run: python -m unittest discover -s tests -v

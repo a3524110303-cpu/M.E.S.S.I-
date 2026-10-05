@@ -3,13 +3,20 @@
 Fecha: 4 de octubre de 2026. Base: `f6bf167`, rama `codex/victor-entrega-1`.
 Revisión asistida por Codex. Sólo se usaron datos ficticios.
 
+**Actualización de integración de Marco, 5 de octubre:** QA-03, QA-04 y QA-05
+se corrigieron en app.py. La prueba de confirmación ahora aprueba sin
+`expectedFailure`; se añadieron casos de conservación de campos y limpieza
+tras envío válido. El registro y las capturas siguientes conservan la
+observación original de Víctor. Resultados actuales en
+[Evidencia de integración de Marco](Evidencia_integracion_Marco.md).
+
 | ID | Prioridad | Hallazgo | Estado |
 | --- | --- | --- | --- |
 | QA-01 | Bloqueante para instalar | El BAT requiere Python 3.13; el equipo tenía 3.14 | Resuelto en este equipo instalando 3.13.16 |
 | QA-02 | Bloqueante para tablas e IA | Windows bloquea la DLL de pyarrow 25.0.1 | Resuelto en este equipo y versión 21.0.0 fijada para revisión |
-| QA-03 | Menor | Desaparece la confirmación de seguimiento | Abierto, reproducido en navegador y AppTest |
-| QA-04 | Media | Un envío inválido borra los campos válidos del formulario | Abierto, reproducido en navegador |
-| QA-05 | Mantenimiento | Avisos de Streamlit sobre `use_container_width` | Abierto; no impide la ejecución con 1.50.0 |
+| QA-03 | Menor | Desaparece la confirmación de seguimiento | Corregido por Marco; prueba de confirmación aprobada |
+| QA-04 | Media | Un envío inválido borra los campos válidos del formulario | Corregido por Marco; conserva datos inválidos y limpia tras aceptar |
+| QA-05 | Mantenimiento | Avisos de Streamlit sobre `use_container_width` | Corregido por Marco con width="stretch" |
 
 ## QA-01: versión de Python
 

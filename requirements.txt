@@ -8,3 +8,5 @@ joblib==1.5.2
 openpyxl==3.1.5
 # Verificado en Windows con Python 3.13: 25.0.1 fallo al importar su DLL.
 pyarrow==21.0.0
+mysql-connector-python==9.4.0
+python-dotenv==1.1.1

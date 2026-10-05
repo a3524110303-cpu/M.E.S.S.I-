@@ -4,6 +4,10 @@ Base de la primera entrega del equipo MESSI. El docente ingresa indicadores del
 primer parcial; el tutor revisa los casos y registra apoyos y seguimiento; el
 estudiante puede solicitar ayuda aunque no haya alerta ni modelo disponible.
 
+Documento vigente de la primera entrega:
+[Documento del proyecto 01](docs/entrega_1/01_Documento_del_proyecto_MESSI.md).
+La copia DOCX anterior conserva el diseño original como referencia histórica.
+
 El prototipo es una demostración local con datos sintéticos. El selector de
 roles sirve para demostrar los flujos; la autenticación y los permisos de un
 piloto escolar están pendientes. No usar datos de estudiantes reales en esta
@@ -14,18 +18,26 @@ versión. Una alerta no cambia calificaciones ni aplica sanciones.
 1. Abre esta carpeta del escritorio: `C:\Users\user\Desktop\MESSI`.
 2. Ejecuta `INSTALAR_MESSI.bat` una vez. Crea un entorno privado `.venv` e
    instala las versiones de `requirements.txt`. Requiere internet.
-3. Ejecuta `INICIAR_MESSI.bat`. Abre `http://127.0.0.1:8501` en el navegador.
-4. En Docente, elige **Ejemplo sintético** y pulsa **Cargar ejemplo sintético**.
+3. Inicia MySQL 8.0.16 o posterior y prepara la base `messi` y una cuenta de aplicación siguiendo
+   la [guía de base de datos](docs/base_de_datos.md). Copia `.env.example` a `.env`
+   si aún no existe y completa la contraseña de esa cuenta. `.env` está excluido
+   de Git.
+4. Ejecuta `.\.venv\Scripts\python.exe scripts\init_database.py` con los permisos
+   temporales de inicialización indicados en la guía; después retíralos. El
+   inicializador usa una base existente. Sólo `--create-database` autoriza a crearla.
+5. Ejecuta `INICIAR_MESSI.bat`. Abre `http://127.0.0.1:8501` en el navegador.
+6. En Docente, elige **Ejemplo sintético** y pulsa **Cargar ejemplo sintético**.
    También puedes descargar la plantilla Excel, capturar datos directamente o
    pegar una tabla. En Estudiante, registra una solicitud ficticia. En Tutor,
    registra un apoyo y su seguimiento.
-5. Para activar la IA de demostración, ejecuta `ENTRENAR_DEMO.bat`; vuelve a la
+7. Para activar la IA de demostración, ejecuta `ENTRENAR_DEMO.bat`; vuelve a la
    vista Docente y pulsa **Calcular riesgo de demostración**.
-6. Ejecuta `PROBAR_MESSI.bat` para comprobar todos los módulos instalados.
+8. Ejecuta `PROBAR_MESSI.bat` para comprobar los módulos instalados. Las pruebas
+   con dobles de conexión no sustituyen una comprobación contra MySQL.
 
-Python 3.13 ya se encontró en este equipo. Faltan Streamlit y scikit-learn;
-la instalación de paquetes queda a cargo del usuario mediante el primer paso.
 La versión admite Python 3.11 a 3.13; los accesos de Windows seleccionan 3.13.
+El entorno privado debe contener las dependencias de `requirements.txt`,
+incluidos el conector MySQL y el lector de configuración `.env`.
 
 También se puede ejecutar desde PowerShell:
 
@@ -33,11 +45,23 @@ También se puede ejecutar desde PowerShell:
 Set-Location 'C:\Users\user\Desktop\MESSI'
 py -3.13 -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
+if (-not (Test-Path '.env')) { Copy-Item '.env.example' '.env' }
+# Completa .env y prepara la cuenta/base siguiendo docs/base_de_datos.md.
+.\.venv\Scripts\python.exe scripts\init_database.py
 .\.venv\Scripts\python.exe -m streamlit run app.py
 ```
 
-No hace falta instalar Node, Docker ni un motor externo de base de datos.
-SQLite viene con Python. La aplicación sólo escucha en el equipo local.
+MySQL es el motor de almacenamiento del runtime y requiere un servicio activo.
+La aplicación se conecta por defecto a `127.0.0.1:3306`, con usuario y base
+`messi`; la contraseña se configura localmente. No utiliza una cuenta
+administradora por defecto. Streamlit sólo escucha en el equipo local.
+
+De momento todas las personas que usan la interfaz pueden acceder a la base
+mediante la cuenta configurada. El administrador puede gestionar cuentas MySQL
+con permisos de lectura o edición y bloquear accesos mediante
+`scripts/manage_mysql_users.py`; el procedimiento está en la guía de base de
+datos. Estos permisos del servidor no convierten el selector de roles de la
+interfaz en autenticación individual.
 
 ## Equipo y actividades
 
@@ -62,11 +86,19 @@ Para continuar sobre la base existente, consultar
 app.py                         Interfaz Streamlit con tres vistas de demostración
 src/messi/data.py              Validación de Excel, CSV, pegado y captura
 src/messi/model.py             Inferencia opcional y comprobación de metadatos
-src/messi/storage.py           Solicitudes, apoyos y seguimiento SQLite
+src/messi/database.py          Configuración y transacciones MySQL
+src/messi/mysql_storage.py     Persistencia relacional del runtime
+src/messi/esquema_mysql.sql    Tablas, índices, restricciones y relaciones
+src/messi/storage.py           SQLite legado, migración y pruebas
+scripts/init_database.py      Inicialización explícita del esquema MySQL
+scripts/migrate_sqlite.py      Importación opcional del almacenamiento legado
+scripts/manage_mysql_users.py Administración de cuentas y permisos de MySQL
 scripts/generate_synthetic.py  Generador reproducible de datos ficticios
 scripts/train_demo.py          Entrenamiento opcional y evaluación sintética
 data/synthetic/                Datos ficticios para carga y entrenamiento
-data/private/                  Base local ignorada por Git
+data/private/                  Archivos privados y SQLite legado, ignorados por Git
+.env.example                   Plantilla sin credenciales reales
+docs/base_de_datos.md          Configuración, esquema y migración a MySQL
 models/                        Modelo local ignorado por Git
 tests/                         Pruebas automatizadas
 docs/planificacion/            Mapa de actividades del equipo
@@ -103,6 +135,14 @@ En Excel, pegado y captura se asigna un código temporal cuando falta el ID.
 Conserva códigos estables como EST-001 para el seguimiento; los códigos
 automáticos no enlazan listas distintas de forma fiable.
 
+**Guardar indicadores** conserva la lista validada en MySQL para el periodo
+`primer_parcial`; **Cargar indicadores guardados** recupera los datos persistidos.
+Importar o capturar una lista sólo la coloca en la sesión hasta guardarla. Al
+calcular el riesgo se intenta conservar también la predicción: si falla la
+conexión, el resultado calculado permanece en la sesión y la aplicación avisa
+que no se guardó. La vista Tutor puede recuperar indicadores y predicciones
+guardados cuando la sesión está vacía.
+
 ## Contrato de datos
 
 El CSV de predicción contiene exactamente estas cuatro columnas:
@@ -125,21 +165,36 @@ y prueba, y compara MLP, regresión logística y una regla basada en nota.
 El umbral sintético no acredita validez escolar. El documento técnico del modelo
 se genera al ejecutar el entrenamiento y registra su procedencia sintética.
 
-Las solicitudes y las notas del tutor se almacenan por separado en SQLite y no
-forman parte de las variables del modelo. El contexto sensible y la discapacidad
+MySQL relaciona estudiantes, indicadores y predicciones, y conserva solicitudes,
+apoyos y seguimientos. Las solicitudes y las notas del tutor no forman parte de
+las variables del modelo. El contexto sensible y la discapacidad
 no determinan automáticamente el riesgo. Los indicadores observados no son una
 explicación causal de una predicción.
 
 ## Validación y estado real
 
-Verificación inicial: 50 casos aprobados, ninguno fallido y una integración
-MLP omitida por dependencias faltantes. Excel, CSV, pegado y conteos manuales
-produjeron registros equivalentes sobre la plantilla real. La interfaz real
-todavía está pendiente de instalar y ejecutar. Detalle en
+El 5 de octubre se integraron las aportaciones de Ismael y Víctor con la
+persistencia MySQL de Marco y las correcciones QA-03, QA-04 y QA-05.
+La ejecución local con servidor MySQL aislado aprobó **138 pruebas**, sin
+errores, omisiones ni fallos esperados. Se verificaron también instalación,
+`pip check` y sintaxis. Evidencia y límites en
+[Integración de Marco](docs/entrega_1/Evidencia_integracion_Marco.md).
+GitHub Actions comprueba además Windows y MySQL 8.0 en Linux.
+
+Los formularios conservan los valores cuando falla un envío y se limpian
+únicamente después de guardarlo o aceptar la fila. La confirmación del
+seguimiento permanece después de actualizar la pantalla. Los cambios de
+interfaz se registran como aportación de integración de Marco.
+
+La verificación inicial registró 50 casos aprobados, ninguno fallido y una
+integración MLP omitida por dependencias faltantes. Excel, CSV, pegado y conteos manuales
+produjeron registros equivalentes sobre la plantilla real. La interfaz no se
+ejecutó en esa comprobación inicial. Detalle en
 [Verificación inicial](docs/entrega_1/Verificacion_inicial.md).
 
 Las pruebas de contrato y almacenamiento pueden ejecutarse sin instalar la
-interfaz ni IA:
+interfaz ni IA. Los casos del adaptador MySQL que usan conexiones simuladas
+comprueban el contrato, pero no acreditan una conexión al servidor:
 
 ```powershell
 py -3.13 -m unittest discover -s tests -v
@@ -149,10 +204,22 @@ Las pruebas que necesitan scikit-learn o Streamlit deben ejecutarse después de
 instalar dependencias; un caso omitido no cuenta como aprobado.
 El estado y pendientes de la primera entrega están en
 [Estado de la entrega](docs/entrega_1/Estado_de_la_entrega.md).
-La instalación completa, la ejecución visual y el entrenamiento todavía requieren
-verificación en el entorno `.venv`. No hay un modelo escolar validado ni una URL
+La ejecución visual y el entrenamiento deben verificarse en el entorno `.venv`
+y acompañarse de su evidencia. No hay un modelo escolar validado ni una URL
 pública. La base del repositorio sirve para iniciar las contribuciones y reunir
 las evidencias de la primera entrega.
+
+La puesta en marcha de MySQL se comprueba por separado con las credenciales de
+esta instalación, el inicializador y un recorrido de guardar y recuperar datos.
+La existencia del servicio MySQL no demuestra que la base esté inicializada.
+Si hay un SQLite anterior de MESSI, su importación es explícita; no se declara
+migrado hasta ejecutar el procedimiento de la guía y verificar sus conteos.
+
+El adaptador MySQL se verificó con cinco pruebas reales en un servidor aislado
+MySQL 8.0.42, puerto 13307; también se comprobó el cambio entre permisos de
+edición y lectura y el bloqueo de cuentas. La conexión del servidor principal
+en 3306 continúa pendiente de su configuración local. Esta validación no
+declara realizada la importación del SQLite anterior.
 
 ## Colaboración y créditos
 
@@ -169,6 +236,9 @@ prueba, historial de contribuciones de todos, créditos y bitácora. Las plantil
 06 se completa en la entrega 4. Los documentos existentes se conservan intactos.
 La versión completada de la bitácora 6 mencionada por el equipo debe colocarse
 cuando esté disponible; el adjunto 6 es una plantilla sin llenar.
+Los prompts reales de esta revisión y corrección de Marco están en
+[Bitácora de Marco](docs/entrega_1/06_Bitacora_de_prompts_Marco.md).
+Ese registro no sustituye los aportes individuales pendientes del equipo.
 
 Equipo: Marco Antonio Osorio Hernandez, Ismael Hernández Jiménez, Víctor Manuel
 Jiménez Suárez, Yokio Yosafat Vazquez Carrillo y Salomón Alvarez Gomez.
@@ -177,9 +247,9 @@ comprender, revisar y comprobar el código asignado antes de entregar.
 
 ## Dependencias y licencias
 
-Versiones directas fijadas y publicaciones comprobadas en PyPI. La instalación
-conjunta se comprobó en GitHub Actions con Windows y Python 3.13; la instalación
-en el equipo local sigue pendiente. Las licencias de dependencias no otorgan
+Versiones directas fijadas y publicaciones comprobadas en PyPI. La comprobación
+inicial en GitHub Actions utilizó Windows y Python 3.13; la incorporación de
+MySQL tiene las verificaciones separadas descritas arriba. Las licencias de dependencias no otorgan
 automáticamente una licencia al código del equipo; ésta queda por acordar.
 
 | Dependencia | Versión | Licencia | Fuente |
@@ -191,6 +261,9 @@ automáticamente una licencia al código del equipo; ésta queda por acordar.
 | SciPy | 1.16.2 | BSD 3 Clause | [Publicación oficial](https://pypi.org/project/scipy/1.16.2/) |
 | joblib | 1.5.2 | BSD 3 Clause | [Publicación oficial](https://pypi.org/project/joblib/1.5.2/) |
 | openpyxl | 3.1.5 | MIT | [Publicación oficial](https://pypi.org/project/openpyxl/3.1.5/) |
+| pyarrow | 21.0.0 | Apache 2.0 | [Publicación oficial](https://pypi.org/project/pyarrow/21.0.0/) |
+| mysql-connector-python | 9.4.0 | GNU GPLv2 con FOSS License Exception | [Publicación oficial](https://pypi.org/project/mysql-connector-python/9.4.0/) |
+| python-dotenv | 1.1.1 | BSD 3 Clause | [Publicación oficial](https://pypi.org/project/python-dotenv/1.1.1/) |
 
 La propuesta de microservicios encontrada en las referencias queda como línea
 de evolución. Esta base implementa el stack de la entrega 1 adjunta; no presenta

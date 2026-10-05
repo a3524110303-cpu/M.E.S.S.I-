@@ -38,7 +38,9 @@ La fecha límite queda pendiente de confirmar. Las sesiones siguientes son una p
 
 ## Contrato técnico de la primera versión
 
-- Aplicación local en navegador con Python 3.13 y Streamlit; pandas para datos, openpyxl 3.1.5 para Excel, scikit-learn para la red MLP y SQLite para solicitudes, apoyos y seguimiento. Las versiones instaladas y comprobadas se documentarán en el README.
+- Aplicación local en navegador con Python 3.13 y Streamlit; pandas para datos, openpyxl 3.1.5 para Excel, scikit-learn para la red MLP y MySQL para estudiantes, indicadores, predicciones, solicitudes, apoyos y seguimiento. SQLite se conserva como almacenamiento legado para migración y pruebas. Las versiones instaladas y comprobadas se documentarán en el README.
+- La conexión MySQL se configura mediante las variables MESSI_MYSQL_HOST, MESSI_MYSQL_PORT, MESSI_MYSQL_USER, MESSI_MYSQL_PASSWORD y MESSI_MYSQL_DATABASE en un .env local excluido de Git. La aplicación usa una cuenta limitada; la creación del esquema y la migración desde SQLite son operaciones explícitas. Procedimiento: [Base de datos](../base_de_datos.md). El servicio iniciado y las pruebas simuladas no acreditan una conexión real ni una migración completada.
+- Inicialmente todos pueden usar la base mediante la cuenta configurada de la aplicación. El administrador conserva el control de cuentas MySQL y puede asignar lectura, edición o bloqueo con scripts/manage_mysql_users.py. El selector de roles de la interfaz sigue siendo una demostración, sin autenticación individual.
 - Ingreso docente mediante captura directa, pegado desde Excel, CSV o archivo XLSX. El formato XLS clásico se exporta a XLSX antes de cargarlo. Plantilla docente: data/synthetic/Plantilla_MESSI.xlsx. Las pantallas explican el ingreso con lenguaje sencillo.
 - Contrato interno de predicción: id_estudiante, nota_parcial, asistencia y tareas_entregadas. La nota va de 0 a 10; asistencia y tareas son porcentajes de 0 a 100. CSV, XLSX y pegado usan esas cuatro columnas con valores, sin fórmulas. El ID es seudónimo y único.
 - La captura directa admite conteos de sesiones asistidas e impartidas y tareas entregadas y solicitadas. record_from_counts en data.py convierte a porcentajes: el total debe superar cero y la cantidad no puede superar el total. No se promete carga de un esquema de conteos desde Excel.
@@ -60,11 +62,11 @@ Marco mantiene la integración técnica y apoya la persistencia. Ismael mantiene
 
 **Asignación** Responsable Marco. Esfuerzo 4 h. Prioridad P0. Depende de Contrato E1 T04 y estructura inicial.
 
-Integrar captura, pegado, CSV y XLSX con el contrato común de datos, evaluación opcional y vistas; completar SQLite para solicitudes, apoyos y seguimiento. Acordar interfaces con Ismael y Salomón.
+Integrar captura, pegado, CSV y XLSX con el contrato común de datos, evaluación opcional y vistas; completar MySQL para estudiantes, indicadores, predicciones, solicitudes, apoyos y seguimiento. Preparar configuración local, inicialización explícita del esquema y migración opcional del SQLite anterior de MESSI. Acordar interfaces con Ismael y Salomón.
 
-**Evidencia** Código integrado y una solicitud con apoyo y seguimiento guardados usando datos de prueba.
+**Evidencia** Código integrado, esquema MySQL inicializado y una solicitud con apoyo y seguimiento guardados usando datos de prueba. Si se importa SQLite, registrar conteos comprobados y conservación del original.
 
-**Aceptación** Las vías de ingreso usan la misma validación; el apoyo persiste al reiniciar; la solicitud funciona sin modelo. Los errores recuperables muestran una explicación útil.
+**Aceptación** Las vías de ingreso usan la misma validación; indicadores, predicciones y apoyos se recuperan de MySQL al reiniciar; la solicitud funciona sin modelo. Los errores recuperables muestran una explicación útil. La cuenta del runtime no requiere privilegios administrativos ni creación de tablas.
 
 ### E1 T02 Comprobación de integración
 
