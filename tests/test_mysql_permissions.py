@@ -89,36 +89,37 @@ class RealPermissionsTests(unittest.TestCase):
         username = "perm_" + secrets.token_hex(6)
         password = secrets.token_urlsafe(24)
         student = "EST-" + str(secrets.randbelow(100000000)).zfill(8)
-        permissions.manage(config, "create", username, role="editor", password=password)
-        self.addCleanup(self.cleanup_account, database, username, student)
+        user_host = os.environ.get("MESSI_TEST_MYSQL_USER_HOST", "127.0.0.1")
+        permissions.manage(config, "create", username, user_host=user_host, role="editor", password=password)
+        self.addCleanup(self.cleanup_account, database, username, student, user_host)
         member = MySQLConfig(host=config.host, port=config.port, user=username, password=password, database=config.database)
         store = MySQLStore(member)
         store.create_request(student, "Prueba de editor")
-        permissions.manage(config, "set-role", username, role="lector")
+        permissions.manage(config, "set-role", username, user_host=user_host, role="lector")
         self.assertEqual(len(store.list_requests(student)), 1)
         with self.assertRaises(DatabaseError):
             store.create_request(student, "Lector no debe escribir")
-        permissions.manage(config, "block", username)
+        permissions.manage(config, "block", username, user_host=user_host)
         with self.assertRaises(DatabaseError):
             store.list_requests(student)
-        permissions.manage(config, "unblock", username)
-        permissions.manage(config, "set-role", username, role="editor")
+        permissions.manage(config, "unblock", username, user_host=user_host)
+        permissions.manage(config, "set-role", username, user_host=user_host, role="editor")
         store.create_request(student, "Editor restaurado")
         raw = database._open()
         try:
             raw.raw.autocommit = True
-            raw.execute(f"GRANT SELECT ON `{config.database}`.* TO %s@%s", (username, "127.0.0.1"))
+            raw.execute(f"GRANT SELECT ON `{config.database}`.* TO %s@%s", (username, user_host))
         finally:
             raw.close()
         with self.assertRaisesRegex(DatabaseError, "permisos directos"):
-            permissions.manage(config, "set-role", username, role="lector")
+            permissions.manage(config, "set-role", username, user_host=user_host, role="lector")
 
     @staticmethod
-    def cleanup_account(database, username, student):
+    def cleanup_account(database, username, student, user_host):
         raw = database._open()
         try:
             raw.raw.autocommit = True
-            raw.execute("DROP USER %s@%s", (username, "127.0.0.1"))
+            raw.execute("DROP USER %s@%s", (username, user_host))
             raw.execute("DELETE FROM requests WHERE student_id = %s", (student,))
             raw.execute("DELETE FROM students WHERE id = %s", (student,))
         finally:

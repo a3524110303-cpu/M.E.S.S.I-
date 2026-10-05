@@ -36,6 +36,9 @@ jobs:
       MESSI_MYSQL_USER: root
       MESSI_MYSQL_PASSWORD: messi_ci_only
       MESSI_MYSQL_DATABASE: messi_ci_test
+      # La red del contenedor ve el runner desde una IP del bridge.
+      # Sólo las cuentas efímeras de esta prueba utilizan ese origen.
+      MESSI_TEST_MYSQL_USER_HOST: '%'
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

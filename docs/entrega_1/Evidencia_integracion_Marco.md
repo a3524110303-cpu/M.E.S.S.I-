@@ -48,6 +48,12 @@ Para verificar esas siete pruebas, preparar un servidor y una cuenta administrat
 
 Las pruebas de integración generan registros propios y eliminan sólo sus registros y cuentas de prueba. La migración utiliza un destino de prueba vacío y conserva su fuente SQLite.
 
+La prueba de permisos usa cuentas temporales con origen 127.0.0.1 localmente.
+CI configura MESSI_TEST_MYSQL_USER_HOST=% para alcanzar el contenedor desde
+la red interna del runner. Cada cuenta conserva permisos sólo en la base de
+prueba y se elimina al terminar. El origen predeterminado del script de
+administración de la aplicación permanece en 127.0.0.1.
+
 ## Límites y pendientes
 
 La conexión del archivo .env habitual fue rechazada por MySQL; el usuario debe corregir sus credenciales y permisos siguiendo [Base de datos](../base_de_datos.md). No se declara verificada esa conexión, ni migrados los registros habituales.
