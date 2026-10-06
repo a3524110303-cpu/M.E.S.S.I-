@@ -20,8 +20,13 @@ versión. Una alerta no cambia calificaciones ni aplica sanciones.
 1. Abre esta carpeta del escritorio: `C:\Users\user\Desktop\MESSI`.
 2. Ejecuta `INSTALAR_MESSI.bat` una vez. Crea un entorno privado `.venv` e
    instala las versiones de `requirements.txt`. Requiere internet.
-3. Inicia MySQL 8.0.16 (o posterior) o MariaDB equivalente y prepara la base `messi` y una cuenta de aplicación. Puedes seguir la [guía de base de datos](docs/base_de_datos.md) o ejecutar directamente el script local `setup_db.py` (si lo tienes) para crear la base y el usuario automáticamente. Copia `.env.example` a `.env` si aún no existe y completa la contraseña de esa cuenta. `.env` está excluido de Git.
-4. Ejecuta `.\.venv\Scripts\python.exe scripts\init_database.py` para inicializar el esquema en la base existente. Sólo `--create-database` autoriza a crearla.
+3. Inicia MySQL 8.0.16 o posterior y prepara la base `messi` y una cuenta de aplicación siguiendo
+   la [guía de base de datos](docs/base_de_datos.md). Copia `.env.example` a `.env`
+   si aún no existe y completa la contraseña de esa cuenta. `.env` está excluido
+   de Git.
+4. Ejecuta `.\.venv\Scripts\python.exe scripts\init_database.py` con los permisos
+   temporales de inicialización indicados en la guía; después retíralos. El
+   inicializador usa una base existente. Sólo `--create-database` autoriza a crearla.
 5. Ejecuta `INICIAR_MESSI.bat`. Abre `http://127.0.0.1:8501` en el navegador.
 6. En Docente, elige **Ejemplo sintético** y pulsa **Cargar ejemplo sintético**.
    También puedes descargar la plantilla Excel, capturar datos directamente o

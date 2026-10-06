@@ -235,7 +235,7 @@ class MySQLDatabaseTests(unittest.TestCase):
         opened.close.assert_called_once()
 
     def test_unsupported_servers_are_rejected_before_ddl(self):
-        for version in ("5.7.44", "8.0.15"):
+        for version in ("5.7.44", "8.0.15", "10.11.6-MariaDB"):
             opened, statements = self.installer_connection(version=version)
             with self.subTest(version=version), patch.object(self.db, "_open", return_value=opened):
                 with self.assertRaisesRegex(database.DatabaseError, "MySQL"):
