@@ -19,6 +19,10 @@ if not exist ".venv\Scripts\python.exe" (
 )
 ".venv\Scripts\python.exe" -m pip install -r requirements.txt
 if errorlevel 1 goto :fallo
+if not exist "models\messi_demo.joblib" (
+  ".venv\Scripts\python.exe" scripts\train_demo.py
+  if errorlevel 1 goto :fallo
+)
 echo Instalacion terminada. Ejecuta INICIAR_MESSI.bat.
 pause
 exit /b 0

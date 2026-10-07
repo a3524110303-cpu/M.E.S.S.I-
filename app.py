@@ -12,9 +12,11 @@ ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT / "src"))
 
 from messi.data import ValidationError, load_csv, load_excel, load_pasted, record_from_counts, validate_records
-from messi.database import DatabaseError, MySQLConfig
+from messi.database import DatabaseError
+from messi.paths import database_path
 from messi.model import ModelUnavailable, score_records
-from messi.mysql_storage import SUPPORT_STATUSES, SUPPORT_TYPES, MySQLStore
+from messi.storage import SUPPORT_STATUSES, SUPPORT_TYPES
+from messi.sqlite_storage import SQLiteStore
 
 PERIOD = "primer_parcial"
 
@@ -42,7 +44,7 @@ def main() -> None:
     store = None
     storage_error = None
     try:
-        store = MySQLStore(MySQLConfig.from_environment(ROOT))
+        store = SQLiteStore(database_path())
     except DatabaseError as exc:
         storage_error = exc
     if role == "Docente":
@@ -55,12 +57,12 @@ def main() -> None:
             else:
                 show_student(st, store)
         except DatabaseError as exc:
-            st.error(f"No se pudo acceder a MySQL para consultar los datos y el registro de apoyos: {exc}")
+            st.error(f"No se pudo acceder a SQLite para consultar los datos y el registro de apoyos: {exc}")
 
 
-def require_store(store: MySQLStore | None, error: DatabaseError | None = None) -> MySQLStore:
+def require_store(store: SQLiteStore | None, error: DatabaseError | None = None) -> SQLiteStore:
     if store is None:
-        raise error or DatabaseError("Configura MySQL en el archivo .env del proyecto para guardar y consultar datos.")
+        raise error or DatabaseError("No pude abrir la base local. Revisa la carpeta de datos y el diagnóstico.")
     return store
 
 
@@ -91,7 +93,7 @@ def show_indicators(st, records: list[dict]) -> None:
     st.dataframe([{labels.get(k, k): v for k, v in row.items()} for row in records], hide_index=True, width="stretch")
 
 
-def show_teacher(st, store: MySQLStore | None = None, *, storage_error: DatabaseError | None = None) -> None:
+def show_teacher(st, store: SQLiteStore | None = None, *, storage_error: DatabaseError | None = None) -> None:
     st.header("Datos del primer parcial")
     prepare_form(st, "capture")
     st.write("Puedes llenar una plantilla de Excel, escribir los datos aquí o pegar una tabla. Usa notas de 0 a 10 y porcentajes de 0 a 100.")
@@ -113,13 +115,13 @@ def show_teacher(st, store: MySQLStore | None = None, *, storage_error: Database
             if uploaded is not None:
                 content = uploaded.getvalue()
                 fingerprint = hashlib.sha256(content).hexdigest()
-                if st.session_state.get("records_origin") != "mysql" or fingerprint != st.session_state.get("uploaded_fingerprint"):
+                if st.session_state.get("records_origin") != "database" or fingerprint != st.session_state.get("uploaded_fingerprint"):
                     loader = load_excel if uploaded.name.lower().endswith(".xlsx") else load_csv
                     accept_records(st, loader(content))
                 st.session_state["uploaded_fingerprint"] = fingerprint
             else:
                 st.session_state.pop("uploaded_fingerprint", None)
-                if st.session_state.get("records_origin") != "mysql":
+                if st.session_state.get("records_origin") != "database":
                     st.session_state.pop("records", None)
                     st.session_state.pop("predictions", None)
         elif source == "Captura directa":
@@ -176,13 +178,13 @@ def show_teacher(st, store: MySQLStore | None = None, *, storage_error: Database
         try:
             saved = require_store(store, storage_error).list_indicators(period=PERIOD)
             if saved:
-                accept_records(st, validate_records(saved), origin="mysql")
+                accept_records(st, validate_records(saved), origin="database")
                 st.session_state.pop("predictions", None)
                 st.success(f"Indicadores guardados cargados: {len(saved)} estudiantes.")
             else:
                 st.info("Todavía no hay indicadores guardados para el primer parcial.")
         except DatabaseError as exc:
-            st.error(f"No se pudieron cargar los indicadores desde MySQL: {exc}")
+            st.error(f"No se pudieron cargar los indicadores desde SQLite: {exc}")
         except ValidationError as exc:
             st.error(f"Los indicadores guardados no son válidos: {exc}")
     records = st.session_state.get("records", [])
@@ -196,7 +198,7 @@ def show_teacher(st, store: MySQLStore | None = None, *, storage_error: Database
         try:
             require_store(store, storage_error).save_indicators(records, period=PERIOD)
         except (DatabaseError, ValueError) as exc:
-            st.error(f"No se pudieron guardar los indicadores en MySQL: {exc}")
+            st.error(f"No se pudieron guardar los indicadores en SQLite: {exc}")
         else:
             st.success(f"Indicadores guardados para {len(records)} estudiantes.")
     if st.button("Calcular riesgo de demostración"):
@@ -212,7 +214,7 @@ def show_teacher(st, store: MySQLStore | None = None, *, storage_error: Database
             try:
                 require_store(store, storage_error).save_predictions(st.session_state["predictions"], period=PERIOD)
             except (DatabaseError, ValueError) as exc:
-                st.warning(f"La predicción está disponible en esta sesión, pero no se pudo guardar en MySQL: {exc}")
+                st.warning(f"La predicción está disponible en esta sesión, pero no se pudo guardar en SQLite: {exc}")
     predictions = st.session_state.get("predictions")
     if predictions:
         st.subheader("Resultado de demostración")
@@ -222,7 +224,7 @@ def show_teacher(st, store: MySQLStore | None = None, *, storage_error: Database
         st.download_button("Descargar reporte", report_csv(predictions), "reporte_messi_demo.csv", "text/csv")
 
 
-def show_student(st, store: MySQLStore) -> None:
+def show_student(st, store: SQLiteStore) -> None:
     st.header("Solicitar apoyo")
     prepare_form(st, "request")
     st.write("Puedes pedir ayuda aunque no tengas una alerta. Para esta demostración, escribe un identificador ficticio y un mensaje ficticio.")
@@ -239,7 +241,7 @@ def show_student(st, store: MySQLStore) -> None:
             confirm_form(st, "request", {"request_id": "", "request_message": ""}, f"Solicitud {request_id} registrada. El tutor podrá revisarla.")
 
 
-def show_tutor(st, store: MySQLStore) -> None:
+def show_tutor(st, store: SQLiteStore) -> None:
     st.header("Apoyos y seguimiento")
     prepare_form(st, "support")
     prepare_form(st, "followup")
@@ -250,7 +252,7 @@ def show_tutor(st, store: MySQLStore) -> None:
         records = store.list_indicators(period=PERIOD)
         predictions = store.list_predictions(period=PERIOD)
         if records:
-            accept_records(st, records, origin="mysql")
+            accept_records(st, records, origin="database")
         if predictions:
             st.session_state["predictions"] = predictions
     if predictions:

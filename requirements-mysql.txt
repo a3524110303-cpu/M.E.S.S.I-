@@ -1,0 +1,3 @@
+# Sólo para herramientas históricas de administración/migración y CI opt-in.
+-r requirements.txt
+mysql-connector-python==9.4.0

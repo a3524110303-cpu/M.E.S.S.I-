@@ -1,0 +1,24 @@
+MESSI - INSTALACIÓN LOCAL
+
+Windows 10 (versión 2004 o posterior) y Windows 11, 64 bits Intel/AMD.
+Recomendado: 4 GB de RAM, 1 GB de espacio libre y un navegador instalado.
+No se necesita GPU dedicada, Python, MySQL, contraseñas de base de datos ni internet.
+
+Pulsa Siguiente, Instalar y Finalizar. Abre MESSI desde el escritorio o Inicio.
+El sistema abre las pantallas de Docente, Tutor y Estudiante en tu navegador.
+Mantén abierta la ventana MESSI mientras trabajas. Pulsa Cerrar MESSI al terminar.
+
+La red neuronal ya está incluida: carga el ejemplo sintético y pulsa Calcular riesgo de demostración.
+Usa Guardar indicadores para conservar la lista. Las predicciones se guardan al calcularlas.
+Solicitudes, apoyos y seguimientos se conservan automáticamente.
+
+Los datos quedan en %LOCALAPPDATA%\MESSI\data\messi.sqlite3.
+Para llevar tus registros a otra computadora, pulsa Guardar respaldo en la ventana MESSI.
+En el otro equipo, cierra MESSI y copia el respaldo como messi.sqlite3 en la misma carpeta de datos.
+Conserva una copia de la base anterior antes de reemplazarla.
+Los datos se conservan al actualizar o desinstalar el programa.
+
+Si algo falla, pulsa Guardar diagnóstico. El reporte se guarda en %LOCALAPPDATA%\MESSI\diagnostico.json.
+
+El modelo usa datos sintéticos. Sus resultados son demostrativos y requieren revisión humana.
+El selector de roles conserva el alcance de prototipo; no es autenticación individual.
