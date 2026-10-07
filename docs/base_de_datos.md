@@ -1,3 +1,8 @@
+> **Versión histórica MySQL.** Desde MESSI 0.2.0 la aplicación usa SQLite local,
+> crea su base automáticamente y no necesita estas credenciales ni un servidor.
+> Sigue [la guía Windows local](instalacion_local_windows.md) para instalar,
+> respaldar y mover el sistema. Este documento conserva la configuración anterior.
+
 # Base de datos MySQL de MESSI
 
 El runtime de MESSI utiliza MySQL para conservar estudiantes, indicadores,

@@ -6,5 +6,4 @@ if not exist ".venv\Scripts\python.exe" (
   pause
   exit /b 1
 )
-".venv\Scripts\python.exe" -m streamlit run app.py
-if errorlevel 1 pause
+start "" ".venv\Scripts\pythonw.exe" messi_desktop.py

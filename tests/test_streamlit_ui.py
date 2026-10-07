@@ -14,7 +14,7 @@ from unittest.mock import Mock, patch
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 import app
-from messi.storage import SupportStore
+from messi.sqlite_storage import SQLiteStore
 
 STREAMLIT_AVAILABLE = importlib.util.find_spec("streamlit") is not None
 
@@ -40,16 +40,10 @@ class StreamlitInteractionTests(unittest.TestCase):
         model_patch.start()
         self.addCleanup(model_patch.stop)
         self.AppTest = AppTest
-        self.store = SupportStore(self.root / "data" / "private" / "messi.sqlite3")
-        store_adapter = Mock(wraps=self.store)
-        store_adapter.list_indicators = Mock(return_value=[])
-        store_adapter.list_predictions = Mock(return_value=[])
-        store_patch = patch.object(app, "MySQLStore", return_value=store_adapter)
+        self.store = SQLiteStore(self.root / "data" / "private" / "messi.sqlite3")
+        store_patch = patch.object(app, "SQLiteStore", return_value=self.store)
         store_patch.start()
         self.addCleanup(store_patch.stop)
-        config_patch = patch.object(app.MySQLConfig, "from_environment", return_value=object())
-        config_patch.start()
-        self.addCleanup(config_patch.stop)
         self.ui = self.new_session()
 
     def new_session(self):

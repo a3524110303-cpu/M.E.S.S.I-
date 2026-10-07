@@ -13,8 +13,9 @@ import math
 from pathlib import Path
 
 from .data import FEATURES, ID_COLUMN, MAX_ROWS, TARGET, ValidationError, _coerce_record
+from .paths import resource_root
 
-TRUSTED_MODEL_DIR = Path(__file__).resolve().parents[2] / "models"
+TRUSTED_MODEL_DIR = resource_root() / "models"
 
 
 class ModelUnavailable(ValueError):

@@ -121,10 +121,9 @@ class AppRegressionTests(unittest.TestCase):
     def test_storage_failure_does_not_block_teacher(self):
         ui = FakeUI(role="Docente")
         with patch.dict(sys.modules, {"streamlit": ui}), \
-                patch.object(app.MySQLConfig, "from_environment", side_effect=app.DatabaseError("MySQL no configurado")), \
-                patch.object(app, "MySQLStore") as store:
+                patch.object(app, "SQLiteStore", side_effect=app.DatabaseError("SQLite no configurado")) as store:
             app.main()
-        store.assert_not_called()
+        store.assert_called_once()
         self.assertFalse(any(kind == "error" for kind, _ in ui.messages))
 
     def test_invalid_manual_addition_preserves_captured_rows(self):
@@ -136,20 +135,20 @@ class AppRegressionTests(unittest.TestCase):
         self.assertEqual(ui.session_state["records"], existing)
         self.assertTrue(any(kind == "error" for kind, _ in ui.messages))
 
-    def test_missing_mysql_is_reported_to_tutor(self):
+    def test_missing_sqlite_is_reported_to_tutor(self):
         ui = FakeUI(role="Tutor")
         with patch.dict(sys.modules, {"streamlit": ui}), \
-                patch.object(app.MySQLConfig, "from_environment", side_effect=app.DatabaseError("MySQL no disponible")):
+                patch.object(app, "SQLiteStore", side_effect=app.DatabaseError("SQLite no disponible")):
             app.main()
         self.assertTrue(any(kind == "error" and "registro de apoyos" in message for kind, message in ui.messages))
 
 
-class AppMySQLTests(unittest.TestCase):
+class AppSQLiteTests(unittest.TestCase):
     RECORDS = [{"id_estudiante": "EST-001", "nota_parcial": 6.0, "asistencia": 80.0, "tareas_entregadas": 70.0}]
     PREDICTIONS = [{**RECORDS[0], "puntuacion_riesgo": 0.35, "alerta": False, "origen_modelo": "demo_sintetica"}]
 
     def store(self):
-        store = Mock(spec=app.MySQLStore)
+        store = Mock(spec=app.SQLiteStore)
         for name in ("list_indicators", "list_predictions", "list_requests", "list_supports", "list_followups"):
             getattr(store, name).return_value = []
         store.create_request.return_value = 7
@@ -161,16 +160,16 @@ class AppMySQLTests(unittest.TestCase):
         ui.session_state.update(input_source=ui.source, records=self.RECORDS.copy())
         return ui
 
-    def test_main_uses_mysql_configuration_without_eager_operations(self):
+    def test_main_uses_sqlite_configuration_without_eager_operations(self):
         ui = FakeUI(role="Docente")
         store = self.store()
-        configuration = object()
+        path = Path("temporary-messi.sqlite3")
         with patch.dict(sys.modules, {"streamlit": ui}), \
-                patch.object(app.MySQLConfig, "from_environment", return_value=configuration) as read_config, \
-                patch.object(app, "MySQLStore", return_value=store) as create_store:
+                patch.object(app, "database_path", return_value=path) as read_path, \
+                patch.object(app, "SQLiteStore", return_value=store) as create_store:
             app.main()
-        read_config.assert_called_once_with(app.ROOT)
-        create_store.assert_called_once_with(configuration)
+        read_path.assert_called_once_with()
+        create_store.assert_called_once_with(path)
         self.assertEqual(store.mock_calls, [])
         self.assertFalse(any(kind == "error" for kind, _ in ui.messages))
 
@@ -186,14 +185,14 @@ class AppMySQLTests(unittest.TestCase):
         app.show_teacher(ui, store)
         store.save_indicators.assert_called_once()
 
-    def test_loading_mysql_records_survives_excel_rerun_without_upload(self):
+    def test_loading_sqlite_records_survives_excel_rerun_without_upload(self):
         ui = FakeUI(source="Excel o CSV")
         ui.buttons = {"Cargar indicadores guardados"}
         store = self.store()
         store.list_indicators.return_value = self.RECORDS.copy()
         app.show_teacher(ui, store)
         self.assertEqual(ui.session_state["records"], self.RECORDS)
-        self.assertEqual(ui.session_state["records_origin"], "mysql")
+        self.assertEqual(ui.session_state["records_origin"], "database")
         store.list_indicators.assert_called_once_with(period="primer_parcial")
         ui.buttons.clear()
         app.show_teacher(ui, store)
@@ -210,7 +209,7 @@ class AppMySQLTests(unittest.TestCase):
         app.show_teacher(ui, store)
         self.assertNotIn("predictions", ui.session_state)
 
-    def test_loaded_mysql_records_survive_existing_upload_until_file_changes(self):
+    def test_loaded_sqlite_records_survive_existing_upload_until_file_changes(self):
         ui = FakeUI(source="Excel o CSV")
         csv_data = b"id_estudiante,nota_parcial,asistencia,tareas_entregadas\nEST-002,5,60,40\n"
         ui.uploaded = SimpleNamespace(name="captura.csv", getvalue=lambda: csv_data)
@@ -228,31 +227,31 @@ class AppMySQLTests(unittest.TestCase):
         store.list_indicators.assert_called_once()
         store.save_indicators.assert_not_called()
 
-    def test_save_failure_keeps_captured_records_and_reports_mysql(self):
+    def test_save_failure_keeps_captured_records_and_reports_sqlite(self):
         ui = self.teacher()
         ui.buttons = {"Guardar indicadores"}
         store = self.store()
-        store.save_indicators.side_effect = app.DatabaseError("Servidor MySQL no disponible")
+        store.save_indicators.side_effect = app.DatabaseError("Servidor SQLite no disponible")
         app.show_teacher(ui, store)
         self.assertEqual(ui.session_state["records"], self.RECORDS)
-        self.assertTrue(any(kind == "error" and "guardar" in message and "MySQL" in message for kind, message in ui.messages))
+        self.assertTrue(any(kind == "error" and "guardar" in message and "SQLite" in message for kind, message in ui.messages))
 
-    def test_load_failure_keeps_current_records_and_reports_mysql(self):
+    def test_load_failure_keeps_current_records_and_reports_sqlite(self):
         ui = self.teacher()
         ui.buttons = {"Cargar indicadores guardados"}
         store = self.store()
-        store.list_indicators.side_effect = app.DatabaseError("Servidor MySQL no disponible")
+        store.list_indicators.side_effect = app.DatabaseError("Servidor SQLite no disponible")
         app.show_teacher(ui, store)
         self.assertEqual(ui.session_state["records"], self.RECORDS)
-        self.assertTrue(any(kind == "error" and "cargar" in message and "MySQL" in message for kind, message in ui.messages))
+        self.assertTrue(any(kind == "error" and "cargar" in message and "SQLite" in message for kind, message in ui.messages))
 
-    def test_no_mysql_config_error_until_explicit_persistence(self):
+    def test_no_sqlite_config_error_until_explicit_persistence(self):
         ui = self.teacher()
-        app.show_teacher(ui, storage_error=app.DatabaseError("Configura MySQL"))
+        app.show_teacher(ui, storage_error=app.DatabaseError("Configura SQLite"))
         self.assertFalse(any(kind == "error" for kind, _ in ui.messages))
         ui.buttons = {"Guardar indicadores"}
-        app.show_teacher(ui, storage_error=app.DatabaseError("Configura MySQL"))
-        self.assertTrue(any(kind == "error" and "Configura MySQL" in message for kind, message in ui.messages))
+        app.show_teacher(ui, storage_error=app.DatabaseError("Configura SQLite"))
+        self.assertTrue(any(kind == "error" and "Configura SQLite" in message for kind, message in ui.messages))
 
     def test_prediction_is_saved_on_calculation_only(self):
         ui = self.teacher()
@@ -266,17 +265,17 @@ class AppMySQLTests(unittest.TestCase):
         app.show_teacher(ui, store)
         store.save_predictions.assert_called_once()
 
-    def test_prediction_survives_mysql_failure(self):
+    def test_prediction_survives_sqlite_failure(self):
         ui = self.teacher()
         ui.buttons = {"Calcular riesgo de demostración"}
         store = self.store()
-        store.save_predictions.side_effect = app.DatabaseError("MySQL sin conexión")
+        store.save_predictions.side_effect = app.DatabaseError("SQLite sin conexión")
         with patch.object(app, "score_records", return_value=self.PREDICTIONS.copy()):
             app.show_teacher(ui, store)
         self.assertEqual(ui.session_state["predictions"], self.PREDICTIONS)
-        self.assertTrue(any(kind == "warning" and "sesión" in message and "MySQL" in message for kind, message in ui.messages))
+        self.assertTrue(any(kind == "warning" and "sesión" in message and "SQLite" in message for kind, message in ui.messages))
 
-    def test_model_unavailable_does_not_attempt_mysql_save(self):
+    def test_model_unavailable_does_not_attempt_sqlite_save(self):
         ui = self.teacher()
         ui.buttons = {"Calcular riesgo de demostración"}
         store = self.store()
@@ -285,7 +284,7 @@ class AppMySQLTests(unittest.TestCase):
         store.save_predictions.assert_not_called()
         self.assertNotIn("predictions", ui.session_state)
 
-    def test_tutor_restores_indicators_and_predictions_from_mysql(self):
+    def test_tutor_restores_indicators_and_predictions_from_sqlite(self):
         ui = FakeUI(role="Tutor")
         store = self.store()
         store.list_indicators.return_value = self.RECORDS.copy()
@@ -319,13 +318,13 @@ class AppMySQLTests(unittest.TestCase):
         app.show_student(ui, store)
         self.assertIn(("success", "Solicitud 7 registrada. El tutor podrá revisarla."), ui.messages)
 
-    def test_student_mysql_failure_is_reported(self):
+    def test_student_sqlite_failure_is_reported(self):
         ui = FakeUI(role="Estudiante")
         ui.buttons = {"Enviar solicitud"}
         store = self.store()
-        store.create_request.side_effect = app.DatabaseError("MySQL sin conexión")
+        store.create_request.side_effect = app.DatabaseError("SQLite sin conexión")
         app.show_student(ui, store)
-        self.assertIn(("error", "MySQL sin conexión"), ui.messages)
+        self.assertIn(("error", "SQLite sin conexión"), ui.messages)
 
     def test_support_and_followup_retain_existing_store_contract(self):
         ui = FakeUI(role="Tutor")

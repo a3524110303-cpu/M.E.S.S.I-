@@ -15,57 +15,47 @@ roles sirve para demostrar los flujos; la autenticación y los permisos de un
 piloto escolar están pendientes. No usar datos de estudiantes reales en esta
 versión. Una alerta no cambia calificaciones ni aplica sanciones.
 
-## Empezar en Windows
+## Usar MESSI en Windows 10 y 11
 
-1. Abre esta carpeta del escritorio: `C:\Users\user\Desktop\MESSI`.
-2. Ejecuta `INSTALAR_MESSI.bat` una vez. Crea un entorno privado `.venv` e
-   instala las versiones de `requirements.txt`. Requiere internet.
-3. Inicia MySQL 8.0.16 o posterior y prepara la base `messi` y una cuenta de aplicación siguiendo
-   la [guía de base de datos](docs/base_de_datos.md). Copia `.env.example` a `.env`
-   si aún no existe y completa la contraseña de esa cuenta. `.env` está excluido
-   de Git.
-4. Ejecuta `.\.venv\Scripts\python.exe scripts\init_database.py` con los permisos
-   temporales de inicialización indicados en la guía; después retíralos. El
-   inicializador usa una base existente. Sólo `--create-database` autoriza a crearla.
-5. Ejecuta `INICIAR_MESSI.bat`. Abre `http://127.0.0.1:8501` en el navegador.
-6. En Docente, elige **Ejemplo sintético** y pulsa **Cargar ejemplo sintético**.
-   También puedes descargar la plantilla Excel, capturar datos directamente o
-   pegar una tabla. En Estudiante, registra una solicitud ficticia. En Tutor,
-   registra un apoyo y su seguimiento.
-7. Para activar la IA de demostración, ejecuta `ENTRENAR_DEMO.bat`; vuelve a la
-   vista Docente y pulsa **Calcular riesgo de demostración**.
-8. Ejecuta `PROBAR_MESSI.bat` para comprobar los módulos instalados. Las pruebas
-   con dobles de conexión no sustituyen una comprobación contra MySQL.
+Para el cliente, entrega **`release/MESSI-Setup-Windows-x64.exe`**. El instalador
+[se descarga en las versiones de GitHub](https://github.com/a3524110303-cpu/M.E.S.S.I-/releases/tag/v0.2.0-local).
+El instalador
+incluye Python, librerías, SQLite y el modelo neuronal ya entrenado. Basta con
+Siguiente, Instalar y Finalizar; después abrir MESSI desde el acceso directo.
+Funciona sin internet, MySQL ni configuración de contraseñas. La aplicación
+se abre en el navegador local y la ventana de control permite cerrarla,
+guardar un respaldo o generar un diagnóstico.
 
-La versión admite Python 3.11 a 3.13; los accesos de Windows seleccionan 3.13.
-El entorno privado debe contener las dependencias de `requirements.txt`,
-incluidos el conector MySQL y el lector de configuración `.env`.
+La base se crea automáticamente en
+`%LOCALAPPDATA%\MESSI\data\messi.sqlite3`, separada de la instalación.
+Se conservan los datos al actualizar o desinstalar. Cada equipo y usuario tienen
+su propia base; no hay sincronización automática entre computadoras.
 
-También se puede ejecutar desde PowerShell:
+El paquete es para Intel/AMD x64 con Windows 10 versión 2004 o posterior,
+o Windows 11. Se recomiendan 4 GB de RAM, 1 GB libre y un navegador instalado.
+No requiere GPU dedicada.
+
+Para reconstruir el instalador en desarrollo:
 
 ```powershell
-Set-Location 'C:\Users\user\Desktop\MESSI'
-py -3.13 -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -r requirements.txt
-if (-not (Test-Path '.env')) { Copy-Item '.env.example' '.env' }
-# Completa .env y prepara la cuenta/base siguiendo docs/base_de_datos.md.
-.\.venv\Scripts\python.exe scripts\init_database.py
-.\.venv\Scripts\python.exe -m streamlit run app.py
+powershell -ExecutionPolicy Bypass -File scripts\build_windows.ps1
 ```
 
-MySQL es el motor de almacenamiento del runtime y requiere un servicio activo.
-La aplicación se conecta por defecto a `127.0.0.1:3306`, con usuario y base
-`messi`; la contraseña se configura localmente. No utiliza una cuenta
-administradora por defecto. Streamlit sólo escucha en el equipo local.
+Esta computadora necesita Python 3.13 x64 e Inno Setup 6. El cliente no necesita
+instalarlos. La versión portable requiere copiar **toda** `dist/MESSI`.
 
-De momento todas las personas que usan la interfaz pueden acceder a la base
-mediante la cuenta configurada. El administrador puede gestionar cuentas MySQL
-con permisos de lectura o edición y bloquear accesos mediante
-`scripts/manage_mysql_users.py`; el procedimiento está en la guía de base de
-datos. Estos permisos del servidor no convierten el selector de roles de la
-interfaz en autenticación individual.
+Para ejecutar desde el código: `INSTALAR_MESSI.bat` instala dependencias y genera
+el modelo si falta; `INICIAR_MESSI.bat` abre MESSI. `PROBAR_MESSI.bat` ejecuta las
+pruebas. La IA usa únicamente datos y librerías locales.
+
+[Guía de instalación, archivos que mover y cambios de código](docs/instalacion_local_windows.md).
+La [guía MySQL](docs/base_de_datos.md) y sus scripts quedan como documentación de
+la versión anterior; la interfaz actual usa SQLite e ignora las credenciales MySQL.
 
 ## Equipo y actividades
+
+**Entrega 2 — 8 de octubre de 2026, durante la hora de clase:**
+[reparto del código documentado, manual 02 e informe QA 03](docs/entrega_2/Reparto_del_equipo.md).
 
 El reparto para cerrar esta entrega se actualizó el 5 de octubre de 2026.
 Todos pueden aportar código; los roles indican la responsabilidad principal
@@ -90,10 +80,16 @@ Para continuar sobre la base existente, consultar
 app.py                         Interfaz Streamlit con tres vistas de demostración
 src/messi/data.py              Validación de Excel, CSV, pegado y captura
 src/messi/model.py             Inferencia opcional y comprobación de metadatos
-src/messi/database.py          Configuración y transacciones MySQL
-src/messi/mysql_storage.py     Persistencia relacional del runtime
+src/messi/paths.py             Recursos incluidos y datos por usuario
+src/messi/sqlite_storage.py    Persistencia local completa y respaldos
+messi_desktop.py              Entrada del ejecutable y diagnóstico
+MESSI.spec                    Empaquetado de Python, recursos y modelo
+installer/MESSI.iss            Instalador Windows 10/11
+scripts/build_windows.ps1     Construcción y comprobación del paquete
+src/messi/database.py          Herramientas históricas MySQL
+src/messi/mysql_storage.py     Adaptador histórico MySQL opcional
 src/messi/esquema_mysql.sql    Tablas, índices, restricciones y relaciones
-src/messi/storage.py           SQLite legado, migración y pruebas
+src/messi/storage.py           Contrato base de solicitudes, apoyos y seguimientos
 scripts/init_database.py      Inicialización explícita del esquema MySQL
 scripts/migrate_sqlite.py      Importación opcional del almacenamiento legado
 scripts/manage_mysql_users.py Administración de cuentas y permisos de MySQL
@@ -103,7 +99,7 @@ data/synthetic/                Datos ficticios para carga y entrenamiento
 data/private/                  Archivos privados y SQLite legado, ignorados por Git
 .env.example                   Plantilla sin credenciales reales
 docs/base_de_datos.md          Configuración, esquema y migración a MySQL
-models/                        Modelo local ignorado por Git
+models/                        Modelo local, incluido al construir el instalador
 tests/                         Pruebas automatizadas
 docs/planificacion/            Mapa de actividades del equipo
 docs/entrega_1/                Documento 1 existente y estado de la entrega
@@ -139,11 +135,11 @@ En Excel, pegado y captura se asigna un código temporal cuando falta el ID.
 Conserva códigos estables como EST-001 para el seguimiento; los códigos
 automáticos no enlazan listas distintas de forma fiable.
 
-**Guardar indicadores** conserva la lista validada en MySQL para el periodo
+**Guardar indicadores** conserva la lista validada en SQLite para el periodo
 `primer_parcial`; **Cargar indicadores guardados** recupera los datos persistidos.
 Importar o capturar una lista sólo la coloca en la sesión hasta guardarla. Al
 calcular el riesgo se intenta conservar también la predicción: si falla la
-conexión, el resultado calculado permanece en la sesión y la aplicación avisa
+escritura en SQLite, el resultado calculado permanece en la sesión y la aplicación avisa
 que no se guardó. La vista Tutor puede recuperar indicadores y predicciones
 guardados cuando la sesión está vacía.
 
@@ -169,13 +165,21 @@ y prueba, y compara MLP, regresión logística y una regla basada en nota.
 El umbral sintético no acredita validez escolar. El documento técnico del modelo
 se genera al ejecutar el entrenamiento y registra su procedencia sintética.
 
-MySQL relaciona estudiantes, indicadores y predicciones, y conserva solicitudes,
+SQLite relaciona estudiantes, indicadores y predicciones, y conserva solicitudes,
 apoyos y seguimientos. Las solicitudes y las notas del tutor no forman parte de
 las variables del modelo. El contexto sensible y la discapacidad
 no determinan automáticamente el riesgo. Los indicadores observados no son una
 explicación causal de una predicción.
 
 ## Validación y estado real
+
+La versión local 0.2.0 sustituye MySQL por SQLite en la aplicación y añade un
+instalador. Las comprobaciones del paquete están en
+`release/verificacion-self-test.json` y `release/verificacion-smoke-server.json`.
+Las pruebas de integración MySQL siguen siendo opt-in y no forman parte del
+funcionamiento del cliente. La evidencia histórica siguiente describe la versión
+anterior y no demuestra instalación en otro dispositivo:
+
 
 El 5 de octubre se integraron las aportaciones de Ismael y Víctor con la
 persistencia MySQL de Marco y las correcciones QA-03, QA-04 y QA-05.
@@ -266,7 +270,6 @@ automáticamente una licencia al código del equipo; ésta queda por acordar.
 | joblib | 1.5.2 | BSD 3 Clause | [Publicación oficial](https://pypi.org/project/joblib/1.5.2/) |
 | openpyxl | 3.1.5 | MIT | [Publicación oficial](https://pypi.org/project/openpyxl/3.1.5/) |
 | pyarrow | 21.0.0 | Apache 2.0 | [Publicación oficial](https://pypi.org/project/pyarrow/21.0.0/) |
-| mysql-connector-python | 9.4.0 | GNU GPLv2 con FOSS License Exception | [Publicación oficial](https://pypi.org/project/mysql-connector-python/9.4.0/) |
 | python-dotenv | 1.1.1 | BSD 3 Clause | [Publicación oficial](https://pypi.org/project/python-dotenv/1.1.1/) |
 
 La propuesta de microservicios encontrada en las referencias queda como línea

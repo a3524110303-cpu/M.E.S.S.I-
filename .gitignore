@@ -17,3 +17,6 @@ models/*
 .env
 .env.*
 !.env.example
+build/
+dist/
+release/
