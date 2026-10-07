@@ -18,6 +18,8 @@ versión. Una alerta no cambia calificaciones ni aplica sanciones.
 ## Usar MESSI en Windows 10 y 11
 
 Para el cliente, entrega **`release/MESSI-Setup-Windows-x64.exe`**. El instalador
+[se descarga en las versiones de GitHub](https://github.com/a3524110303-cpu/M.E.S.S.I-/releases/tag/v0.2.0-local).
+El instalador
 incluye Python, librerías, SQLite y el modelo neuronal ya entrenado. Basta con
 Siguiente, Instalar y Finalizar; después abrir MESSI desde el acceso directo.
 Funciona sin internet, MySQL ni configuración de contraseñas. La aplicación

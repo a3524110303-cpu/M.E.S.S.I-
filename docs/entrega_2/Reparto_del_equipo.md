@@ -13,11 +13,11 @@ La versión actual funciona con Streamlit, una MLP local y SQLite. Incluye
 instalador para Windows 10/11 Intel/AMD x64. MySQL es una implementación
 histórica y opcional, no un requisito del funcionamiento actual.
 
-Marco debe compartir una misma versión del código y el instalador antes de
-que los demás documenten o prueben. La preparación local está en la rama
-`codex/messi-local-windows`; su existencia local no acredita publicación ni
-que los demás integrantes ya tengan esos cambios. Registrar el commit de la
-versión compartida y usarlo en ambos documentos y en las evidencias de QA.
+Marco coordina una misma versión del código y el instalador antes de que los
+demás documenten o prueben. La preparación está en `codex/messi-local-windows`;
+al integrarse en `main`, todos deben actualizar su copia desde esa versión.
+Registrar el commit compartido y usarlo en ambos documentos y en las evidencias
+de QA. La publicación no acredita que cada integrante ya haya actualizado su copia.
 
 ## Responsabilidad de cada integrante
 

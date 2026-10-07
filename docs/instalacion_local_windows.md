@@ -7,6 +7,9 @@ Siguiente, Instalar y Finalizar. Abre MESSI con su acceso directo; las pantallas
 se abren en el navegador de esa computadora. Debe mantener abierta la ventana
 de control y usar **Cerrar MESSI** al terminar.
 
+El instalador y su SHA256 también se publican en la
+[versión v0.2.0-local de GitHub](https://github.com/a3524110303-cpu/M.E.S.S.I-/releases/tag/v0.2.0-local).
+
 El instalador contiene Python, las librerías, el modelo MLP ya entrenado, su
 archivo de metadatos, el ejemplo CSV y la plantilla Excel. Funciona sin conexión
 para capturar datos, predecir y registrar apoyos. No instala MySQL ni pide claves,
