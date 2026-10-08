@@ -11,12 +11,14 @@ La copia DOCX anterior conserva el diseño original como referencia histórica.
 La descripción de los roles, los datos y el flujo funcional está en
 [Funcionalidad del proyecto](docs/funcionalidad.md).
 
-Los formatos del profesor están completos en
+Los manuales y formatos del profesor están en
 [entrega 2](docs/entrega_2/README.md) y [entrega 3](docs/entrega_3/README.md).
 La [lista de cotejo](docs/entrega_3/Verificacion_de_entregas_2_y_3.md) relaciona
 cada requisito del examen con su archivo y evidencia. **La prueba con una persona
 ajena sigue pendiente:** el equipo confirmó el 8 de octubre que aún no la ha
 realizado. El formato 05 contiene un protocolo preparado, sin resultados inventados.
+El [video público de 4:25](https://github.com/a3524110303-cpu/M.E.S.S.I-/releases/download/v0.3.0-entregas/MESSI_Demo_Entrega_3.mp4)
+y el instalador están publicados; se comprobó acceso HTTP 200 sin autenticación.
 
 El prototipo es una demostración local con datos sintéticos. El selector de
 roles sirve para demostrar los flujos; la autenticación y los permisos de un
@@ -26,7 +28,7 @@ versión. Una alerta no cambia calificaciones ni aplica sanciones.
 ## Usar MESSI en Windows 10 y 11
 
 Para el cliente, entrega **`release/MESSI-Setup-Windows-x64.exe`**. El instalador
-[se descarga en las versiones de GitHub](https://github.com/a3524110303-cpu/M.E.S.S.I-/releases).
+[se descarga en la versión 0.3.0 de GitHub](https://github.com/a3524110303-cpu/M.E.S.S.I-/releases/tag/v0.3.0-entregas).
 El instalador
 incluye Python, librerías, SQLite y el modelo neuronal ya entrenado. Basta con
 Siguiente, Instalar y Finalizar; después abrir MESSI desde el acceso directo.

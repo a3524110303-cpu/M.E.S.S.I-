@@ -1,0 +1,34 @@
+{
+  "version": "0.3.0",
+  "fecha_utc": "2026-10-08T09:08:49.1746858Z",
+  "repositorio_publico": true,
+  "tag": "v0.3.0-entregas",
+  "video_url": "https://github.com/a3524110303-cpu/M.E.S.S.I-/releases/download/v0.3.0-entregas/MESSI_Demo_Entrega_3.mp4",
+  "release_url": "https://github.com/a3524110303-cpu/M.E.S.S.I-/releases/tag/v0.3.0-entregas",
+  "duracion_segundos": 265.23,
+  "sha256_video": "a440f61c5ec9967edb0bd4616abbab915b535d0a7a8fff8e74e9be74448b8e4b",
+  "peticiones": [
+    {
+      "url": "https://github.com/a3524110303-cpu/M.E.S.S.I-/releases/download/v0.3.0-entregas/MESSI_Demo_Entrega_3.mp4",
+      "status_code": 200,
+      "tipo_contenido": "application/octet-stream",
+      "bytes": "6073065",
+      "autenticacion": "Ninguna; petición HTTP sin sesión ni token"
+    },
+    {
+      "url": "https://github.com/a3524110303-cpu/M.E.S.S.I-/releases/tag/v0.3.0-entregas",
+      "status_code": 200,
+      "tipo_contenido": "text/html; charset=utf-8",
+      "bytes": "",
+      "autenticacion": "Ninguna; petición HTTP sin sesión ni token"
+    },
+    {
+      "url": "https://github.com/a3524110303-cpu/M.E.S.S.I-/releases/download/v0.3.0-entregas/MESSI-Setup-Windows-x64.exe",
+      "status_code": 200,
+      "tipo_contenido": "application/octet-stream",
+      "bytes": "109470799",
+      "autenticacion": "Ninguna; petición HTTP sin sesión ni token"
+    }
+  ],
+  "acceso_publico": true
+}

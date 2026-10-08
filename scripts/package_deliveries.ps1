@@ -1,7 +1,8 @@
 param(
     [string]$Destination = (Join-Path ([Environment]::GetFolderPath('Desktop')) 'MESSI_Entregas_2_y_3'),
     [string]$PdfDirectory,
-    [string]$ReleaseUrl = 'https://github.com/a3524110303-cpu/M.E.S.S.I-/releases/tag/v0.3.0-entregas'
+    [string]$ReleaseUrl = 'https://github.com/a3524110303-cpu/M.E.S.S.I-/releases/tag/v0.3.0-entregas',
+    [string]$VideoUrl = 'https://github.com/a3524110303-cpu/M.E.S.S.I-/releases/download/v0.3.0-entregas/MESSI_Demo_Entrega_3.mp4'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -76,7 +77,7 @@ la base del usuario se conservo. La desinstalacion aislada no se ejecuto.
 Video: capturas reales y voz sintetica generica, no prueba con persona ajena.
 "@
 $taskReadme | Set-Content -LiteralPath (Join-Path $taskDestination 'LEEME_ENTREGA.txt') -Encoding utf8
-"Video publico: $ReleaseUrl`nArchivo: MESSI_Demo_Entrega_3.mp4`n" | Set-Content -LiteralPath (Join-Path $taskDestination 'Entrega_3/Enlace_video.txt') -Encoding utf8
+"Video publico: $VideoUrl`nDescargas: $ReleaseUrl`nArchivo: MESSI_Demo_Entrega_3.mp4`n" | Set-Content -LiteralPath (Join-Path $taskDestination 'Entrega_3/Enlace_video.txt') -Encoding utf8
 
 $taskManifest = foreach ($taskFile in Get-ChildItem -LiteralPath $taskDestination -Recurse -File | Where-Object Name -ne 'SHA256SUMS.txt' | Sort-Object FullName) {
     $taskRelative = [IO.Path]::GetRelativePath($taskDestination, $taskFile.FullName).Replace('\', '/')
