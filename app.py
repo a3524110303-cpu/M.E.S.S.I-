@@ -353,8 +353,17 @@ def show_tutor(st, store: SQLiteStore) -> None:
     with inbox_column:
         st.subheader("Solicitudes recibidas")
         if requests:
-            st.dataframe(readable_rows(requests), hide_index=True, width="stretch")
-            st.caption("Utiliza el código de la solicitud para registrar el acuerdo de apoyo.")
+            with st.expander("Ver todas las solicitudes"):
+                st.dataframe(readable_rows(requests), hide_index=True, width="stretch")
+            request_options = {r["id"]: f'Solicitud {r["id"]} · {r["student_id"]}' for r in requests}
+            selected_request_id = st.selectbox("Leer una solicitud", list(request_options), format_func=request_options.get, key="request_selection")
+            selected_request = next(r for r in requests if r["id"] == selected_request_id)
+            st.caption(f"{selected_request['student_id']} · {readable_rows([selected_request])[0]['Fecha (hora local)']}")
+            st.text_area("Detalle de la solicitud", value=selected_request["message"], height=140, disabled=True, key=f"read_request_{selected_request_id}")
+            if st.button("Usar este código en el acuerdo", width="stretch"):
+                # La asignación ocurre antes de crear el control del formulario.
+                st.session_state["support_student_id"] = selected_request["student_id"]
+            st.caption("Lee el mensaje y utiliza su código para preparar el acuerdo de apoyo.")
         else:
             empty_state(st, "La bandeja está vacía", "Las solicitudes enviadas desde la vista Estudiante aparecerán aquí.")
     with agreement_column:
