@@ -1,4 +1,4 @@
-MESSI - INSTALACIÓN LOCAL
+MESSI 0.3.0 - INSTALACIÓN LOCAL
 
 Windows 10 (versión 2004 o posterior) y Windows 11, 64 bits Intel/AMD.
 Recomendado: 4 GB de RAM, 1 GB de espacio libre y un navegador instalado.
@@ -14,8 +14,9 @@ Solicitudes, apoyos y seguimientos se conservan automáticamente.
 
 Los datos quedan en %LOCALAPPDATA%\MESSI\data\messi.sqlite3.
 Para llevar tus registros a otra computadora, pulsa Guardar respaldo en la ventana MESSI.
-En el otro equipo, cierra MESSI y copia el respaldo como messi.sqlite3 en la misma carpeta de datos.
-Conserva una copia de la base anterior antes de reemplazarla.
+En el otro equipo, cierra todas las ventanas MESSI y copia el respaldo como messi.sqlite3 en la misma carpeta de datos.
+Conserva una copia de la base anterior antes de reemplazarla. Si quedaron archivos messi.sqlite3-wal o messi.sqlite3-shm,
+apártalos junto con la copia anterior; no los combines con la base restaurada.
 Los datos se conservan al actualizar o desinstalar el programa.
 
 Si algo falla, pulsa Guardar diagnóstico. El reporte se guarda en %LOCALAPPDATA%\MESSI\diagnostico.json.

@@ -1,14 +1,22 @@
 # MESSI Alerta y acompañamiento escolar
 
-Base de la primera entrega del equipo MESSI. El docente ingresa indicadores del
+Versión local **0.3.0** preparada para las entregas 2 y 3 del equipo MESSI.
+El docente ingresa indicadores del
 primer parcial; el tutor revisa los casos y registra apoyos y seguimiento; el
 estudiante puede solicitar ayuda aunque no haya alerta ni modelo disponible.
 
-Documento vigente de la primera entrega:
+Documento de alcance de la primera entrega:
 [Documento del proyecto 01](docs/entrega_1/01_Documento_del_proyecto_MESSI.md).
 La copia DOCX anterior conserva el diseño original como referencia histórica.
 La descripción de los roles, los datos y el flujo funcional está en
 [Funcionalidad del proyecto](docs/funcionalidad.md).
+
+Los formatos del profesor están completos en
+[entrega 2](docs/entrega_2/README.md) y [entrega 3](docs/entrega_3/README.md).
+La [lista de cotejo](docs/entrega_3/Verificacion_de_entregas_2_y_3.md) relaciona
+cada requisito del examen con su archivo y evidencia. **La prueba con una persona
+ajena sigue pendiente:** el equipo confirmó el 8 de octubre que aún no la ha
+realizado. El formato 05 contiene un protocolo preparado, sin resultados inventados.
 
 El prototipo es una demostración local con datos sintéticos. El selector de
 roles sirve para demostrar los flujos; la autenticación y los permisos de un
@@ -18,7 +26,7 @@ versión. Una alerta no cambia calificaciones ni aplica sanciones.
 ## Usar MESSI en Windows 10 y 11
 
 Para el cliente, entrega **`release/MESSI-Setup-Windows-x64.exe`**. El instalador
-[se descarga en las versiones de GitHub](https://github.com/a3524110303-cpu/M.E.S.S.I-/releases/tag/v0.2.0-local).
+[se descarga en las versiones de GitHub](https://github.com/a3524110303-cpu/M.E.S.S.I-/releases).
 El instalador
 incluye Python, librerías, SQLite y el modelo neuronal ya entrenado. Basta con
 Siguiente, Instalar y Finalizar; después abrir MESSI desde el acceso directo.
@@ -34,6 +42,8 @@ su propia base; no hay sincronización automática entre computadoras.
 El paquete es para Intel/AMD x64 con Windows 10 versión 2004 o posterior,
 o Windows 11. Se recomiendan 4 GB de RAM, 1 GB libre y un navegador instalado.
 No requiere GPU dedicada.
+La versión 0.3.0 se comprobó en Windows 11 x64; Windows 10 y una segunda
+computadora aún requieren una prueba física.
 
 Para reconstruir el instalador en desarrollo:
 
@@ -103,8 +113,8 @@ models/                        Modelo local, incluido al construir el instalador
 tests/                         Pruebas automatizadas
 docs/planificacion/            Mapa de actividades del equipo
 docs/entrega_1/                Documento 1 existente y estado de la entrega
-docs/entrega_2/                Espacio para manual del programador y QA
-docs/entrega_3/                Espacio para manual y prueba con persona ajena
+docs/entrega_2/                Manual del programador, QA y evidencias actuales
+docs/entrega_3/                Manual de usuario, nota pendiente, guion y capturas
 docs/referencias/              Copias intactas de documentos y referencias
 ```
 
@@ -173,12 +183,31 @@ explicación causal de una predicción.
 
 ## Validación y estado real
 
-La versión local 0.2.0 sustituye MySQL por SQLite en la aplicación y añade un
-instalador. Las comprobaciones del paquete están en
-`release/verificacion-self-test.json` y `release/verificacion-smoke-server.json`.
-Las pruebas de integración MySQL siguen siendo opt-in y no forman parte del
-funcionamiento del cliente. La evidencia histórica siguiente describe la versión
-anterior y no demuestra instalación en otro dispositivo:
+La versión **0.3.0** conserva SQLite y el instalador local. Corrige el aislamiento
+de los diagnósticos para que no creen una base en la carpeta de usuario,
+sincroniza el arranque y cierre del servidor y documenta las APIs públicas.
+La revisión de Ismael confirmó aportes de comentarios y manual, sin cambios de
+lógica; se precisó la interpretación de métricas, puntuación y checksum.
+El informe de Víctor se contrastó con su commit y con una ejecución nueva.
+[Revisión de ambos aportes](docs/entrega_2/Revision_Ismael_y_Victor_2026-10-08.md).
+
+La suite actual descubrió **157 pruebas: 150 aprobadas, siete MySQL omitidas y
+cero fallidas**. Las omisiones requieren un servidor MySQL y no se cuentan como
+aprobaciones. La aplicación cliente usa SQLite.
+[Registro de pruebas](docs/entrega_2/evidencias/pruebas_actuales.txt).
+
+Se verificaron el ejecutable empaquetado y la instalación actualizada: inferencia
+sintética, persistencia, respaldo, interfaz HTTP 200 y cierre del servidor.
+La actualización conservó el SHA-256 de la base de usuario y el ejecutable
+funcionó sin Python en PATH.
+[Actualización comprobada](docs/entrega_2/evidencias/actualizacion_instalador.json).
+La prueba aislada de instalar y desinstalar abortó de forma segura al detectar
+la instalación habitual; no se presenta como ejecutada en esta versión.
+
+El recorrido manual en navegador incluye entrada, validación, cálculo, solicitud,
+apoyo y seguimiento con información ficticia. Sus capturas acompañan el manual
+04 y un video de 4:25 con voz sintética y subtítulos. Las pruebas anteriores se
+conservan como historial y no sustituyen la evidencia actual.
 
 
 El 5 de octubre se integraron las aportaciones de Ismael y Víctor con la
@@ -212,10 +241,8 @@ Las pruebas que necesitan scikit-learn o Streamlit deben ejecutarse después de
 instalar dependencias; un caso omitido no cuenta como aprobado.
 El estado y pendientes de la primera entrega están en
 [Estado de la entrega](docs/entrega_1/Estado_de_la_entrega.md).
-La ejecución visual y el entrenamiento deben verificarse en el entorno `.venv`
-y acompañarse de su evidencia. No hay un modelo escolar validado ni una URL
-pública. La base del repositorio sirve para iniciar las contribuciones y reunir
-las evidencias de la primera entrega.
+El modelo se entrenó y evaluó con datos sintéticos reproducibles. No hay un
+modelo validado para un colegio real; el servidor de la aplicación es local.
 
 La puesta en marcha de MySQL se comprueba por separado con las credenciales de
 esta instalación, el inicializador y un recorrido de guardar y recuperar datos.
@@ -252,6 +279,9 @@ Equipo: Marco Antonio Osorio Hernandez, Ismael Hernández Jiménez, Víctor Manu
 Jiménez Suárez, Yokio Yosafat Vazquez Carrillo y Salomón Alvarez Gomez.
 Herramienta de asistencia para preparar esta base: Codex. Cada responsable debe
 comprender, revisar y comprobar el código asignado antes de entregar.
+La integración, los formatos y el video del 8 de octubre fueron preparados con
+asistencia de Codex. Las pruebas nuevas pertenecen a esta sesión técnica; no se
+atribuyen como observaciones humanas de Víctor ni como prueba de una persona externa.
 
 ## Dependencias y licencias
 

@@ -69,6 +69,7 @@ class SQLiteStore(SupportStore):
         db.execute("INSERT OR IGNORE INTO students VALUES (?,?)", (student_id, now))
 
     def create_request(self, student_id: str, message: str) -> int:
+        """Validar y guardar una solicitud de ayuda; devolver su identificador."""
         student_id = _student_id(student_id)
         message = _text(message, "El mensaje")
         now = _utc_now()
@@ -78,6 +79,7 @@ class SQLiteStore(SupportStore):
                                  (student_id, message, now)).lastrowid)
 
     def create_support(self, student_id: str, support_type: str, notes: str) -> int:
+        """Guardar un apoyo validado con estado inicial Pendiente y devolver su ID."""
         from messi.storage import _choice, SUPPORT_TYPES
         student_id = _student_id(student_id)
         support_type = _choice(support_type, SUPPORT_TYPES, "El tipo de apoyo")
@@ -105,6 +107,7 @@ class SQLiteStore(SupportStore):
             (record[ID_COLUMN], period, *(record[name] for name in FEATURES), now))
 
     def save_indicators(self, records: list[dict], period: str = "primer_parcial") -> int:
+        """Guardar un lote validado por periodo e invalidar predicciones si cambian sus entradas."""
         records = validate_records(records)
         period = _period(period)
         now = _utc_now()
@@ -119,12 +122,14 @@ class SQLiteStore(SupportStore):
         return len(records)
 
     def list_indicators(self, period: str = "primer_parcial") -> list[dict]:
+        """Recuperar las tres variables académicas y el código para un periodo."""
         period = _period(period)
         with self._connection() as db:
             rows = db.execute("SELECT student_id AS id_estudiante, nota_parcial, asistencia, tareas_entregadas FROM indicators WHERE period=? ORDER BY student_id", (period,)).fetchall()
         return [dict(row) for row in rows]
 
     def save_predictions(self, records: list[dict], period: str = "primer_parcial") -> int:
+        """Persistir puntuaciones sólo si coinciden con los indicadores vigentes; devolver el total."""
         records = _prediction_records(records)
         period = _period(period)
         now = _utc_now()
@@ -145,6 +150,7 @@ class SQLiteStore(SupportStore):
         return len(records)
 
     def list_predictions(self, period: str = "primer_parcial") -> list[dict]:
+        """Recuperar indicadores y puntuaciones persistidos, con alerta booleana, por periodo."""
         period = _period(period)
         with self._connection() as db:
             rows = db.execute("""SELECT i.student_id AS id_estudiante,i.nota_parcial,i.asistencia,
@@ -154,6 +160,7 @@ class SQLiteStore(SupportStore):
         return [{**dict(row), "alerta": bool(row["alerta"])} for row in rows]
 
     def backup(self, destination: Path):
+        """Crear una copia consistente mediante SQLite backup en un archivo distinto a la base."""
         destination = Path(destination).resolve()
         if destination == self.db_path.resolve():
             raise ValueError("El respaldo debe guardarse en otro archivo.")

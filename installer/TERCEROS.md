@@ -1,4 +1,4 @@
-# Dependencias incluidas en MESSI 0.2.0
+# Dependencias incluidas en MESSI 0.3.0
 
 El instalador contiene Python, SQLite, Streamlit, pandas, NumPy, SciPy,
 scikit-learn, joblib, openpyxl y PyArrow, además de sus dependencias transitivas.

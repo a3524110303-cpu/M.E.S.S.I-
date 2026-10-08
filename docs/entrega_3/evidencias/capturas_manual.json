@@ -1,0 +1,13 @@
+{
+  "instalacion_inicio": "10_instalador_informacion.png",
+  "instalacion_acceso": "11_instalador_acceso.png",
+  "instalacion_instalar": "12_instalador_listo.png",
+  "docente_entrada": "01_docente_inicio.png",
+  "docente_captura": "02_entrada_tabla.png",
+  "docente_validado": "03_datos_validados.png",
+  "docente_resultado": "04_resultado_modelo.png",
+  "estudiante_solicitud": "05_solicitud_entrada.png",
+  "tutor_apoyo": "16_tutor_formulario.png",
+  "tutor_seguimiento": "08_seguimiento_guardado.png",
+  "control": "15_control_messi.png"
+}

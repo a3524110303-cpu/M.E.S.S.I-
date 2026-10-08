@@ -1,11 +1,12 @@
-"""Módulo de la Red Neuronal (Demo M.E.S.S.I.).
+"""Carga e infiere con el MLP local de demostración de MESSI.
 
-Aquí se carga y ejecuta el modelo de Inteligencia Artificial (MLP_8).
+Usa nota_parcial, asistencia y tareas_entregadas. La puntuación y el umbral
+de sus metadatos pertenecen a una simulación; no son probabilidades de
+reprobación calibradas para estudiantes reales. El MLP se conserva por el
+alcance didáctico, no porque supere a los métodos comparativos.
 
-- Modelo: Usamos la red neuronal MLP_8 porque es muy sensible (96.3% de Recall) 
-  y prefiere lanzar una alerta preventiva antes que ignorar a un alumno en riesgo.
-- Datos: Usa datos sintéticos (ficticios) con 3 variables: nota_parcial, asistencia y tareas.
-- Umbral: Si la IA calcula un riesgo del 50% (0.5) o más, dispara la alerta.
+joblib puede ejecutar código al abrirse. Sólo se aceptan artefactos del
+directorio local models, generados por train_demo.py; nunca cargas de terceros.
 """
 
 from __future__ import annotations
@@ -28,8 +29,9 @@ class ModelUnavailable(ValueError):
 def _read_metadata(model_path: Path) -> tuple[Path, dict]:
     """Lee el archivo del modelo y revisa que sea el correcto.
 
-    Comprueba que estemos usando el modelo de la demostración ficticia y 
-    que nadie haya modificado el archivo (usando seguridad SHA-256).
+    Valida ruta, contrato de la demo y coincidencia SHA-256 con los metadatos
+    locales antes de deserializar. La coincidencia detecta cambios frente al
+    JSON, pero no autentica la autoría si se modifican ambos archivos.
     """
     try:
         candidate = model_path.resolve()
@@ -85,9 +87,10 @@ def _read_metadata(model_path: Path) -> tuple[Path, dict]:
 def score_records(records: list[dict], model_path: Path) -> list[dict]:
     """Calcula el riesgo de cada estudiante usando la Red Neuronal.
 
-    Toma las calificaciones y porcentajes de asistencia/tareas y las pasa 
-    por la IA. Si la probabilidad de reprobar es mayor a 0.5 (50%), lanza 
-    una alerta preventiva.
+    Sólo pasa las tres variables al modelo; excluye ID y resultado_final.
+    Marca alerta cuando la puntuación es mayor o igual que el umbral de los
+    metadatos (0.5 en la demo distribuida). La salida no acredita eficacia
+    educativa ni una probabilidad calibrada de reprobación real.
     """
     if not isinstance(records, list) or not records or len(records) > MAX_ROWS:
         raise ValidationError("Proporciona entre 1 y 10,000 registros válidos.")

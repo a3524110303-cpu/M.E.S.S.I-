@@ -9,6 +9,7 @@ from messi.storage import _student_id, _text, _choice, SUPPORT_STATUSES, SUPPORT
 
 
 class MigrationError(ValueError):
+    """Indicar un problema de validación o importación sin alterar el SQLite de origen."""
     pass
 
 
@@ -59,6 +60,7 @@ def _snapshot(source):
 
 
 def migrate_sqlite(source: Path, database: MySQLDatabase):
+    """Importar solicitudes, apoyos y seguimientos legados una sola vez en un destino MySQL vacío."""
     datos = _snapshot(source)
     with database.connection() as db:
         # Serializa la migración con otras migraciones del mismo destino.

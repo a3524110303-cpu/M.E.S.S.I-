@@ -1,0 +1,86 @@
+{
+  "fecha": "2026-10-08",
+  "version_messi": "0.3.0",
+  "metodo_render": "Microsoft Word 16.0 COM: documentos abiertos en modo lectura y exportados a PDF; render_docx.py rasterize con Poppler bundled a 144 DPI. No se utilizo LibreOffice de escritorio.",
+  "qa_visual": "Las 18 paginas finales fueron inspeccionadas a tamano completo: sin desbordamiento, superposicion ni controles esenciales cortados.",
+  "documentos": [
+    {
+      "docx": "docs/entrega_2/02_Manual_del_programador.docx",
+      "paginas": 6,
+      "paginas_inspeccionadas": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "sha256_docx": "abd11765789f0d4d12e65e89ec4445ae960f1760a0672256bdb567a24898bc9a",
+      "original": "docs/referencias/02_Manual_del_programador.docx",
+      "sha256_original": "81d4dd33f7c687386560061f4a8c596b45adea72b8fb74ecc9c7effac55bba88",
+      "original_intacto": true,
+      "partes_opacas_estilos_pie_geometria_conservados": true,
+      "titulos_y_orden_conservados": true,
+      "placeholders_y_ejemplos_eliminados": true,
+      "pdf_final_exportado": "C:\\Users\\user\\Desktop\\MESSI\\tmp\\documents\\final_05\\02_Manual_del_programador\\word.pdf"
+    },
+    {
+      "docx": "docs/entrega_2/03_Informe_de_pruebas_QA.docx",
+      "paginas": 3,
+      "paginas_inspeccionadas": [
+        1,
+        2,
+        3
+      ],
+      "sha256_docx": "092f9aabb39ff4bbf079522c4e4911ca3e656cea886e597d90534353785136da",
+      "original": "docs/referencias/03_Informe_de_pruebas_QA.docx",
+      "sha256_original": "e1b2c0d382387825f5461bea941b200c0ddd45003a3cd22dd35142a5beb665be",
+      "original_intacto": true,
+      "partes_opacas_estilos_pie_geometria_conservados": true,
+      "titulos_y_orden_conservados": true,
+      "placeholders_y_ejemplos_eliminados": true,
+      "pdf_final_exportado": "C:\\Users\\user\\Desktop\\MESSI\\tmp\\documents\\final_05\\03_Informe_de_pruebas_QA\\word.pdf"
+    },
+    {
+      "docx": "docs/entrega_3/04_Manual_de_usuario.docx",
+      "paginas": 8,
+      "paginas_inspeccionadas": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "sha256_docx": "aac4ea9d99b3832eb22bc82c48e7f0340d343cce7f0a34ae423b86d897ff20ce",
+      "original": "docs/referencias/04_Manual_de_usuario.docx",
+      "sha256_original": "cbc1d2ec13e6047b6b1319a52517a1d323427b26bbf60bfb9beb847845c0e443",
+      "original_intacto": true,
+      "partes_opacas_estilos_pie_geometria_conservados": true,
+      "titulos_y_orden_conservados": true,
+      "placeholders_y_ejemplos_eliminados": true,
+      "pdf_final_exportado": "C:\\Users\\user\\Desktop\\MESSI\\tmp\\documents\\final_05\\04_Manual_de_usuario\\word.pdf"
+    },
+    {
+      "docx": "docs/entrega_3/05_Nota_de_prueba_con_persona_ajena.docx",
+      "paginas": 1,
+      "paginas_inspeccionadas": [
+        1
+      ],
+      "sha256_docx": "389c51b486992876816aa7963c2b9318a34c981ba37d2887c9c17ca46368f7ef",
+      "original": "docs/referencias/05_Nota_de_prueba_con_persona_ajena.docx",
+      "sha256_original": "cde93b6038b7b01de79207230408e4c68ea88e98eb9296b95fabdd7aaf4a3e05",
+      "original_intacto": true,
+      "partes_opacas_estilos_pie_geometria_conservados": true,
+      "titulos_y_orden_conservados": true,
+      "placeholders_y_ejemplos_eliminados": true,
+      "pdf_final_exportado": "C:\\Users\\user\\Desktop\\MESSI\\tmp\\documents\\final_05\\05_Nota_de_prueba_con_persona_ajena\\word.pdf",
+      "estado_prueba_ajena": "Pendiente: el usuario confirmo que todavia no se ha realizado. No hay persona, observaciones o hallazgos inventados.",
+      "contenido_hasta_puntos": 390.59,
+      "limite_media_hoja_puntos": 396,
+      "nota_dentro_de_media_pagina": true
+    }
+  ]
+}
