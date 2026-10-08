@@ -1,8 +1,8 @@
 param(
-    [string]$Destination = (Join-Path ([Environment]::GetFolderPath('Desktop')) 'MESSI_Entregas_2_y_3'),
+    [string]$Destination = (Join-Path ([Environment]::GetFolderPath('Desktop')) 'MESSI_0.4.0'),
     [string]$PdfDirectory,
-    [string]$ReleaseUrl = 'https://github.com/a3524110303-cpu/M.E.S.S.I-/releases/tag/v0.3.0-entregas',
-    [string]$VideoUrl = 'https://github.com/a3524110303-cpu/M.E.S.S.I-/releases/download/v0.3.0-entregas/MESSI_Demo_Entrega_3.mp4'
+    [string]$ReleaseUrl = 'https://github.com/a3524110303-cpu/M.E.S.S.I-/releases/tag/v0.4.0-interfaz',
+    [string]$VideoUrl = 'https://github.com/a3524110303-cpu/M.E.S.S.I-/releases/download/v0.4.0-interfaz/MESSI_Demo_Entrega_3.mp4'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -43,13 +43,13 @@ if ($PdfDirectory) {
 
 # Git archive incluye únicamente archivos versionados, sin bases personales,
 # credenciales, entornos Python ni intermediarios de construcción.
-$taskSourceZip = Join-Path $taskDestination 'Codigo_y_evidencias/MESSI_Codigo_0.3.0.zip'
+$taskSourceZip = Join-Path $taskDestination 'Codigo_y_evidencias/MESSI_Codigo_0.4.0.zip'
 git -C $taskProjectRoot archive --format=zip --output=$taskSourceZip HEAD
 if ($LASTEXITCODE -ne 0) { throw 'No se pudo crear el ZIP del código versionado.' }
 $taskCommit = (git -C $taskProjectRoot rev-parse HEAD).Trim()
 
 $taskReadme = @"
-MESSI 0.3.0 - Entregas 2 y 3
+MESSI 0.4.0 - Entregas 2 y 3
 Version del codigo: $taskCommit
 Descargas publicas: $ReleaseUrl
 
@@ -71,7 +71,8 @@ Codigo_y_evidencias: codigo versionado y lista de cotejo. El ZIP incluye
 dependencias fijadas, datos ficticios, scripts y evidencias tecnicas.
 PDF: copias de lectura de los formatos; entregar los DOCX del maestro.
 
-Pruebas actuales: 157 descubiertas, 150 aprobadas, 7 MySQL omitidas, 0 fallidas.
+Pruebas actuales: 161 descubiertas, 154 aprobadas, 7 MySQL omitidas, 0 fallidas.
+CI con MySQL: 161 aprobadas, 0 omitidas y 0 fallidas.
 Instalacion actualizada y ejecutable comprobados sin Python en PATH;
 la base del usuario se conservo. La desinstalacion aislada no se ejecuto.
 Video: capturas reales y voz sintetica generica, no prueba con persona ajena.

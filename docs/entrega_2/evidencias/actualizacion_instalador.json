@@ -1,11 +1,10 @@
 {
-  "version": "0.3.0",
-  "actualizacion_exit": 0,
-  "base_usuario_conservada": true,
-  "sin_python_en_path": true,
-  "self_test": "OK",
-  "smoke_server": "OK",
-  "desinstalacion": "No ejecutada; instalación habitual conservada",
-  "windows": "Microsoft Windows NT 10.0.26200.0",
-  "ok": true
+  "version": "0.4.0",
+  "exit_code": 0,
+  "db_hash_before": "426B4B1005651296B748F2D73958A3FB04D3A72200A1932EDE66C6D644CF9D90",
+  "db_hash_after": "426B4B1005651296B748F2D73958A3FB04D3A72200A1932EDE66C6D644CF9D90",
+  "db_preserved": true,
+  "exe": "C:\\Users\\user\\AppData\\Local\\Programs\\MESSI\\MESSI.exe",
+  "includes_request_copy": true,
+  "includes_readonly_contrast": true
 }

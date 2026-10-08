@@ -1,0 +1,195 @@
+MESSI 0.4.0 - CI tests
+Commit: dd4a001a872b3a06e52d8b93a9f498d48f54fe36
+Run: https://github.com/a3524110303-cpu/M.E.S.S.I-/actions/runs/37763603878
+Job: https://github.com/a3524110303-cpu/M.E.S.S.I-/actions/runs/37763603878/job/113265733354
+
+﻿2026-10-08T10:29:15.1393958Z ##[group]Run python -m unittest discover -s tests -v
+2026-10-08T10:29:15.1394337Z ^[[36;1mpython -m unittest discover -s tests -v^[[0m
+2026-10-08T10:29:15.1465797Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-10-08T10:29:15.1466240Z env:
+2026-10-08T10:29:15.1466592Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.13.15\x64
+2026-10-08T10:29:15.1467449Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.13.15\x64/lib/pkgconfig
+2026-10-08T10:29:15.1468060Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.15\x64
+2026-10-08T10:29:15.1468584Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.15\x64
+2026-10-08T10:29:15.1469111Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.15\x64
+2026-10-08T10:29:15.1469528Z ##[endgroup]
+2026-10-08T10:29:16.8934927Z test_bad_paste_clears_previous_predictions (test_app.AppRegressionTests.test_bad_paste_clears_previous_predictions) ... ok
+2026-10-08T10:29:16.8937060Z test_changing_source_clears_old_data_and_predictions (test_app.AppRegressionTests.test_changing_source_clears_old_data_and_predictions) ... ok
+2026-10-08T10:29:16.8944798Z test_example_remains_selected_on_prediction_rerun (test_app.AppRegressionTests.test_example_remains_selected_on_prediction_rerun) ... ok
+2026-10-08T10:29:16.8946176Z test_invalid_manual_addition_preserves_captured_rows (test_app.AppRegressionTests.test_invalid_manual_addition_preserves_captured_rows) ... ok
+2026-10-08T10:29:16.8947660Z test_manual_counts_create_same_percentage_contract (test_app.AppRegressionTests.test_manual_counts_create_same_percentage_contract) ... ok
+2026-10-08T10:29:16.8950905Z test_missing_sqlite_is_reported_to_tutor (test_app.AppRegressionTests.test_missing_sqlite_is_reported_to_tutor) ... ok
+2026-10-08T10:29:16.8953257Z test_storage_failure_does_not_block_teacher (test_app.AppRegressionTests.test_storage_failure_does_not_block_teacher) ... ok
+2026-10-08T10:29:16.8961159Z test_bad_paste_resets_saved_status_and_visible_progress (test_app.AppSQLiteTests.test_bad_paste_resets_saved_status_and_visible_progress) ... ok
+2026-10-08T10:29:16.8967499Z test_indicators_are_saved_only_when_requested (test_app.AppSQLiteTests.test_indicators_are_saved_only_when_requested) ... ok
+2026-10-08T10:29:16.8972485Z test_load_failure_keeps_current_records_and_reports_sqlite (test_app.AppSQLiteTests.test_load_failure_keeps_current_records_and_reports_sqlite) ... ok
+2026-10-08T10:29:16.8983200Z test_loaded_sqlite_records_survive_existing_upload_until_file_changes (test_app.AppSQLiteTests.test_loaded_sqlite_records_survive_existing_upload_until_file_changes) ... ok
+2026-10-08T10:29:16.8990851Z test_loading_indicators_discards_predictions_for_other_records (test_app.AppSQLiteTests.test_loading_indicators_discards_predictions_for_other_records) ... ok
+2026-10-08T10:29:16.8999304Z test_loading_sqlite_records_survives_excel_rerun_without_upload (test_app.AppSQLiteTests.test_loading_sqlite_records_survives_excel_rerun_without_upload) ... ok
+2026-10-08T10:29:16.9005246Z test_main_uses_sqlite_configuration_without_eager_operations (test_app.AppSQLiteTests.test_main_uses_sqlite_configuration_without_eager_operations) ... ok
+2026-10-08T10:29:16.9010776Z test_model_unavailable_does_not_attempt_sqlite_save (test_app.AppSQLiteTests.test_model_unavailable_does_not_attempt_sqlite_save) ... ok
+2026-10-08T10:29:16.9012704Z test_no_sqlite_config_error_until_explicit_persistence (test_app.AppSQLiteTests.test_no_sqlite_config_error_until_explicit_persistence) ... ok
+2026-10-08T10:29:16.9019509Z test_prediction_is_saved_on_calculation_only (test_app.AppSQLiteTests.test_prediction_is_saved_on_calculation_only) ... ok
+2026-10-08T10:29:16.9025129Z test_prediction_survives_sqlite_failure (test_app.AppSQLiteTests.test_prediction_survives_sqlite_failure) ... ok
+2026-10-08T10:29:16.9031672Z test_replacing_saved_data_invalidates_result_and_guarded_progress (test_app.AppSQLiteTests.test_replacing_saved_data_invalidates_result_and_guarded_progress) ... ok
+2026-10-08T10:29:16.9036648Z test_save_failure_keeps_captured_records_and_reports_sqlite (test_app.AppSQLiteTests.test_save_failure_keeps_captured_records_and_reports_sqlite) ... ok
+2026-10-08T10:29:16.9040816Z test_student_request_retains_existing_store_contract (test_app.AppSQLiteTests.test_student_request_retains_existing_store_contract) ... ok
+2026-10-08T10:29:16.9044330Z test_student_sqlite_failure_is_reported (test_app.AppSQLiteTests.test_student_sqlite_failure_is_reported) ... ok
+2026-10-08T10:29:16.9049626Z test_support_and_followup_retain_existing_store_contract (test_app.AppSQLiteTests.test_support_and_followup_retain_existing_store_contract) ... ok
+2026-10-08T10:29:16.9056471Z test_tutor_preserves_current_session_without_overwriting_from_database (test_app.AppSQLiteTests.test_tutor_preserves_current_session_without_overwriting_from_database) ... ok
+2026-10-08T10:29:16.9061554Z test_tutor_restores_indicators_and_predictions_from_sqlite (test_app.AppSQLiteTests.test_tutor_restores_indicators_and_predictions_from_sqlite) ... ok
+2026-10-08T10:29:16.9062911Z test_boundaries_and_column_order_are_supported (test_data.DataContractTests.test_boundaries_and_column_order_are_supported) ... ok
+2026-10-08T10:29:16.9066340Z test_byte_and_row_limits_are_enforced (test_data.DataContractTests.test_byte_and_row_limits_are_enforced) ... ok
+2026-10-08T10:29:16.9081404Z test_bytes_content_and_file_normalize_to_same_records (test_data.DataContractTests.test_bytes_content_and_file_normalize_to_same_records) ... ok
+2026-10-08T10:29:16.9096308Z test_committed_synthetic_datasets_meet_contract (test_data.DataContractTests.test_committed_synthetic_datasets_meet_contract) ... ok
+2026-10-08T10:29:16.9098296Z test_empty_malformed_and_bad_encoding_are_rejected (test_data.DataContractTests.test_empty_malformed_and_bad_encoding_are_rejected) ... ok
+2026-10-08T10:29:16.9100820Z test_ids_and_duplicates_are_rejected (test_data.DataContractTests.test_ids_and_duplicates_are_rejected) ... ok
+2026-10-08T10:29:16.9103678Z test_invalid_values_and_ranges_are_rejected (test_data.DataContractTests.test_invalid_values_and_ranges_are_rejected) ... ok
+2026-10-08T10:29:16.9108372Z test_plain_string_is_content_and_missing_path_is_handled (test_data.DataContractTests.test_plain_string_is_content_and_missing_path_is_handled) ... ok
+2026-10-08T10:29:16.9110361Z test_sensitive_extra_missing_and_duplicate_headers_are_rejected (test_data.DataContractTests.test_sensitive_extra_missing_and_duplicate_headers_are_rejected) ... ok
+2026-10-08T10:29:16.9111714Z test_training_target_is_separate_and_binary (test_data.DataContractTests.test_training_target_is_separate_and_binary) ... ok
+2026-10-08T10:29:16.9114720Z test_ambiguous_delimiters_bad_headers_and_invalid_rows_are_rejected (test_data.ManualAndPastedTests.test_ambiguous_delimiters_bad_headers_and_invalid_rows_are_rejected) ... ok
+2026-10-08T10:29:16.9116273Z test_blank_rows_are_ignored_and_limits_apply_to_pasted_and_manual_input (test_data.ManualAndPastedTests.test_blank_rows_are_ignored_and_limits_apply_to_pasted_and_manual_input) ... ok
+2026-10-08T10:29:16.9118001Z test_counts_convert_exactly_to_percentage_contract (test_data.ManualAndPastedTests.test_counts_convert_exactly_to_percentage_contract) ... ok
+2026-10-08T10:29:16.9119441Z test_friendly_and_canonical_headers_allow_column_reordering (test_data.ManualAndPastedTests.test_friendly_and_canonical_headers_allow_column_reordering) ... ok
+2026-10-08T10:29:16.9120758Z test_invalid_counts_note_and_id_are_rejected (test_data.ManualAndPastedTests.test_invalid_counts_note_and_id_are_rejected) ... ok
+2026-10-08T10:29:16.9121970Z test_manual_empty_and_duplicate_ids_are_rejected (test_data.ManualAndPastedTests.test_manual_empty_and_duplicate_ids_are_rejected) ... ok
+2026-10-08T10:29:16.9123290Z test_manual_records_use_same_ranges_and_reject_extra_columns (test_data.ManualAndPastedTests.test_manual_records_use_same_ranges_and_reject_extra_columns) ... ok
+2026-10-08T10:29:16.9124672Z test_semicolon_four_columns_and_blank_ids_avoid_later_collisions (test_data.ManualAndPastedTests.test_semicolon_four_columns_and_blank_ids_avoid_later_collisions) ... ok
+2026-10-08T10:29:16.9126956Z test_three_columns_without_headers_generate_ids_and_accept_decimal_comma (test_data.ManualAndPastedTests.test_three_columns_without_headers_generate_ids_and_accept_decimal_comma) ... ok
+2026-10-08T10:29:16.9141958Z test_explicit_create_flag_and_safe_failure_exit_code (test_database.InitializationCLITests.test_explicit_create_flag_and_safe_failure_exit_code) ... ok
+2026-10-08T10:29:16.9205315Z test_env_file_is_read_without_interpolating_password (test_database.MySQLConfigTests.test_env_file_is_read_without_interpolating_password) ... ok
+2026-10-08T10:29:16.9259159Z test_invalid_port_and_database_name_are_rejected (test_database.MySQLConfigTests.test_invalid_port_and_database_name_are_rejected) ... ok
+2026-10-08T10:29:16.9280574Z test_missing_configuration_reports_actionable_error (test_database.MySQLConfigTests.test_missing_configuration_reports_actionable_error) ... ok
+2026-10-08T10:29:16.9307809Z test_process_environment_overrides_file_values (test_database.MySQLConfigTests.test_process_environment_overrides_file_values) ... ok
+2026-10-08T10:29:16.9314132Z test_application_failure_rolls_back_without_commit (test_database.MySQLDatabaseTests.test_application_failure_rolls_back_without_commit) ... ok
+2026-10-08T10:29:16.9319564Z test_commit_failure_rolls_back_and_closes_connection (test_database.MySQLDatabaseTests.test_commit_failure_rolls_back_and_closes_connection) ... ok
+2026-10-08T10:29:16.9320963Z test_constructor_is_lazy (test_database.MySQLDatabaseTests.test_constructor_is_lazy) ... ok
+2026-10-08T10:29:16.9347998Z test_dict_cursors_are_buffered_parameterized_and_closed (test_database.MySQLDatabaseTests.test_dict_cursors_are_buffered_parameterized_and_closed) ... ok
+2026-10-08T10:29:16.9353180Z test_driver_operation_failure_is_safe_and_rolls_back (test_database.MySQLDatabaseTests.test_driver_operation_failure_is_safe_and_rolls_back) ... ok
+2026-10-08T10:29:16.9359775Z test_failed_ddl_releases_lock_without_marking_schema_complete (test_database.MySQLDatabaseTests.test_failed_ddl_releases_lock_without_marking_schema_complete) ... ok
+2026-10-08T10:29:16.9369853Z test_initialize_runs_explicit_ddl_in_autocommit_without_data_transaction (test_database.MySQLDatabaseTests.test_initialize_runs_explicit_ddl_in_autocommit_without_data_transaction) ... ok
+2026-10-08T10:29:16.9375153Z test_missing_schema_marker_rejects_operation_and_closes (test_database.MySQLDatabaseTests.test_missing_schema_marker_rejects_operation_and_closes) ... ok
+2026-10-08T10:29:16.9381242Z test_open_errors_do_not_expose_driver_message_or_password (test_database.MySQLDatabaseTests.test_open_errors_do_not_expose_driver_message_or_password) ... ok
+2026-10-08T10:29:16.9383464Z test_open_uses_timeouts_utf8_and_disables_local_infile (test_database.MySQLDatabaseTests.test_open_uses_timeouts_utf8_and_disables_local_infile) ... ok
+2026-10-08T10:29:16.9387109Z test_raw_connection_is_closed_when_cursor_close_fails (test_database.MySQLDatabaseTests.test_raw_connection_is_closed_when_cursor_close_fails) ... ok
+2026-10-08T10:29:16.9392490Z test_successful_data_operation_commits_and_never_runs_ddl (test_database.MySQLDatabaseTests.test_successful_data_operation_commits_and_never_runs_ddl) ... ok
+2026-10-08T10:29:16.9396369Z test_unavailable_installation_lock_rejects_ddl (test_database.MySQLDatabaseTests.test_unavailable_installation_lock_rejects_ddl) ... ok
+2026-10-08T10:29:16.9404179Z test_unsupported_servers_are_rejected_before_ddl (test_database.MySQLDatabaseTests.test_unsupported_servers_are_rejected_before_ddl) ... ok
+2026-10-08T10:29:16.9436535Z test_cancelled_start_never_launches_a_process (test_desktop.DesktopLifecycleTests.test_cancelled_start_never_launches_a_process) ... ok
+2026-10-08T10:29:17.0747490Z test_closing_during_process_creation_leaves_no_running_child (test_desktop.DesktopLifecycleTests.test_closing_during_process_creation_leaves_no_running_child) ... ok
+2026-10-08T10:29:17.0749088Z test_invalid_port_is_rejected_before_importing_streamlit (test_desktop.DesktopLifecycleTests.test_invalid_port_is_rejected_before_importing_streamlit) ... ok
+2026-10-08T10:29:17.0752446Z test_repeated_close_terminates_server_and_releases_log_once (test_desktop.DesktopLifecycleTests.test_repeated_close_terminates_server_and_releases_log_once) ... ok
+2026-10-08T10:29:17.0777172Z test_failing_self_test_restores_absent_override_and_cleans_temporary_files (test_desktop.DiagnosticIsolationTests.test_failing_self_test_restores_absent_override_and_cleans_temporary_files) ... ok
+2026-10-08T10:29:17.0815363Z test_self_test_uses_temporary_directory_and_restores_existing_override (test_desktop.DiagnosticIsolationTests.test_self_test_uses_temporary_directory_and_restores_existing_override) ... ok
+2026-10-08T10:29:17.0816998Z test_invalid_and_empty_workbooks_are_rejected_without_optional_import (test_excel.ExcelEnvelopeTests.test_invalid_and_empty_workbooks_are_rejected_without_optional_import) ... ok
+2026-10-08T10:29:17.3418473Z test_ambiguous_sheets_are_rejected (test_excel.ExcelInputTests.test_ambiguous_sheets_are_rejected) ... ok
+2026-10-08T10:29:17.3477911Z test_byte_row_and_expansion_limits_apply (test_excel.ExcelInputTests.test_byte_row_and_expansion_limits_apply) ... ok
+2026-10-08T10:29:17.3611464Z test_formulas_are_rejected_even_in_extra_cells (test_excel.ExcelInputTests.test_formulas_are_rejected_even_in_extra_cells) ... ok
+2026-10-08T10:29:17.3678877Z test_friendly_headers_blank_rows_and_temporary_ids (test_excel.ExcelInputTests.test_friendly_headers_blank_rows_and_temporary_ids) ... ok
+2026-10-08T10:29:17.4168476Z test_missing_duplicate_extra_headers_and_data_are_rejected (test_excel.ExcelInputTests.test_missing_duplicate_extra_headers_and_data_are_rejected) ... ok
+2026-10-08T10:29:17.4226068Z test_only_sheet_is_allowed_without_datos_and_canonical_headers_work (test_excel.ExcelInputTests.test_only_sheet_is_allowed_without_datos_and_canonical_headers_work) ... ok
+2026-10-08T10:29:17.4228142Z test_exact_sqlite_migration_and_idempotence_on_empty_mysql_database (test_migration.MigrationMySQLIntegrationTests.test_exact_sqlite_migration_and_idempotence_on_empty_mysql_database) ... skipped 'MySQL opt-in: MESSI_TEST_MYSQL=1'
+2026-10-08T10:29:18.4763379Z test_abril_schema_is_rejected_before_destination_is_opened (test_migration.MigrationTests.test_abril_schema_is_rejected_before_destination_is_opened) ... ok
+2026-10-08T10:29:19.6283484Z test_any_nonempty_destination_table_rejects_import (test_migration.MigrationTests.test_any_nonempty_destination_table_rejects_import) ... ok
+2026-10-08T10:29:20.8174508Z test_corrupt_file_is_rejected_without_creating_destination_data (test_migration.MigrationTests.test_corrupt_file_is_rejected_without_creating_destination_data) ... ok
+2026-10-08T10:29:21.4846142Z test_invalid_saved_date_is_rejected_before_destination_is_opened (test_migration.MigrationTests.test_invalid_saved_date_is_rejected_before_destination_is_opened) ... ok
+2026-10-08T10:29:22.1813797Z test_late_mysql_failure_rolls_back_all_imported_rows_and_marker (test_migration.MigrationTests.test_late_mysql_failure_rolls_back_all_imported_rows_and_marker) ... ok
+2026-10-08T10:29:22.9460076Z test_marker_two_prevents_duplicate_imports (test_migration.MigrationTests.test_marker_two_prevents_duplicate_imports) ... ok
+2026-10-08T10:29:23.5646955Z test_missing_source_does_not_create_a_sqlite_file (test_migration.MigrationTests.test_missing_source_does_not_create_a_sqlite_file) ... ok
+2026-10-08T10:29:24.8542944Z test_orphan_followup_is_rejected_without_touching_destination (test_migration.MigrationTests.test_orphan_followup_is_rejected_without_touching_destination) ... ok
+2026-10-08T10:29:26.1961603Z test_source_read_only_and_ids_content_links_are_preserved (test_migration.MigrationTests.test_source_read_only_and_ids_content_links_are_preserved) ... ok
+2026-10-08T10:29:26.1970770Z test_external_model_is_rejected_before_deserialization (test_model.ModelContractTests.test_external_model_is_rejected_before_deserialization) ... ok
+2026-10-08T10:29:26.1986185Z test_integrity_and_metadata_are_checked_before_deserialization (test_model.ModelContractTests.test_integrity_and_metadata_are_checked_before_deserialization) ... ok
+2026-10-08T10:29:26.2035812Z test_invalid_probability_and_reversed_classes_fail_closed (test_model.ModelContractTests.test_invalid_probability_and_reversed_classes_fail_closed) ... ok
+2026-10-08T10:29:26.2041666Z test_missing_model_has_actionable_pending_message (test_model.ModelContractTests.test_missing_model_has_actionable_pending_message) ... ok
+2026-10-08T10:29:26.2055162Z test_missing_optional_dependency_returns_actionable_error (test_model.ModelContractTests.test_missing_optional_dependency_returns_actionable_error) ... ok
+2026-10-08T10:29:26.2069104Z test_non_demo_metadata_and_target_leakage_are_rejected (test_model.ModelContractTests.test_non_demo_metadata_and_target_leakage_are_rejected) ... ok
+2026-10-08T10:29:26.2082709Z test_only_features_reach_model_and_original_records_are_unchanged (test_model.ModelContractTests.test_only_features_reach_model_and_original_records_are_unchanged) ... ok
+2026-10-08T10:29:27.2118554Z test_local_pipeline_roundtrip (test_model.RealPipelineTests.test_local_pipeline_roundtrip) ... ok
+2026-10-08T10:29:27.2373067Z test_create_grants_scoped_role_without_administrator_permissions (test_mysql_permissions.PermissionsTests.test_create_grants_scoped_role_without_administrator_permissions) ... ok
+2026-10-08T10:29:27.2378917Z test_direct_grants_reject_apparent_downgrade (test_mysql_permissions.PermissionsTests.test_direct_grants_reject_apparent_downgrade) ... ok
+2026-10-08T10:29:27.2418842Z test_editor_role_is_removed_when_switching_to_reader (test_mysql_permissions.PermissionsTests.test_editor_role_is_removed_when_switching_to_reader) ... ok
+2026-10-08T10:29:27.2421735Z test_invalid_accounts_and_administrator_are_rejected_before_connection (test_mysql_permissions.PermissionsTests.test_invalid_accounts_and_administrator_are_rejected_before_connection) ... ok
+2026-10-08T10:29:27.2423038Z test_roles_are_separate_for_each_database (test_mysql_permissions.PermissionsTests.test_roles_are_separate_for_each_database) ... ok
+2026-10-08T10:29:27.2430165Z test_unmanaged_role_rejects_apparent_downgrade (test_mysql_permissions.PermissionsTests.test_unmanaged_role_rejects_apparent_downgrade) ... ok
+2026-10-08T10:29:27.2431451Z test_editor_reader_block_and_direct_grants (test_mysql_permissions.RealPermissionsTests.test_editor_reader_block_and_direct_grants) ... skipped 'MySQL aislado no solicitado'
+2026-10-08T10:29:27.2433675Z test_concurrent_indicator_change_never_keeps_prediction_of_old_values (test_mysql_storage.MySQLStoreIntegrationTests.test_concurrent_indicator_change_never_keeps_prediction_of_old_values) ... skipped 'Integraci�n MySQL opt-in: MESSI_TEST_MYSQL=1'
+2026-10-08T10:29:27.2435018Z test_foreign_key_failure_rolls_back_support_status (test_mysql_storage.MySQLStoreIntegrationTests.test_foreign_key_failure_rolls_back_support_status) ... skipped 'Integraci�n MySQL opt-in: MESSI_TEST_MYSQL=1'
+2026-10-08T10:29:27.2436369Z test_indicator_updates_preserve_or_invalidate_prediction_and_separate_periods (test_mysql_storage.MySQLStoreIntegrationTests.test_indicator_updates_preserve_or_invalidate_prediction_and_separate_periods) ... skipped 'Integraci�n MySQL opt-in: MESSI_TEST_MYSQL=1'
+2026-10-08T10:29:27.2437833Z test_stale_prediction_rolls_back_entire_batch_and_retains_changed_indicators (test_mysql_storage.MySQLStoreIntegrationTests.test_stale_prediction_rolls_back_entire_batch_and_retains_changed_indicators) ... skipped 'Integraci�n MySQL opt-in: MESSI_TEST_MYSQL=1'
+2026-10-08T10:29:27.2439167Z test_support_records_survive_reopening_and_repeated_status (test_mysql_storage.MySQLStoreIntegrationTests.test_support_records_survive_reopening_and_repeated_status) ... skipped 'Integraci�n MySQL opt-in: MESSI_TEST_MYSQL=1'
+2026-10-08T10:29:27.2820563Z test_batch_locks_students_in_stable_order (test_mysql_storage.MySQLStoreTests.test_batch_locks_students_in_stable_order) ... ok
+2026-10-08T10:29:27.2825951Z test_construction_is_lazy_and_uses_supplied_config (test_mysql_storage.MySQLStoreTests.test_construction_is_lazy_and_uses_supplied_config) ... ok
+2026-10-08T10:29:27.2835502Z test_followup_accepts_unchanged_status_with_zero_update_rowcount (test_mysql_storage.MySQLStoreTests.test_followup_accepts_unchanged_status_with_zero_update_rowcount) ... ok
+2026-10-08T10:29:27.2844836Z test_indicator_change_removes_old_prediction_within_same_transaction (test_mysql_storage.MySQLStoreTests.test_indicator_change_removes_old_prediction_within_same_transaction) ... ok
+2026-10-08T10:29:27.2852210Z test_indicator_save_validates_entire_batch_before_connection (test_mysql_storage.MySQLStoreTests.test_indicator_save_validates_entire_batch_before_connection) ... ok
+2026-10-08T10:29:27.2860400Z test_insert_failure_reaches_transaction_context_for_rollback (test_mysql_storage.MySQLStoreTests.test_insert_failure_reaches_transaction_context_for_rollback) ... ok
+2026-10-08T10:29:27.2866784Z test_invalid_ids_content_and_choices_fail_before_opening_connection (test_mysql_storage.MySQLStoreTests.test_invalid_ids_content_and_choices_fail_before_opening_connection) ... ok
+2026-10-08T10:29:27.2877751Z test_later_stale_prediction_rolls_back_earlier_batch_write (test_mysql_storage.MySQLStoreTests.test_later_stale_prediction_rolls_back_earlier_batch_write) ... ok
+2026-10-08T10:29:27.2886102Z test_list_indicators_returns_canonical_fields_for_requested_period (test_mysql_storage.MySQLStoreTests.test_list_indicators_returns_canonical_fields_for_requested_period) ... ok
+2026-10-08T10:29:27.2895080Z test_period_is_nonempty_and_at_most_64_characters (test_mysql_storage.MySQLStoreTests.test_period_is_nonempty_and_at_most_64_characters) ... ok
+2026-10-08T10:29:27.2905042Z test_prediction_creates_snapshot_when_no_indicator_exists (test_mysql_storage.MySQLStoreTests.test_prediction_creates_snapshot_when_no_indicator_exists) ... ok
+2026-10-08T10:29:27.2913934Z test_prediction_does_not_overwrite_existing_snapshot (test_mysql_storage.MySQLStoreTests.test_prediction_does_not_overwrite_existing_snapshot) ... ok
+2026-10-08T10:29:27.2922858Z test_prediction_join_restores_score_records_contract (test_mysql_storage.MySQLStoreTests.test_prediction_join_restores_score_records_contract) ... ok
+2026-10-08T10:29:27.2929620Z test_prediction_metadata_is_validated_before_connection (test_mysql_storage.MySQLStoreTests.test_prediction_metadata_is_validated_before_connection) ... ok
+2026-10-08T10:29:27.2938559Z test_request_registers_student_and_preserves_sql_like_text (test_mysql_storage.MySQLStoreTests.test_request_registers_student_and_preserves_sql_like_text) ... ok
+2026-10-08T10:29:27.2947348Z test_stale_prediction_rejects_batch_without_updating_new_indicators (test_mysql_storage.MySQLStoreTests.test_stale_prediction_rejects_batch_without_updating_new_indicators) ... ok
+2026-10-08T10:29:27.2955008Z test_support_has_default_status_and_same_validation_contract (test_mysql_storage.MySQLStoreTests.test_support_has_default_status_and_same_validation_contract) ... ok
+2026-10-08T10:29:27.2965881Z test_support_queries_filter_with_parameters_and_keep_descending_order (test_mysql_storage.MySQLStoreTests.test_support_queries_filter_with_parameters_and_keep_descending_order) ... ok
+2026-10-08T10:29:27.2974285Z test_unchanged_indicators_keep_existing_prediction (test_mysql_storage.MySQLStoreTests.test_unchanged_indicators_keep_existing_prediction) ... ok
+2026-10-08T10:29:27.2983248Z test_unknown_support_cannot_be_updated_or_get_followup (test_mysql_storage.MySQLStoreTests.test_unknown_support_cannot_be_updated_or_get_followup) ... ok
+2026-10-08T10:29:28.1053172Z test_backup_includes_wal_changes_and_all_relationships (test_sqlite_storage.SQLiteStorageTests.test_backup_includes_wal_changes_and_all_relationships) ... ok
+2026-10-08T10:29:28.3467326Z test_cannot_backup_over_active_database (test_sqlite_storage.SQLiteStorageTests.test_cannot_backup_over_active_database) ... ok
+2026-10-08T10:29:28.6662089Z test_changed_indicators_invalidate_only_their_prediction (test_sqlite_storage.SQLiteStorageTests.test_changed_indicators_invalidate_only_their_prediction) ... ok
+2026-10-08T10:29:29.2245892Z test_complete_flow_survives_reopening (test_sqlite_storage.SQLiteStorageTests.test_complete_flow_survives_reopening) ... ok
+2026-10-08T10:29:29.6816110Z test_default_app_never_loads_mysql_configuration (test_sqlite_storage.SQLiteStorageTests.test_default_app_never_loads_mysql_configuration) ... ok
+2026-10-08T10:29:30.0477673Z test_invalid_prediction_never_persists_a_partial_batch (test_sqlite_storage.SQLiteStorageTests.test_invalid_prediction_never_persists_a_partial_batch) ... ok
+2026-10-08T10:29:30.3283642Z test_newer_database_is_rejected_without_modifying_its_schema (test_sqlite_storage.SQLiteStorageTests.test_newer_database_is_rejected_without_modifying_its_schema) ... ok
+2026-10-08T10:29:30.6432881Z test_parallel_requests_are_all_committed (test_sqlite_storage.SQLiteStorageTests.test_parallel_requests_are_all_committed) ... ok
+2026-10-08T10:29:30.8579334Z test_periods_do_not_overwrite_each_other (test_sqlite_storage.SQLiteStorageTests.test_periods_do_not_overwrite_each_other) ... ok
+2026-10-08T10:29:31.0730308Z test_recalculation_updates_instead_of_duplicating (test_sqlite_storage.SQLiteStorageTests.test_recalculation_updates_instead_of_duplicating) ... ok
+2026-10-08T10:29:31.2979149Z test_same_indicators_preserve_prediction (test_sqlite_storage.SQLiteStorageTests.test_same_indicators_preserve_prediction) ... ok
+2026-10-08T10:29:31.4959759Z test_stale_prediction_rolls_back_the_entire_batch (test_sqlite_storage.SQLiteStorageTests.test_stale_prediction_rolls_back_the_entire_batch) ... ok
+2026-10-08T10:29:31.9264683Z test_upgrade_keeps_legacy_ids_and_followups (test_sqlite_storage.SQLiteStorageTests.test_upgrade_keeps_legacy_ids_and_followups) ... ok
+2026-10-08T10:29:31.9360288Z test_empty_non_text_and_oversized_content_is_rejected (test_storage.SupportStoreTests.test_empty_non_text_and_oversized_content_is_rejected) ... ok
+2026-10-08T10:29:31.9452939Z test_failure_rolls_back_both_followup_and_support_status (test_storage.SupportStoreTests.test_failure_rolls_back_both_followup_and_support_status) ... ok
+2026-10-08T10:29:31.9615944Z test_filtering_and_newest_first_order (test_storage.SupportStoreTests.test_filtering_and_newest_first_order) ... ok
+2026-10-08T10:29:31.9678311Z test_foreign_keys_are_enforced_on_store_connections (test_storage.SupportStoreTests.test_foreign_keys_are_enforced_on_store_connections) ... ok
+2026-10-08T10:29:31.9759320Z test_invalid_student_ids_are_rejected_for_writes_and_filters (test_storage.SupportStoreTests.test_invalid_student_ids_are_rejected_for_writes_and_filters) ... ok
+2026-10-08T10:29:31.9831445Z test_request_needs_no_csv_or_prediction (test_storage.SupportStoreTests.test_request_needs_no_csv_or_prediction) ... ok
+2026-10-08T10:29:31.9934954Z test_requests_and_supports_survive_reopening (test_storage.SupportStoreTests.test_requests_and_supports_survive_reopening) ... ok
+2026-10-08T10:29:32.0036008Z test_sql_like_text_is_stored_as_text (test_storage.SupportStoreTests.test_sql_like_text_is_stored_as_text) ... ok
+2026-10-08T10:29:32.0171258Z test_types_and_statuses_are_validated (test_storage.SupportStoreTests.test_types_and_statuses_are_validated) ... ok
+2026-10-08T10:29:32.0234662Z test_unknown_or_invalid_support_cannot_create_followup (test_storage.SupportStoreTests.test_unknown_or_invalid_support_cannot_create_followup) ... ok
+2026-10-08T10:29:32.3941809Z test_duplicate_manual_id_preserves_previous_student (test_streamlit_ui.StreamlitInteractionTests.test_duplicate_manual_id_preserves_previous_student) ... 2026-10-08 10:29:32.393 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-08T10:29:32.6837653Z ok
+2026-10-08T10:29:32.9017586Z test_empty_request_does_not_write_to_database (test_streamlit_ui.StreamlitInteractionTests.test_empty_request_does_not_write_to_database) ... 2026-10-08 10:29:32.901 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-08T10:29:32.9160319Z ok
+2026-10-08T10:29:33.1522849Z test_empty_request_preserves_id_and_success_clears_form (test_streamlit_ui.StreamlitInteractionTests.test_empty_request_preserves_id_and_success_clears_form) ... 2026-10-08 10:29:33.151 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-08T10:29:33.2013455Z ok
+2026-10-08T10:29:34.2293913Z test_invalid_capture_preserves_inputs_then_success_clears_them (test_streamlit_ui.StreamlitInteractionTests.test_invalid_capture_preserves_inputs_then_success_clears_them) ... 2026-10-08 10:29:34.229 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-08T10:29:34.2551192Z ok
+2026-10-08T10:29:34.7418905Z test_invalid_paste_discards_old_data_and_reports_reason (test_streamlit_ui.StreamlitInteractionTests.test_invalid_paste_discards_old_data_and_reports_reason) ... 2026-10-08 10:29:34.741 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-08T10:29:34.7718664Z ok
+2026-10-08T10:29:34.7719329Z test_qa03_followup_keeps_visible_success_confirmation (test_streamlit_ui.StreamlitInteractionTests.test_qa03_followup_keeps_visible_success_confirmation)
+2026-10-08T10:29:35.0810047Z QA-03: la confirmaci�n debe sobrevivir a la actualizaci�n de pantalla. ... 2026-10-08 10:29:35.080 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-08T10:29:35.3663892Z ok
+2026-10-08T10:29:35.6451959Z test_request_selection_prefills_only_the_agreement_code_until_submission (test_streamlit_ui.StreamlitInteractionTests.test_request_selection_prefills_only_the_agreement_code_until_submission) ... 2026-10-08 10:29:35.644 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-08T10:29:35.9054559Z ok
+2026-10-08T10:29:36.1303607Z test_request_without_alert_and_followup_survive_new_session (test_streamlit_ui.StreamlitInteractionTests.test_request_without_alert_and_followup_survive_new_session) ... 2026-10-08 10:29:36.130 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-08T10:29:36.3288537Z 2026-10-08 10:29:36.328 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-08T10:29:36.3577899Z ok
+2026-10-08T10:29:36.8742011Z test_sample_table_and_missing_model_keep_indicators (test_streamlit_ui.StreamlitInteractionTests.test_sample_table_and_missing_model_keep_indicators) ... 2026-10-08 10:29:36.873 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-08T10:29:36.8982651Z ok
+2026-10-08T10:29:37.3323325Z test_three_roles_render_without_exceptions (test_streamlit_ui.StreamlitInteractionTests.test_three_roles_render_without_exceptions) ... 2026-10-08 10:29:37.332 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-08T10:29:37.3552320Z ok
+2026-10-08T10:29:50.9403961Z test_tutor_tables_translate_labels_and_preserve_stored_records (test_streamlit_ui.StreamlitInteractionTests.test_tutor_tables_translate_labels_and_preserve_stored_records) ... 2026-10-08 10:29:50.940 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-08T10:29:57.9376824Z ok
+2026-10-08T10:30:08.9192073Z test_zero_total_is_rejected_and_counts_convert_to_percentages (test_streamlit_ui.StreamlitInteractionTests.test_zero_total_is_rejected_and_counts_convert_to_percentages) ... 2026-10-08 10:30:08.918 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-08T10:30:08.9493661Z ok
+2026-10-08T10:30:08.9493892Z 
+2026-10-08T10:30:08.9494235Z ----------------------------------------------------------------------
+2026-10-08T10:30:08.9494785Z Ran 161 tests in 52.061s
+2026-10-08T10:30:08.9495070Z 
+2026-10-08T10:30:08.9495441Z OK (skipped=7)

@@ -23,6 +23,7 @@ class FakeUI:
         self.messages = []
         self.numeric = {}
         self.text = {}
+        self.selections = {}
         self.counts = False
         self.reruns = 0
         self.uploaded = None
@@ -85,7 +86,7 @@ class FakeUI:
         return self.uploaded
 
     def selectbox(self, label, options, **kwargs):
-        return options[kwargs.get("index", 0)]
+        return self.selections.get(kwargs.get("key"), self.selections.get(label, options[kwargs.get("index", 0)]))
 
     def rerun(self):
         self.reruns += 1

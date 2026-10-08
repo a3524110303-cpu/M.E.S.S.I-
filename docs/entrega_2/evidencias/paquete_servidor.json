@@ -1,9 +1,9 @@
 {
-  "version": "0.3.0",
+  "version": "0.4.0",
   "windows": "Windows-11-10.0.26200-SP0",
   "arquitectura": "AMD64",
   "sqlite": "3.50.4",
-  "base_local": "C:\\Users\\user\\AppData\\Local\\Temp\\messi-prueba-29oiah96\\data\\messi.sqlite3",
+  "base_local": "C:\\Users\\user\\AppData\\Local\\Temp\\messi-prueba-p8oi4wmb\\data\\messi.sqlite3",
   "modelo": "MLP de demostración sintética",
   "dependencias": {
     "streamlit": "1.50.0",

@@ -27,52 +27,52 @@ VOICE = "es-MX-DaliaNeural"
 SCENES = [
     {
         "id": "01", "section": "Problema y caso", "title": "Acompañamiento desde el primer parcial",
-        "screen": "01_docente_inicio.png",
+        "screen": "capturas_interfaz_04/01_docente_inicio.png",
         "text": "Presentamos MESSI, una aplicación local de alerta y acompañamiento escolar. El problema es que las dificultades pueden detectarse tarde, cuando ya se acumuló una baja calificación o pocas entregas. Este proyecto reúne indicadores del primer parcial para orientar una revisión del tutor. El recorrido utiliza capturas reales de la aplicación y narración sintética, con información completamente ficticia.",
     },
     {
         "id": "02", "section": "Problema y caso", "title": "Un caso ficticio y tres indicadores",
-        "screen": "03_datos_validados.png",
+        "screen": "capturas_interfaz_04/04_datos_guardados.png",
         "text": "Nuestro caso de demostración es un grupo ficticio. Cada estudiante se identifica con un código, sin nombre ni expediente. Se registran la nota parcial, la asistencia y las tareas entregadas. Una nota baja o pocos porcentajes pueden motivar una conversación de apoyo. La decisión corresponde al tutor; la aplicación no modifica calificaciones ni aplica sanciones.",
     },
     {
         "id": "03", "section": "Demostración entrada", "title": "Ingresar y revisar los datos",
-        "screen": "02_entrada_tabla.png",
+        "screen": "capturas_interfaz_04/03_tabla_pegada.png",
         "text": "En la vista Docente elegimos cómo ingresar los datos. MESSI admite una plantilla de Excel, un CSV, una tabla pegada, captura directa y un ejemplo sintético. La nota debe estar entre cero y diez, y los porcentajes entre cero y cien. La pantalla confirma cuántos registros son válidos y permite comprobarlos antes de continuar. Los códigos enlazan después los apoyos.",
     },
     {
         "id": "04", "section": "Demostración entrada", "title": "Rechazar datos fuera de rango",
-        "screen": "09_validacion_invalida.png",
+        "screen": "capturas_interfaz_04/12_validacion_invalida.png",
         "text": "La validación rechaza valores fuera de rango, identificadores duplicados, datos faltantes y fórmulas en Excel. Aquí pegamos una fila ficticia con nota doce, que supera el máximo de diez. La aplicación señala el campo que debe corregirse. Para continuar hay que corregir el dato y volver a revisar la tabla. Esta entrada inválida no genera una predicción.",
     },
     {
         "id": "05", "section": "Demostración proceso", "title": "Calcular la puntuación de demostración",
-        "screen": "04_resultado_modelo.png",
+        "screen": "capturas_interfaz_04/05_resultado_modelo.png",
         "text": "Al pulsar Calcular riesgo de demostración, el programa usa una red neuronal con una capa de ocho neuronas y un escalador. El modelo recibe únicamente los tres indicadores. No recibe el código del estudiante ni la etiqueta final usada al entrenar. La alerta se activa cuando la puntuación es mayor o igual a cero punto cinco, el umbral de esta demostración.",
     },
     {
         "id": "06", "section": "Demostración salida", "title": "Interpretar la salida y descargar el reporte",
-        "screen": "04_resultado_modelo.png",
+        "screen": "capturas_interfaz_04/05_resultado_modelo.png",
         "text": "La salida conserva los indicadores y añade una puntuación entre cero y uno y una marca para revisar el caso con un tutor. El botón Descargar reporte genera un CSV. Los indicadores y predicciones se guardan en la base local SQLite. Si cambian los indicadores, una predicción anterior debe recalcularse. La puntuación orienta esta simulación; no es una probabilidad escolar validada.",
     },
     {
         "id": "07", "section": "Demostración acompañamiento", "title": "Solicitar apoyo aunque no haya alerta",
-        "screen": "06_solicitud_registrada.png",
+        "screen": "capturas_interfaz_04/07_solicitud_registrada.png",
         "text": "En la vista Estudiante registramos una solicitud ficticia de ayuda. Esta función está disponible aunque no exista alerta ni predicción. El mensaje se valida y, al guardarse, la pantalla muestra una confirmación. Así, la búsqueda de apoyo no depende de que la inteligencia artificial identifique primero un riesgo. En este recorrido sólo se utilizan códigos y mensajes de demostración.",
     },
     {
         "id": "08", "section": "Demostración acompañamiento", "title": "Acordar un apoyo y conservar su seguimiento",
-        "screen": "08_seguimiento_guardado.png",
+        "screen": "capturas_interfaz_04/11_seguimiento_guardado.png",
         "text": "El tutor consulta las solicitudes, registra un acuerdo y selecciona el apoyo para agregar seguimiento. Los estados permiten distinguir pendiente, en seguimiento y cerrado. La captura muestra el historial y el estado de seguimiento guardado. SQLite conserva solicitudes, acuerdos y seguimiento al volver a abrir la aplicación. Esta persistencia permite revisar qué se acordó, sin depender de una sola sesión del navegador.",
     },
     {
         "id": "09", "section": "Resultados e interpretación", "title": "Qué demuestran los resultados sintéticos",
-        "screen": "04_resultado_modelo.png",
+        "screen": "capturas_interfaz_04/05_resultado_modelo.png",
         "text": "El entrenamiento separó ciento cuarenta y cuatro registros para ajuste, cuarenta y ocho para validación y cuarenta y ocho para prueba. En prueba, la red detectó veintiséis de veintisiete riesgos artificiales, pero produjo catorce falsas alarmas. Su exactitud fue de sesenta y ocho punto setenta y cinco por ciento. El recall alto no prueba eficacia real, y el MLP se conserva por el alcance didáctico.",
     },
     {
         "id": "10", "section": "Limitaciones y mejoras", "title": "Alcance de la entrega y próximos pasos",
-        "screen": "15_control_messi.png",
+        "screen": "capturas_interfaz_04/17_control_instalado.jpg",
         "text": "MESSI se entrega como demostración local para Windows, con aplicación, ejecutable, instalador y manuales. El selector de roles no autentica usuarios y los datos son sintéticos. Las mejoras futuras requieren datos reales autorizados, validación, calibración y control de acceso. Este video documenta el recorrido mediante capturas reales; no sustituye una prueba con persona ajena al equipo ni inventa su opinión o conformidad.",
     },
 ]
@@ -298,7 +298,8 @@ def build(scenes: list[dict], paths: list[Path], ffmpeg: str) -> None:
     report = {"file": output.name, "duration_seconds": measured, "resolution": list(SIZE), "fps": 15, "video_codec": "H.264", "audio_codec": "AAC", "audio_normalization": "loudnorm I=-16 LUFS, TP=-1.5 dBTP, LRA=11", "voice_kind": "generic_synthetic", "screen_origin": "real_MESSI_application_captures", "human_external_test": False, "tempo_factor": round(tempo, 8), "sha256": hashlib.sha256(output.read_bytes()).hexdigest(), "scenes": scenes}
     (DOCS / "evidencias" / "verificacion_video_demo.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     audio_check = run([ffmpeg, "-hide_banner", "-i", str(output), "-af", "volumedetect", "-vn", "-f", "null", "NUL" if sys.platform == "win32" else "/dev/null"])
-    (DOCS / "evidencias" / "verificacion_video_ffmpeg.txt").write_text(audio_check.stderr, encoding="utf-8")
+    audio_log = "\n".join(line.rstrip() for line in audio_check.stderr.splitlines()) + "\n"
+    (DOCS / "evidencias" / "verificacion_video_ffmpeg.txt").write_text(audio_log, encoding="utf-8")
     print(json.dumps({"output": str(output), "duration_seconds": measured, "size_bytes": output.stat().st_size, "sha256": report["sha256"]}, indent=2), flush=True)
 
 

@@ -1,0 +1,447 @@
+{
+  "version": "0.4.0",
+  "fecha_utc": "2026-10-08T10:31:30.130043+00:00",
+  "commit": "dd4a001a872b3a06e52d8b93a9f498d48f54fe36",
+  "alcance": "Suite de fuente en Windows y MySQL real en Ubuntu del commit final; logs reales extraídos sólo del paso unittest. No sustituye verificación de instalador ni prueba humana externa.",
+  "ci_0.3.0_conservado": "ci_github.json",
+  "ejecuciones": [
+    {
+      "conclusion": "success",
+      "createdAt": "2026-10-08T10:27:41Z",
+      "databaseId": 37763609648,
+      "headSha": "dd4a001a872b3a06e52d8b93a9f498d48f54fe36",
+      "jobs": [
+        {
+          "completedAt": "2026-10-08T10:28:45Z",
+          "conclusion": "success",
+          "databaseId": 113265753293,
+          "name": "mysql-integration",
+          "startedAt": "2026-10-08T10:27:44Z",
+          "status": "completed",
+          "steps": [
+            {
+              "completedAt": "2026-10-08T10:27:45Z",
+              "conclusion": "success",
+              "name": "Set up job",
+              "number": 1,
+              "startedAt": "2026-10-08T10:27:44Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-08T10:28:13Z",
+              "conclusion": "success",
+              "name": "Initialize containers",
+              "number": 2,
+              "startedAt": "2026-10-08T10:27:45Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-08T10:28:14Z",
+              "conclusion": "success",
+              "name": "Run actions/checkout@v4",
+              "number": 3,
+              "startedAt": "2026-10-08T10:28:13Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-08T10:28:17Z",
+              "conclusion": "success",
+              "name": "Run actions/setup-python@v5",
+              "number": 4,
+              "startedAt": "2026-10-08T10:28:14Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-08T10:28:37Z",
+              "conclusion": "success",
+              "name": "Run python -m pip install -r requirements-mysql.txt",
+              "number": 5,
+              "startedAt": "2026-10-08T10:28:17Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-08T10:28:42Z",
+              "conclusion": "success",
+              "name": "Run python -m unittest discover -s tests -v",
+              "number": 6,
+              "startedAt": "2026-10-08T10:28:37Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-08T10:28:42Z",
+              "conclusion": "success",
+              "name": "Post Run actions/setup-python@v5",
+              "number": 10,
+              "startedAt": "2026-10-08T10:28:42Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-08T10:28:42Z",
+              "conclusion": "success",
+              "name": "Post Run actions/checkout@v4",
+              "number": 11,
+              "startedAt": "2026-10-08T10:28:42Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-08T10:28:44Z",
+              "conclusion": "success",
+              "name": "Stop containers",
+              "number": 12,
+              "startedAt": "2026-10-08T10:28:42Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-08T10:28:44Z",
+              "conclusion": "success",
+              "name": "Complete job",
+              "number": 13,
+              "startedAt": "2026-10-08T10:28:44Z",
+              "status": "completed"
+            }
+          ],
+          "url": "https://github.com/a3524110303-cpu/M.E.S.S.I-/actions/runs/37763609648/job/113265753293"
+        },
+        {
+          "completedAt": "2026-10-08T10:29:14Z",
+          "conclusion": "success",
+          "databaseId": 113265753435,
+          "name": "tests",
+          "startedAt": "2026-10-08T10:27:44Z",
+          "status": "completed",
+          "steps": [
+            {
+              "completedAt": "2026-10-08T10:27:46Z",
+              "conclusion": "success",
+              "name": "Set up job",
+              "number": 1,
+              "startedAt": "2026-10-08T10:27:45Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-08T10:27:51Z",
+              "conclusion": "success",
+              "name": "Run actions/checkout@v4",
+              "number": 2,
+              "startedAt": "2026-10-08T10:27:46Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-08T10:28:00Z",
+              "conclusion": "success",
+              "name": "Run actions/setup-python@v5",
+              "number": 3,
+              "startedAt": "2026-10-08T10:27:51Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-08T10:28:49Z",
+              "conclusion": "success",
+              "name": "Run python -m pip install -r requirements-mysql.txt",
+              "number": 4,
+              "startedAt": "2026-10-08T10:28:00Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-08T10:29:09Z",
+              "conclusion": "success",
+              "name": "Run python -m unittest discover -s tests -v",
+              "number": 5,
+              "startedAt": "2026-10-08T10:28:49Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-08T10:29:09Z",
+              "conclusion": "success",
+              "name": "Run python -m compileall -q app.py src scripts",
+              "number": 6,
+              "startedAt": "2026-10-08T10:29:09Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-08T10:29:10Z",
+              "conclusion": "success",
+              "name": "Post Run actions/setup-python@v5",
+              "number": 11,
+              "startedAt": "2026-10-08T10:29:09Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-08T10:29:12Z",
+              "conclusion": "success",
+              "name": "Post Run actions/checkout@v4",
+              "number": 12,
+              "startedAt": "2026-10-08T10:29:10Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-08T10:29:12Z",
+              "conclusion": "success",
+              "name": "Complete job",
+              "number": 13,
+              "startedAt": "2026-10-08T10:29:12Z",
+              "status": "completed"
+            }
+          ],
+          "url": "https://github.com/a3524110303-cpu/M.E.S.S.I-/actions/runs/37763609648/job/113265753435"
+        }
+      ],
+      "status": "completed",
+      "updatedAt": "2026-10-08T10:29:15Z",
+      "url": "https://github.com/a3524110303-cpu/M.E.S.S.I-/actions/runs/37763609648",
+      "resumen_pruebas": [
+        {
+          "nombre": "mysql-integration",
+          "plataforma": "Ubuntu GitHub-hosted, Python 3.13, MySQL 8.0 real",
+          "job_id": 113265753293,
+          "url": "https://github.com/a3524110303-cpu/M.E.S.S.I-/actions/runs/37763609648/job/113265753293",
+          "conclusion": "success",
+          "total": 161,
+          "aprobadas": 161,
+          "omitidas": 0,
+          "fallidas": 0,
+          "duracion_s": 4.416,
+          "log": "ci_0.4.0_37763609648_mysql.txt",
+          "log_sha256": "fcf9f9bdf85c2aef21bc778c2f97e04b0b35d44766f0a0db92aafb1269cee2bb",
+          "regresion_copia_solicitud_incluida": true,
+          "log_formato_hash": "UTF-8 con saltos LF; normalizar CRLF a LF si Git cambia los saltos al extraer."
+        },
+        {
+          "nombre": "tests",
+          "plataforma": "Windows GitHub-hosted, Python 3.13",
+          "job_id": 113265753435,
+          "url": "https://github.com/a3524110303-cpu/M.E.S.S.I-/actions/runs/37763609648/job/113265753435",
+          "conclusion": "success",
+          "total": 161,
+          "aprobadas": 154,
+          "omitidas": 7,
+          "fallidas": 0,
+          "duracion_s": 17.286,
+          "log": "ci_0.4.0_37763609648_windows.txt",
+          "log_sha256": "79fc80c3649a46163fd347c705fa5a5499f2117aae0789e422d5b030f1c12e02",
+          "regresion_copia_solicitud_incluida": true,
+          "log_formato_hash": "UTF-8 con saltos LF; normalizar CRLF a LF si Git cambia los saltos al extraer."
+        }
+      ]
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-10-08T10:27:38Z",
+      "databaseId": 37763603878,
+      "headSha": "dd4a001a872b3a06e52d8b93a9f498d48f54fe36",
+      "jobs": [
+        {
+          "completedAt": "2026-10-08T10:28:36Z",
+          "conclusion": "success",
+          "databaseId": 113265733054,
+          "name": "mysql-integration",
+          "startedAt": "2026-10-08T10:27:40Z",
+          "status": "completed",
+          "steps": [
+            {
+              "completedAt": "2026-10-08T10:27:41Z",
+              "conclusion": "success",
+              "name": "Set up job",
+              "number": 1,
+              "startedAt": "2026-10-08T10:27:41Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-08T10:28:09Z",
+              "conclusion": "success",
+              "name": "Initialize containers",
+              "number": 2,
+              "startedAt": "2026-10-08T10:27:41Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-08T10:28:09Z",
+              "conclusion": "success",
+              "name": "Run actions/checkout@v4",
+              "number": 3,
+              "startedAt": "2026-10-08T10:28:09Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-08T10:28:12Z",
+              "conclusion": "success",
+              "name": "Run actions/setup-python@v5",
+              "number": 4,
+              "startedAt": "2026-10-08T10:28:09Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-08T10:28:26Z",
+              "conclusion": "success",
+              "name": "Run python -m pip install -r requirements-mysql.txt",
+              "number": 5,
+              "startedAt": "2026-10-08T10:28:12Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-08T10:28:30Z",
+              "conclusion": "success",
+              "name": "Run python -m unittest discover -s tests -v",
+              "number": 6,
+              "startedAt": "2026-10-08T10:28:26Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-08T10:28:30Z",
+              "conclusion": "success",
+              "name": "Post Run actions/setup-python@v5",
+              "number": 10,
+              "startedAt": "2026-10-08T10:28:30Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-08T10:28:30Z",
+              "conclusion": "success",
+              "name": "Post Run actions/checkout@v4",
+              "number": 11,
+              "startedAt": "2026-10-08T10:28:30Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-08T10:28:34Z",
+              "conclusion": "success",
+              "name": "Stop containers",
+              "number": 12,
+              "startedAt": "2026-10-08T10:28:30Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-08T10:28:34Z",
+              "conclusion": "success",
+              "name": "Complete job",
+              "number": 13,
+              "startedAt": "2026-10-08T10:28:34Z",
+              "status": "completed"
+            }
+          ],
+          "url": "https://github.com/a3524110303-cpu/M.E.S.S.I-/actions/runs/37763603878/job/113265733054"
+        },
+        {
+          "completedAt": "2026-10-08T10:30:14Z",
+          "conclusion": "success",
+          "databaseId": 113265733354,
+          "name": "tests",
+          "startedAt": "2026-10-08T10:27:41Z",
+          "status": "completed",
+          "steps": [
+            {
+              "completedAt": "2026-10-08T10:27:43Z",
+              "conclusion": "success",
+              "name": "Set up job",
+              "number": 1,
+              "startedAt": "2026-10-08T10:27:42Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-08T10:28:01Z",
+              "conclusion": "success",
+              "name": "Run actions/checkout@v4",
+              "number": 2,
+              "startedAt": "2026-10-08T10:27:43Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-08T10:28:18Z",
+              "conclusion": "success",
+              "name": "Run actions/setup-python@v5",
+              "number": 3,
+              "startedAt": "2026-10-08T10:28:01Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-08T10:29:15Z",
+              "conclusion": "success",
+              "name": "Run python -m pip install -r requirements-mysql.txt",
+              "number": 4,
+              "startedAt": "2026-10-08T10:28:18Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-08T10:30:09Z",
+              "conclusion": "success",
+              "name": "Run python -m unittest discover -s tests -v",
+              "number": 5,
+              "startedAt": "2026-10-08T10:29:15Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-08T10:30:09Z",
+              "conclusion": "success",
+              "name": "Run python -m compileall -q app.py src scripts",
+              "number": 6,
+              "startedAt": "2026-10-08T10:30:09Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-08T10:30:09Z",
+              "conclusion": "success",
+              "name": "Post Run actions/setup-python@v5",
+              "number": 11,
+              "startedAt": "2026-10-08T10:30:09Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-08T10:30:12Z",
+              "conclusion": "success",
+              "name": "Post Run actions/checkout@v4",
+              "number": 12,
+              "startedAt": "2026-10-08T10:30:09Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-10-08T10:30:12Z",
+              "conclusion": "success",
+              "name": "Complete job",
+              "number": 13,
+              "startedAt": "2026-10-08T10:30:12Z",
+              "status": "completed"
+            }
+          ],
+          "url": "https://github.com/a3524110303-cpu/M.E.S.S.I-/actions/runs/37763603878/job/113265733354"
+        }
+      ],
+      "status": "completed",
+      "updatedAt": "2026-10-08T10:30:14Z",
+      "url": "https://github.com/a3524110303-cpu/M.E.S.S.I-/actions/runs/37763603878",
+      "resumen_pruebas": [
+        {
+          "nombre": "mysql-integration",
+          "plataforma": "Ubuntu GitHub-hosted, Python 3.13, MySQL 8.0 real",
+          "job_id": 113265733054,
+          "url": "https://github.com/a3524110303-cpu/M.E.S.S.I-/actions/runs/37763603878/job/113265733054",
+          "conclusion": "success",
+          "total": 161,
+          "aprobadas": 161,
+          "omitidas": 0,
+          "fallidas": 0,
+          "duracion_s": 3.338,
+          "log": "ci_0.4.0_37763603878_mysql.txt",
+          "log_sha256": "3c5c9b38877ec06a8d3be6269056cc936f010cdbf1b15e6502636c2a1787684f",
+          "regresion_copia_solicitud_incluida": true,
+          "log_formato_hash": "UTF-8 con saltos LF; normalizar CRLF a LF si Git cambia los saltos al extraer."
+        },
+        {
+          "nombre": "tests",
+          "plataforma": "Windows GitHub-hosted, Python 3.13",
+          "job_id": 113265733354,
+          "url": "https://github.com/a3524110303-cpu/M.E.S.S.I-/actions/runs/37763603878/job/113265733354",
+          "conclusion": "success",
+          "total": 161,
+          "aprobadas": 154,
+          "omitidas": 7,
+          "fallidas": 0,
+          "duracion_s": 52.061,
+          "log": "ci_0.4.0_37763603878_windows.txt",
+          "log_sha256": "43535013aa42518e1c7758047ca197837009b9437e384794b49dd2916a0af062",
+          "regresion_copia_solicitud_incluida": true,
+          "log_formato_hash": "UTF-8 con saltos LF; normalizar CRLF a LF si Git cambia los saltos al extraer."
+        }
+      ]
+    }
+  ]
+}

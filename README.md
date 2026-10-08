@@ -1,9 +1,17 @@
 # MESSI Alerta y acompañamiento escolar
 
-Versión local **0.3.0** preparada para las entregas 2 y 3 del equipo MESSI.
+Versión local **0.4.0** preparada para las entregas 2 y 3 del equipo MESSI.
 El docente ingresa indicadores del
 primer parcial; el tutor revisa los casos y registra apoyos y seguimiento; el
 estudiante puede solicitar ayuda aunque no haya alerta ni modelo disponible.
+
+La navegación lateral organiza las vistas Docente, Tutor y Estudiante. El
+docente ve pasos de carga, guardado y cálculo que reflejan el estado de sus
+datos; el tutor consulta cifras de solicitudes, apoyos activos y casos para
+revisar, con tablas en español y fechas locales. Puede leer una solicitud por
+folio y usar su código para preparar el acuerdo; el apoyo se guarda al enviarlo.
+La ventana de escritorio
+agrupa apertura, respaldo, diagnóstico y cierre.
 
 Documento de alcance de la primera entrega:
 [Documento del proyecto 01](docs/entrega_1/01_Documento_del_proyecto_MESSI.md).
@@ -17,8 +25,14 @@ La [lista de cotejo](docs/entrega_3/Verificacion_de_entregas_2_y_3.md) relaciona
 cada requisito del examen con su archivo y evidencia. **La prueba con una persona
 ajena sigue pendiente:** el equipo confirmó el 8 de octubre que aún no la ha
 realizado. El formato 05 contiene un protocolo preparado, sin resultados inventados.
-El [video público de 4:25](https://github.com/a3524110303-cpu/M.E.S.S.I-/releases/download/v0.3.0-entregas/MESSI_Demo_Entrega_3.mp4)
-y el instalador están publicados; se comprobó acceso HTTP 200 sin autenticación.
+El [video de MESSI 0.4.0, de 4:25](https://github.com/a3524110303-cpu/M.E.S.S.I-/releases/download/v0.4.0-interfaz/MESSI_Demo_Entrega_3.mp4)
+ya está generado y validado con capturas de la interfaz actual, narración
+sintética y subtítulos. El instalador y portable también están listos;
+su publicación se prepara en la
+[versión 0.4.0](https://github.com/a3524110303-cpu/M.E.S.S.I-/releases/tag/v0.4.0-interfaz).
+El acceso público nuevo se comprueba al terminar la subida. La
+[versión 0.3.0](https://github.com/a3524110303-cpu/M.E.S.S.I-/releases/tag/v0.3.0-entregas)
+se conserva como historial, con acceso HTTP 200 comprobado.
 
 El prototipo es una demostración local con datos sintéticos. El selector de
 roles sirve para demostrar los flujos; la autenticación y los permisos de un
@@ -28,7 +42,7 @@ versión. Una alerta no cambia calificaciones ni aplica sanciones.
 ## Usar MESSI en Windows 10 y 11
 
 Para el cliente, entrega **`release/MESSI-Setup-Windows-x64.exe`**. El instalador
-[se descarga en la versión 0.3.0 de GitHub](https://github.com/a3524110303-cpu/M.E.S.S.I-/releases/tag/v0.3.0-entregas).
+[se prepara en la versión 0.4.0 de GitHub](https://github.com/a3524110303-cpu/M.E.S.S.I-/releases/tag/v0.4.0-interfaz).
 El instalador
 incluye Python, librerías, SQLite y el modelo neuronal ya entrenado. Basta con
 Siguiente, Instalar y Finalizar; después abrir MESSI desde el acceso directo.
@@ -44,8 +58,9 @@ su propia base; no hay sincronización automática entre computadoras.
 El paquete es para Intel/AMD x64 con Windows 10 versión 2004 o posterior,
 o Windows 11. Se recomiendan 4 GB de RAM, 1 GB libre y un navegador instalado.
 No requiere GPU dedicada.
-La versión 0.3.0 se comprobó en Windows 11 x64; Windows 10 y una segunda
-computadora aún requieren una prueba física.
+La interfaz y el paquete 0.4.0 se comprobaron en Windows 11 x64, con ejecución
+instalada sin Python en `PATH` y conservación de la base al actualizar. Windows
+10 y una segunda computadora aún requieren una prueba física.
 
 Para reconstruir el instalador en desarrollo:
 
@@ -90,10 +105,12 @@ Para continuar sobre la base existente, consultar
 
 ```text
 app.py                         Interfaz Streamlit con tres vistas de demostración
+src/messi/presentation.py      Navegación, pasos, presentación y tablas en español
 src/messi/data.py              Validación de Excel, CSV, pegado y captura
 src/messi/model.py             Inferencia opcional y comprobación de metadatos
 src/messi/paths.py             Recursos incluidos y datos por usuario
 src/messi/sqlite_storage.py    Persistencia local completa y respaldos
+src/messi/desktop.py           Ventana de control y servidor local incluido
 messi_desktop.py              Entrada del ejecutable y diagnóstico
 MESSI.spec                    Empaquetado de Python, recursos y modelo
 installer/MESSI.iss            Instalador Windows 10/11
@@ -121,6 +138,17 @@ docs/referencias/              Copias intactas de documentos y referencias
 ```
 
 ## Ingreso para docentes
+
+Tres pasos visibles separan **cargar y revisar**, **guardar indicadores** y
+**calcular y descargar**. El paso de guardado se confirma cuando SQLite acepta
+el conjunto o cuando se recupera de la base. Un resultado disponible en sesión
+se distingue de un resultado guardado; un error de escritura mantiene el aviso
+de que no se guardó. Cambiar datos o rechazar un pegado invalida el progreso
+correspondiente y los resultados anteriores.
+
+Las cifras muestran estudiantes, nota y asistencia promedio y casos marcados
+para revisar. Se calculan a partir de los indicadores visibles; no representan
+eficacia escolar ni decisiones tomadas por una persona.
 
 La vista Docente ofrece cuatro opciones. **Excel o CSV** permite descargar
 `data/synthetic/Plantilla_MESSI.xlsx`, reemplazar sus ejemplos, guardar y cargar
@@ -185,35 +213,59 @@ explicación causal de una predicción.
 
 ## Validación y estado real
 
-La versión **0.3.0** conserva SQLite y el instalador local. Corrige el aislamiento
-de los diagnósticos para que no creen una base en la carpeta de usuario,
-sincroniza el arranque y cierre del servidor y documenta las APIs públicas.
+La versión **0.4.0** mejora la jerarquía de tareas, el progreso de Docente, los
+resúmenes de datos, las tablas de Tutor y la ventana de control. Conserva el
+modelo, SQLite y los contratos de captura, validación y acompañamiento. Una
+regresión nueva confirma que el progreso se restablece al rechazar datos; otra
+comprueba que las tablas en español conservan intactos los registros de SQLite.
+Las mejoras de aislamiento y cierre del servidor introducidas en 0.3.0 se
+mantienen.
 La revisión de Ismael confirmó aportes de comentarios y manual, sin cambios de
 lógica; se precisó la interpretación de métricas, puntuación y checksum.
 El informe de Víctor se contrastó con su commit y con una ejecución nueva.
 [Revisión de ambos aportes](docs/entrega_2/Revision_Ismael_y_Victor_2026-10-08.md).
 
-La suite actual descubrió **157 pruebas: 150 aprobadas, siete MySQL omitidas y
+La suite actual descubrió **161 pruebas: 154 aprobadas, siete MySQL omitidas y
 cero fallidas**. Las omisiones requieren un servidor MySQL y no se cuentan como
 aprobaciones. La aplicación cliente usa SQLite.
 [Registro de pruebas](docs/entrega_2/evidencias/pruebas_actuales.txt).
-GitHub Actions aprobó además Windows (150 aprobadas, siete MySQL omitidas) y
-Linux con MySQL real (157 aprobadas, ninguna omitida). Se corrigió una
-comparación de alias temporales de Windows en una prueba, sin cambiar la app.
-[Evidencia CI](docs/entrega_2/evidencias/ci_github.json).
+El registro histórico de **0.3.0** incluye GitHub Actions en Windows (150
+aprobadas, siete MySQL omitidas) y Linux con MySQL real (157 aprobadas, ninguna
+omitida). Se corrigió una comparación de alias temporales de Windows en una
+prueba, sin cambiar la app. [Ejecución CI de 0.3.0](https://github.com/a3524110303-cpu/M.E.S.S.I-/actions/runs/37753609896).
+El CI de **0.4.0**, commit `dd4a001`, también terminó correctamente: Windows
+descubrió 161 pruebas, con 154 aprobadas y siete MySQL omitidas; Ubuntu con
+MySQL real aprobó las 161, sin omisiones ni fallos.
+[Ejecución actual](https://github.com/a3524110303-cpu/M.E.S.S.I-/actions/runs/37763609648)
+y [evidencia con logs reales](docs/entrega_2/evidencias/ci_github_0.4.0.json).
 
-Se verificaron el ejecutable empaquetado y la instalación actualizada: inferencia
-sintética, persistencia, respaldo, interfaz HTTP 200 y cierre del servidor.
-La actualización conservó el SHA-256 de la base de usuario y el ejecutable
-funcionó sin Python en PATH.
-[Actualización comprobada](docs/entrega_2/evidencias/actualizacion_instalador.json).
+El self-test de fuente **0.4.0** comprobó ocho predicciones sintéticas,
+persistencia, respaldo, tres vistas y reapertura.
+[Verificación de fuente](docs/entrega_2/evidencias/verificacion_fuente_self_test.json).
+El ejecutable y la actualización instalada **0.4.0** se comprobaron sin Python
+en `PATH`. La actualización terminó con código 0 y conservó el hash de la base;
+incluye lectura/copia de solicitudes y el contraste final del detalle.
+[Actualización instalada](docs/entrega_2/evidencias/actualizacion_instalador.json),
+[self-test instalado](docs/entrega_2/evidencias/instalado-self-test.json) y
+[servidor instalado](docs/entrega_2/evidencias/instalado-smoke-server.json).
+La [comprobación final](docs/entrega_2/evidencias/verificacion_instalado_final.json)
+confirma que la copia instalada de `app.py` es idéntica a la fuente final.
+El `release/MESSI-Portable-Windows-x64.zip` conserva los 3 355 archivos de
+`dist/MESSI`, con inventario, CRC y SHA-256 comprobados. Extrae la carpeta
+completa antes de abrir `MESSI.exe`.
+[Verificación del portable](docs/entrega_2/evidencias/paquete_portable.json).
 La prueba aislada de instalar y desinstalar abortó de forma segura al detectar
 la instalación habitual; no se presenta como ejecutada en esta versión.
 
 El recorrido manual en navegador incluye entrada, validación, cálculo, solicitud,
-apoyo y seguimiento con información ficticia. Sus capturas acompañan el manual
-04 y un video de 4:25 con voz sintética y subtítulos. Las pruebas anteriores se
-conservan como historial y no sustituyen la evidencia actual.
+apoyo y seguimiento con información ficticia. La actualización 0.4.0 reúne
+[capturas de la interfaz](docs/entrega_3/evidencias/capturas_interfaz_04/), los
+formatos del profesor y el video del diseño actual. Los archivos se reúnen en
+`MESSI_0.4.0` en el escritorio. El video dura 265.23 segundos, es Full HD con
+H.264/AAC y conserva el orden de problema, demostración, resultados y límites.
+[Verificación del video](docs/entrega_3/evidencias/verificacion_video_demo.json).
+Las pruebas anteriores se conservan
+como historial y no sustituyen la evidencia de la versión nueva.
 
 
 El 5 de octubre se integraron las aportaciones de Ismael y Víctor con la
