@@ -29,6 +29,8 @@ button:focus-visible, input:focus-visible, textarea:focus-visible,
 [role="radio"]:focus-visible, [role="combobox"]:focus-visible { outline:3px solid #a45d13 !important; outline-offset:3px; }
 [data-testid="stTextInput"] input, [data-testid="stNumberInput"] input,
 [data-testid="stTextArea"] textarea { background:#f8fbfa; }
+[data-testid="stTextArea"] textarea:disabled { color:#122c39 !important; -webkit-text-fill-color:#122c39 !important; opacity:1 !important; }
+[data-testid="stTextArea"]:has(textarea:disabled) [data-testid="stWidgetLabel"] p { color:#526773 !important; }
 [data-testid="stRadio"] [role="radiogroup"] { gap:.65rem; }
 [data-testid="stSidebar"] [data-testid="stRadio"] [role="radiogroup"] label { background:#f5f8f7; border:1px solid #dce7e3; border-radius:12px; padding:.7rem; margin:0 0 .35rem; width:100%; }
 [data-testid="stSidebar"] [data-testid="stRadio"] [role="radiogroup"] label:has(input:checked) { background:#e6f3ee; border-color:#167a72; }
