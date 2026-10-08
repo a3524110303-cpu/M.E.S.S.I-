@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "messi-escolar"
-version = "0.3.0"
+version = "0.4.0"
 description = "Prototipo de alerta y acompañamiento escolar MESSI"
 requires-python = ">=3.11,<3.14"
 dynamic = ["dependencies"]

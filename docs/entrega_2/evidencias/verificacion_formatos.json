@@ -1,8 +1,7 @@
 {
   "fecha": "2026-10-08",
-  "version_messi": "0.3.0",
-  "metodo_render": "Microsoft Word 16.0 COM: documentos abiertos en modo lectura y exportados a PDF; render_docx.py rasterize con Poppler bundled a 144 DPI. No se utilizo LibreOffice de escritorio.",
-  "qa_visual": "Las 18 paginas finales fueron inspeccionadas a tamano completo: sin desbordamiento, superposicion ni controles esenciales cortados.",
+  "version_messi": "0.4.0",
+  "metodo_render": "Microsoft Word 16.0 COM: documentos abiertos en modo lectura y exportados a PDF; render_docx.py rasterize con Poppler bundled a 144 DPI. No se utilizó LibreOffice de escritorio.",
   "documentos": [
     {
       "docx": "docs/entrega_2/02_Manual_del_programador.docx",
@@ -15,41 +14,129 @@
         5,
         6
       ],
-      "sha256_docx": "abd11765789f0d4d12e65e89ec4445ae960f1760a0672256bdb567a24898bc9a",
+      "sha256_docx": "720e68739e3930edf9a89fd8e527b84e3b944d046737444f5dc607328012674c",
       "original": "docs/referencias/02_Manual_del_programador.docx",
       "sha256_original": "81d4dd33f7c687386560061f4a8c596b45adea72b8fb74ecc9c7effac55bba88",
       "original_intacto": true,
       "partes_opacas_estilos_pie_geometria_conservados": true,
       "titulos_y_orden_conservados": true,
       "placeholders_y_ejemplos_eliminados": true,
-      "pdf_final_exportado": "C:\\Users\\user\\Desktop\\MESSI\\tmp\\documents\\final_05\\02_Manual_del_programador\\word.pdf"
+      "pdf_final_exportado": "C:\\Users\\user\\Desktop\\MESSI\\.qa\\interfaz\\final-pdf\\02_Manual_del_programador.pdf",
+      "sha256_pdf": "b2c3ccb8935f230a597ec15246bbd83e3c0497260013610ad9a97fef7cef0fa2"
     },
     {
       "docx": "docs/entrega_2/03_Informe_de_pruebas_QA.docx",
-      "paginas": 3,
+      "paginas": 4,
       "paginas_inspeccionadas": [
         1,
         2,
-        3
+        3,
+        4
       ],
-      "sha256_docx": "f8425e51453e7b3cf8526d4b223ff6783980c06a195570226799424cc53332b2",
+      "sha256_docx": "898a389d31577165982a9493cd4712b2f23faa568abdda787cc9d4cfff4e487b",
       "original": "docs/referencias/03_Informe_de_pruebas_QA.docx",
       "sha256_original": "e1b2c0d382387825f5461bea941b200c0ddd45003a3cd22dd35142a5beb665be",
       "original_intacto": true,
       "partes_opacas_estilos_pie_geometria_conservados": true,
       "titulos_y_orden_conservados": true,
       "placeholders_y_ejemplos_eliminados": true,
-      "pdf_final_exportado": "C:\\Users\\user\\Desktop\\MESSI\\tmp\\documents\\final_ci_02\\03_Informe_de_pruebas_QA\\word.pdf",
-      "actualizacion_qa_ci": "Hallazgo inicial por alias temporal Windows 8.3 registrado. Seis pruebas desktop aprobadas localmente en ambos entornos; cuatro checks CI Windows y Linux/MySQL aprobados para el commit c8d6942 en push y PR, anterior a esta actualizacion documental.",
-      "commit_ci_verificado": "c8d6942",
-      "ejecuciones_ci": [
+      "pdf_final_exportado": "C:\\Users\\user\\Desktop\\MESSI\\.qa\\interfaz\\final-pdf\\03_Informe_de_pruebas_QA.pdf",
+      "sha256_pdf": "86bd08d9596c0542ab55b18749dc41f5f353c7ed7e75d16fba5cff0b2cabdcb0",
+      "suite_fuente_actual": {
+        "descubiertas": 161,
+        "aprobadas": 154,
+        "omitidas_mysql": 7,
+        "fallidas": 0
+      },
+      "paquete_actual": "0.4.0: self-test y smoke-server portátil/instalado OK; actualización exit0 conserva SQLite. JSON separados en evidencias.",
+      "commit_ci_actual_verificado": "dd4a001a872b3a06e52d8b93a9f498d48f54fe36",
+      "ejecuciones_ci_actuales": [
+        {
+          "url": "https://github.com/a3524110303-cpu/M.E.S.S.I-/actions/runs/37763609648",
+          "conclusion": "success",
+          "checks": [
+            {
+              "nombre": "mysql-integration",
+              "plataforma": "Ubuntu GitHub-hosted, Python 3.13, MySQL 8.0 real",
+              "job_id": 113265753293,
+              "url": "https://github.com/a3524110303-cpu/M.E.S.S.I-/actions/runs/37763609648/job/113265753293",
+              "conclusion": "success",
+              "total": 161,
+              "aprobadas": 161,
+              "omitidas": 0,
+              "fallidas": 0,
+              "duracion_s": 4.416,
+              "log": "ci_0.4.0_37763609648_mysql.txt",
+              "log_sha256": "fcf9f9bdf85c2aef21bc778c2f97e04b0b35d44766f0a0db92aafb1269cee2bb",
+              "regresion_copia_solicitud_incluida": true,
+              "log_formato_hash": "UTF-8 con saltos LF; normalizar CRLF a LF si Git cambia los saltos al extraer."
+            },
+            {
+              "nombre": "tests",
+              "plataforma": "Windows GitHub-hosted, Python 3.13",
+              "job_id": 113265753435,
+              "url": "https://github.com/a3524110303-cpu/M.E.S.S.I-/actions/runs/37763609648/job/113265753435",
+              "conclusion": "success",
+              "total": 161,
+              "aprobadas": 154,
+              "omitidas": 7,
+              "fallidas": 0,
+              "duracion_s": 17.286,
+              "log": "ci_0.4.0_37763609648_windows.txt",
+              "log_sha256": "79fc80c3649a46163fd347c705fa5a5499f2117aae0789e422d5b030f1c12e02",
+              "regresion_copia_solicitud_incluida": true,
+              "log_formato_hash": "UTF-8 con saltos LF; normalizar CRLF a LF si Git cambia los saltos al extraer."
+            }
+          ]
+        },
+        {
+          "url": "https://github.com/a3524110303-cpu/M.E.S.S.I-/actions/runs/37763603878",
+          "conclusion": "success",
+          "checks": [
+            {
+              "nombre": "mysql-integration",
+              "plataforma": "Ubuntu GitHub-hosted, Python 3.13, MySQL 8.0 real",
+              "job_id": 113265733054,
+              "url": "https://github.com/a3524110303-cpu/M.E.S.S.I-/actions/runs/37763603878/job/113265733054",
+              "conclusion": "success",
+              "total": 161,
+              "aprobadas": 161,
+              "omitidas": 0,
+              "fallidas": 0,
+              "duracion_s": 3.338,
+              "log": "ci_0.4.0_37763603878_mysql.txt",
+              "log_sha256": "3c5c9b38877ec06a8d3be6269056cc936f010cdbf1b15e6502636c2a1787684f",
+              "regresion_copia_solicitud_incluida": true,
+              "log_formato_hash": "UTF-8 con saltos LF; normalizar CRLF a LF si Git cambia los saltos al extraer."
+            },
+            {
+              "nombre": "tests",
+              "plataforma": "Windows GitHub-hosted, Python 3.13",
+              "job_id": 113265733354,
+              "url": "https://github.com/a3524110303-cpu/M.E.S.S.I-/actions/runs/37763603878/job/113265733354",
+              "conclusion": "success",
+              "total": 161,
+              "aprobadas": 154,
+              "omitidas": 7,
+              "fallidas": 0,
+              "duracion_s": 52.061,
+              "log": "ci_0.4.0_37763603878_windows.txt",
+              "log_sha256": "43535013aa42518e1c7758047ca197837009b9437e384794b49dd2916a0af062",
+              "regresion_copia_solicitud_incluida": true,
+              "log_formato_hash": "UTF-8 con saltos LF; normalizar CRLF a LF si Git cambia los saltos al extraer."
+            }
+          ]
+        }
+      ],
+      "ci_historica": "Commit c8d6942 de MESSI 0.3.0: cuatro checks aprobados. No se atribuyen a la interfaz 0.4.0.",
+      "ejecuciones_ci_historicas": [
         "https://github.com/a3524110303-cpu/M.E.S.S.I-/actions/runs/37753609896",
         "https://github.com/a3524110303-cpu/M.E.S.S.I-/actions/runs/37753615435"
       ]
     },
     {
       "docx": "docs/entrega_3/04_Manual_de_usuario.docx",
-      "paginas": 8,
+      "paginas": 11,
       "paginas_inspeccionadas": [
         1,
         2,
@@ -58,16 +145,24 @@
         5,
         6,
         7,
-        8
+        8,
+        9,
+        10,
+        11
       ],
-      "sha256_docx": "aac4ea9d99b3832eb22bc82c48e7f0340d343cce7f0a34ae423b86d897ff20ce",
+      "sha256_docx": "234ef4e4df1e47cf1875521f05d1c3c52af00fa23fe2ff637763e37efb76b75c",
       "original": "docs/referencias/04_Manual_de_usuario.docx",
       "sha256_original": "cbc1d2ec13e6047b6b1319a52517a1d323427b26bbf60bfb9beb847845c0e443",
       "original_intacto": true,
       "partes_opacas_estilos_pie_geometria_conservados": true,
       "titulos_y_orden_conservados": true,
       "placeholders_y_ejemplos_eliminados": true,
-      "pdf_final_exportado": "C:\\Users\\user\\Desktop\\MESSI\\tmp\\documents\\final_05\\04_Manual_de_usuario\\word.pdf"
+      "pdf_final_exportado": "C:\\Users\\user\\Desktop\\MESSI\\.qa\\interfaz\\final-pdf\\04_Manual_de_usuario.pdf",
+      "sha256_pdf": "85bca56d84f8aafef4bd7106334a47bdbc6259a82f0cadd6ce0728a61ddfc9c6",
+      "capturas_embebidas": 12,
+      "origen_capturas": "docs/entrega_3/evidencias/capturas_interfaz_04; aplicación 0.4.0 real en navegador, desde fuente y ejecutable instalado del mismo cierre; instalador y ventana nativa instalada. Flujo final comprobado también con el paquete reconstruido.",
+      "figuras_de_capturas": 20,
+      "mapa_capturas": "docs/entrega_3/evidencias/capturas_manual.json"
     },
     {
       "docx": "docs/entrega_3/05_Nota_de_prueba_con_persona_ajena.docx",
@@ -82,11 +177,13 @@
       "partes_opacas_estilos_pie_geometria_conservados": true,
       "titulos_y_orden_conservados": true,
       "placeholders_y_ejemplos_eliminados": true,
-      "pdf_final_exportado": "C:\\Users\\user\\Desktop\\MESSI\\tmp\\documents\\final_05\\05_Nota_de_prueba_con_persona_ajena\\word.pdf",
-      "estado_prueba_ajena": "Pendiente: el usuario confirmo que todavia no se ha realizado. No hay persona, observaciones o hallazgos inventados.",
+      "pdf_final_exportado": "C:\\Users\\user\\Desktop\\MESSI\\.qa\\interfaz\\final-pdf\\05_Nota_de_prueba_con_persona_ajena.pdf",
+      "sha256_pdf": "959fe7c24019dfd709c9cd6d96bb39490be1ee516b49d0936c562815b34e25bc",
+      "estado_prueba_ajena": "Pendiente: el usuario confirmó que todavía no se ha realizado. No hay persona, observaciones o hallazgos inventados.",
       "contenido_hasta_puntos": 390.59,
-      "limite_media_hoja_puntos": 396,
+      "limite_media_hoja_puntos": 396.0,
       "nota_dentro_de_media_pagina": true
     }
-  ]
+  ],
+  "qa_visual": "Las 22 páginas finales fueron inspeccionadas completas: sin desbordamiento, superposición ni controles esenciales cortados."
 }

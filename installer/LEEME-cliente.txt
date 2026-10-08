@@ -1,4 +1,4 @@
-MESSI 0.3.0 - INSTALACIÓN LOCAL
+MESSI 0.4.0 - INSTALACIÓN LOCAL
 
 Windows 10 (versión 2004 o posterior) y Windows 11, 64 bits Intel/AMD.
 Recomendado: 4 GB de RAM, 1 GB de espacio libre y un navegador instalado.

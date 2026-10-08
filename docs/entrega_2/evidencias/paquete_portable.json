@@ -1,7 +1,79 @@
 {
-  "portable_archivos_zip": 3341,
-  "portable_archivos_fuente": 3341,
-  "exe": 22295203,
+  "version": "0.4.0",
+  "fecha_utc": "2026-10-08T10:30:37.231308+00:00",
+  "archivo": "release/MESSI-Portable-Windows-x64.zip",
+  "estructura": "Carpeta MESSI completa; extraer todo antes de abrir MESSI.exe.",
+  "portable_archivos_zip": 3355,
+  "portable_archivos_fuente": 3355,
+  "estructura_completa": true,
+  "nombres_no_vacios": true,
+  "crc_correcto": true,
+  "todos_los_hashes_coinciden_con_fuente": true,
+  "inventario_nombre_sha256": "90b6756726dc4891fb3a92784f20c3bd944d4082b7e91c3a97781162f4e37a80",
+  "zip_bytes": 123881330,
+  "zip_sha256": "abdfc2c8930d3b3f7806c5b917a529306d3cfb0561ff6a29d6088c393da24593",
+  "exe": 22307585,
   "modelo": 11873,
-  "estructura_completa": true
+  "payloads_requeridos_no_vacios": {
+    "MESSI.exe": {
+      "bytes": 22307585,
+      "sha256": "3b224f363a28c680f5383d442e2226d89ea8b541c8e8a1c13bf4ffc4e7f2c8fc"
+    },
+    "LEEME.txt": {
+      "bytes": 1605,
+      "sha256": "cb2f14163c9d8af3ed3d8ed31456e9c6fede52fed1e1c9c283e9a03094cea2e2"
+    },
+    "TERCEROS.md": {
+      "bytes": 1042,
+      "sha256": "58260b2c3587a20638d143f3002b33e8971393dc6f34572863168841d4ac9785"
+    },
+    "_internal/app.py": {
+      "bytes": 26221,
+      "sha256": "de898af7435256692d6e77e33057456b35c1be2a033e90a9151056e00d605be8"
+    },
+    "_internal/models/messi_demo.joblib": {
+      "bytes": 11873,
+      "sha256": "bdee9aa2e3f887cf1ed4f14b8319ed3e2a01d0170c3cc678c8c52372a1972dd4"
+    },
+    "_internal/models/messi_demo.json": {
+      "bytes": 4100,
+      "sha256": "46ac18b7ffb574674958ad3e0d87f23ccc1ca77986db16d1ab72088f7afd4c72"
+    },
+    "_internal/data/synthetic/students_demo.csv": {
+      "bytes": 240,
+      "sha256": "02d20f0039c95feb9b8f04e1b5028415c4449739b05b101d51b773871931c26a"
+    },
+    "_internal/data/synthetic/Plantilla_MESSI.xlsx": {
+      "bytes": 6606,
+      "sha256": "dcda028ece37e6113a77416d9546ca2c3a8adcae89a80c82e585ffe059c3d378"
+    },
+    "_internal/python313.dll": {
+      "bytes": 6129496,
+      "sha256": "6964e590037c41d631fd1215f05af154f7fa68105993c6f573a20689b473f1ac"
+    },
+    "_internal/base_library.zip": {
+      "bytes": 1402481,
+      "sha256": "539e5ed81d5512d9487a11ccaf25e46c44a72686dd0c6d3aa95d4e3d711f6f9b"
+    }
+  },
+  "app_py_coincide_con_fuente_actual": true,
+  "build_final_sha256": "08333d3d4b045b7aa63d53e82bb69ed3f8ad9275494de63b7762349e4d8b27f8",
+  "archivos_vacios": [
+    "MESSI/_internal/altair/py.typed",
+    "MESSI/_internal/certifi/py.typed",
+    "MESSI/_internal/joblib-1.5.2.dist-info/REQUESTED",
+    "MESSI/_internal/numpy-2.3.3.dist-info/REQUESTED",
+    "MESSI/_internal/openpyxl-3.1.5.dist-info/REQUESTED",
+    "MESSI/_internal/pandas-2.3.3.dist-info/REQUESTED",
+    "MESSI/_internal/pyarrow/includes/__init__.pxd",
+    "MESSI/_internal/pyarrow-21.0.0.dist-info/REQUESTED",
+    "MESSI/_internal/scikit_learn-1.7.2.dist-info/REQUESTED",
+    "MESSI/_internal/scipy-1.16.2.dist-info/REQUESTED",
+    "MESSI/_internal/sklearn/externals/array_api_compat/py.typed",
+    "MESSI/_internal/sklearn/externals/array_api_extra/py.typed",
+    "MESSI/_internal/streamlit/py.typed",
+    "MESSI/_internal/streamlit-1.50.0.dist-info/REQUESTED"
+  ],
+  "explicacion_vacios": "14 marcadores legítimos de bibliotecas: py.typed, metadatos REQUESTED y pyarrow/includes/__init__.pxd. Se preservan exactamente; no son payloads requeridos.",
+  "limites": "Verificación de estructura, CRC y hash. Self-test/servidor del ejecutable se registran por separado; no acredita Windows 10, segunda computadora ni prueba humana externa."
 }

@@ -1,0 +1,9 @@
+{
+  "version": "0.4.0",
+  "source_app_sha256": "DE898AF7435256692D6E77E33057456B35C1BE2A033E90A9151056E00D605BE8",
+  "installed_app_sha256": "DE898AF7435256692D6E77E33057456B35C1BE2A033E90A9151056E00D605BE8",
+  "app_identical": true,
+  "self_test": "OK",
+  "smoke_server": "OK",
+  "python_in_path": false
+}

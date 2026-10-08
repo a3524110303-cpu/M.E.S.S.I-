@@ -105,7 +105,9 @@ def run_server(port):
         "server.address": "127.0.0.1", "server.port": port, "server.headless": True,
         "server.fileWatcherType": "none", "server.maxUploadSize": 5,
         "browser.gatherUsageStats": False, "global.developmentMode": False,
-        "client.toolbarMode": "viewer", "theme.base": "light", "theme.primaryColor": "#225D54",
+        "client.toolbarMode": "viewer", "theme.base": "light", "theme.primaryColor": "#167A72",
+        "theme.backgroundColor": "#F5F8F7", "theme.secondaryBackgroundColor": "#F8FBFA",
+        "theme.textColor": "#122C39",
     }
     bootstrap.load_config_options(options)
     bootstrap.run(str(resource_root() / "app.py"), False, [], options)
@@ -120,14 +122,53 @@ def run_window():
 
     window = tk.Tk()
     window.title("MESSI · Sistema local")
-    window.geometry("550x360")
+    window.geometry("620x460")
     window.resizable(False, False)
-    frame = ttk.Frame(window, padding=24)
+    navy, teal, paper, amber = "#122C39", "#167A72", "#F5F8F7", "#D99535"
+    muted, border = "#536872", "#DCE6E2"
+    window.configure(background=paper)
+    style = ttk.Style(window)
+    style.theme_use("clam")
+    style.configure("MESSI.TFrame", background=paper)
+    style.configure("MESSI.Card.TFrame", background="white")
+    style.configure("MESSI.TLabel", background=paper, foreground=navy, font=("Segoe UI", 10))
+    style.configure("MESSI.Hint.TLabel", background=paper, foreground=muted, font=("Segoe UI", 9))
+    style.configure("MESSI.Card.TLabel", background="white", foreground=muted, font=("Segoe UI", 10))
+    style.configure("MESSI.Primary.TButton", background=teal, foreground="white",
+                    font=("Segoe UI", 11, "bold"), padding=(16, 10), borderwidth=0, focusthickness=2,
+                    focuscolor="#A45D13")
+    style.map("MESSI.Primary.TButton", background=[("disabled", "#D4E2DE"), ("pressed", "#105C56"), ("active", "#126D65")],
+              foreground=[("disabled", "#586F69")])
+    style.configure("MESSI.Secondary.TButton", background="white", foreground=navy,
+                    font=("Segoe UI", 10), padding=(12, 8), borderwidth=1, bordercolor=border,
+                    focusthickness=2, focuscolor=teal)
+    style.map("MESSI.Secondary.TButton", background=[("pressed", "#E0ECE7"), ("active", "#EDF4F0")])
+    style.configure("MESSI.Close.TButton", background=paper, foreground=navy,
+                    font=("Segoe UI", 10), padding=(12, 7), borderwidth=1, bordercolor=border,
+                    focusthickness=2, focuscolor="#A45D13")
+    style.map("MESSI.Close.TButton", background=[("pressed", "#E9E4D8"), ("active", "#F4ECDC")])
+
+    brand = tk.Frame(window, background=navy)
+    brand.pack(fill="x")
+    tk.Label(brand, text="MESSI", font=("Segoe UI", 24, "bold"), background=navy,
+             foreground="white").pack(anchor="w", padx=24, pady=(12, 0))
+    tk.Label(brand, text="Alerta y acompañamiento escolar", font=("Segoe UI", 10),
+             background=navy, foreground="#CEE1DB").pack(anchor="w", padx=25, pady=(0, 12))
+
+    frame = ttk.Frame(window, padding=(24, 14), style="MESSI.TFrame")
     frame.pack(fill="both", expand=True)
-    ttk.Label(frame, text="MESSI", font=("Segoe UI", 24, "bold")).pack(anchor="w")
-    ttk.Label(frame, text="Alerta y acompañamiento escolar", font=("Segoe UI", 12)).pack(anchor="w", pady=(0, 16))
+    state_title = tk.StringVar(value="Preparando MESSI")
     status = tk.StringVar(value="Iniciando el sistema en esta computadora…")
-    ttk.Label(frame, textvariable=status, wraplength=490).pack(anchor="w", pady=(0, 16))
+    state_card = ttk.Frame(frame, padding=(14, 10), style="MESSI.Card.TFrame")
+    state_card.pack(fill="x")
+    state_heading = tk.Frame(state_card, background="white")
+    state_heading.pack(fill="x")
+    state_dot = tk.Label(state_heading, text="●", foreground=amber, background="white",
+                         font=("Segoe UI", 12))
+    state_dot.pack(side="left", padx=(0, 7))
+    tk.Label(state_heading, textvariable=state_title, foreground=navy, background="white",
+             font=("Segoe UI", 11, "bold")).pack(side="left")
+    ttk.Label(state_card, textvariable=status, wraplength=510, style="MESSI.Card.TLabel").pack(anchor="w", pady=(2, 0))
     events = queue.Queue()
     server = LocalServer()
     closing = threading.Event()
@@ -138,8 +179,17 @@ def run_window():
             if not webbrowser.open(server.url):
                 messagebox.showinfo("Abrir MESSI", f"Abre esta dirección en tu navegador:\n{server.url}", parent=window)
 
-    open_button = ttk.Button(frame, text="Abrir MESSI", command=open_browser, state="disabled")
-    open_button.pack(fill="x", pady=4)
+    open_button = ttk.Button(frame, text="Abrir MESSI", command=open_browser, state="disabled",
+                             style="MESSI.Primary.TButton")
+    open_button.pack(fill="x", pady=(12, 0))
+    ttk.Label(frame, text="Abre las vistas Docente, Tutor y Estudiante en tu navegador.",
+              style="MESSI.Hint.TLabel").pack(anchor="w", pady=(4, 0))
+    ttk.Label(frame, text="Cuida tus registros", style="MESSI.TLabel",
+              font=("Segoe UI", 10, "bold")).pack(anchor="w", pady=(12, 7))
+    tools = ttk.Frame(frame, style="MESSI.TFrame")
+    tools.pack(fill="x")
+    tools.columnconfigure(0, weight=1, uniform="tools")
+    tools.columnconfigure(1, weight=1, uniform="tools")
 
     def backup():
         """Guardar un respaldo SQLite consistente en el destino elegido."""
@@ -152,7 +202,10 @@ def run_window():
             except Exception as exc:
                 messagebox.showerror("Respaldo", str(exc), parent=window)
 
-    ttk.Button(frame, text="Guardar respaldo", command=backup).pack(fill="x", pady=4)
+    ttk.Button(tools, text="Guardar respaldo", command=backup,
+               style="MESSI.Secondary.TButton").grid(row=0, column=0, sticky="ew", padx=(0, 6))
+    ttk.Label(tools, text="Una copia de tus registros para recuperarlos después.", wraplength=250,
+              style="MESSI.Hint.TLabel").grid(row=1, column=0, sticky="nw", padx=(0, 6), pady=(5, 0))
 
     def diagnosis():
         """Guardar un informe de dependencias e integridad sin exportar registros."""
@@ -165,7 +218,10 @@ def run_window():
         except Exception as exc:
             messagebox.showerror("Diagnóstico", str(exc), parent=window)
 
-    ttk.Button(frame, text="Guardar diagnóstico", command=diagnosis).pack(fill="x", pady=4)
+    ttk.Button(tools, text="Guardar diagnóstico", command=diagnosis,
+               style="MESSI.Secondary.TButton").grid(row=0, column=1, sticky="ew", padx=(6, 0))
+    ttk.Label(tools, text="Un reporte técnico para que el equipo te ayude.", wraplength=250,
+              style="MESSI.Hint.TLabel").grid(row=1, column=1, sticky="nw", padx=(6, 0), pady=(5, 0))
 
     def close():
         """Cerrar la ventana y su servidor, también durante el inicio."""
@@ -173,7 +229,13 @@ def run_window():
         server.close()
         window.destroy()
 
-    ttk.Button(frame, text="Cerrar MESSI", command=close).pack(fill="x", pady=4)
+    tk.Frame(frame, background=border, height=1).pack(fill="x", pady=(12, 8))
+    finish = ttk.Frame(frame, style="MESSI.TFrame")
+    finish.pack(fill="x")
+    ttk.Label(finish, text="Al terminar, cierra MESSI desde aquí.",
+              style="MESSI.Hint.TLabel").pack(side="left")
+    ttk.Button(finish, text="Cerrar MESSI", command=close,
+               style="MESSI.Close.TButton").pack(side="right")
     window.protocol("WM_DELETE_WINDOW", close)
 
     def start():
@@ -192,6 +254,8 @@ def run_window():
         try:
             success, text = events.get_nowait()
             status.set(text)
+            state_title.set("Todo listo" if success else "Revisemos el inicio")
+            state_dot.configure(foreground=teal if success else amber)
             if success:
                 open_button.configure(state="normal")
                 open_browser()
@@ -199,6 +263,8 @@ def run_window():
             pass
         if server.process and server.process.poll() is not None:
             open_button.configure(state="disabled")
+            state_title.set("MESSI se detuvo")
+            state_dot.configure(foreground=amber)
             status.set("El sistema se detuvo. Guarda el diagnóstico y vuelve a abrir MESSI.")
         window.after(300, poll)
 

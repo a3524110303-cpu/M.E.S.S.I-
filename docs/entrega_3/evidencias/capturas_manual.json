@@ -1,13 +1,221 @@
 {
-  "instalacion_inicio": "10_instalador_informacion.png",
-  "instalacion_acceso": "11_instalador_acceso.png",
-  "instalacion_instalar": "12_instalador_listo.png",
-  "docente_entrada": "01_docente_inicio.png",
-  "docente_captura": "02_entrada_tabla.png",
-  "docente_validado": "03_datos_validados.png",
-  "docente_resultado": "04_resultado_modelo.png",
-  "estudiante_solicitud": "05_solicitud_entrada.png",
-  "tutor_apoyo": "16_tutor_formulario.png",
-  "tutor_seguimiento": "08_seguimiento_guardado.png",
-  "control": "15_control_messi.png"
+  "version_messi": "0.4.0",
+  "nota": "Capturas reales; los recortes se aplican dentro de Word y conservan intactos los archivos de evidencia.",
+  "instalacion_inicio": {
+    "archivo": "capturas_interfaz_04/14_instalador_informacion.jpg",
+    "vistas": [
+      {
+        "ancho": 4.6
+      }
+    ]
+  },
+  "instalacion_acceso": {
+    "archivo": "capturas_interfaz_04/15_instalador_acceso.jpg",
+    "vistas": [
+      {
+        "ancho": 4.6
+      }
+    ]
+  },
+  "instalacion_instalar": {
+    "archivo": "capturas_interfaz_04/16_instalador_listo.jpg",
+    "vistas": [
+      {
+        "ancho": 4.6
+      }
+    ]
+  },
+  "control": {
+    "archivo": "capturas_interfaz_04/17_control_instalado.jpg",
+    "vistas": [
+      {
+        "ancho": 4.6
+      }
+    ]
+  },
+  "docente_entrada": {
+    "archivo": "capturas_interfaz_04/01_docente_inicio.png",
+    "vistas": [
+      {
+        "recorte": [
+          20,
+          193,
+          190,
+          407
+        ],
+        "ancho": 1.5
+      },
+      {
+        "recorte": [
+          290,
+          451,
+          865,
+          620
+        ],
+        "ancho": 4.6
+      }
+    ]
+  },
+  "docente_captura": {
+    "archivo": "capturas_interfaz_04/03_tabla_pegada.png",
+    "vistas": [
+      {
+        "recorte": [
+          291,
+          325,
+          901,
+          610
+        ],
+        "ancho": 6.3
+      }
+    ]
+  },
+  "docente_validado": {
+    "archivo": "capturas_interfaz_04/04_datos_guardados.png",
+    "vistas": [
+      {
+        "recorte": [
+          291,
+          336,
+          1321,
+          766
+        ],
+        "ancho": 6.3
+      }
+    ]
+  },
+  "docente_resultado": {
+    "archivo": "capturas_interfaz_04/05_resultado_modelo.png",
+    "vistas": [
+      {
+        "recorte": [
+          291,
+          185,
+          1321,
+          316
+        ],
+        "ancho": 6.3
+      },
+      {
+        "recorte": [
+          290,
+          767,
+          570,
+          855
+        ],
+        "ancho": 2.2,
+        "salto_linea": true
+      }
+    ]
+  },
+  "resultado_detalle": {
+    "archivo": "capturas_interfaz_04/05_resultado_modelo.png",
+    "vistas": [
+      {
+        "recorte": [
+          291,
+          565,
+          865,
+          712
+        ],
+        "ancho": 6.3
+      },
+      {
+        "recorte": [
+          865,
+          565,
+          1321,
+          712
+        ],
+        "ancho": 6.3
+      }
+    ]
+  },
+  "estudiante_solicitud": {
+    "archivo": "capturas_interfaz_04/06_solicitud_entrada.png",
+    "vistas": [
+      {
+        "recorte": [
+          291,
+          338,
+          899,
+          775
+        ],
+        "ancho": 5.7
+      }
+    ]
+  },
+  "tutor_solicitud": {
+    "archivo": "capturas_interfaz_04/09_tutor_acuerdo.png",
+    "vistas": [
+      {
+        "recorte": [
+          291,
+          251,
+          833,
+          451
+        ],
+        "ancho": 5.3
+      },
+      {
+        "recorte": [
+          291,
+          532,
+          833,
+          619
+        ],
+        "ancho": 5.3,
+        "salto_linea": true
+      }
+    ]
+  },
+  "tutor_apoyo": {
+    "archivo": "capturas_interfaz_04/09_tutor_acuerdo.png",
+    "vistas": [
+      {
+        "recorte": [
+          894,
+          150,
+          1321,
+          597
+        ],
+        "ancho": 4.3
+      }
+    ]
+  },
+  "tutor_seguimiento": {
+    "archivo": "capturas_interfaz_04/10_seguimiento_entrada.png",
+    "vistas": [
+      {
+        "recorte": [
+          291,
+          464,
+          1321,
+          533
+        ],
+        "ancho": 6.3
+      },
+      {
+        "recorte": [
+          291,
+          545,
+          718,
+          855
+        ],
+        "ancho": 4.4,
+        "salto_linea": true
+      },
+      {
+        "archivo": "capturas_interfaz_04/11_seguimiento_guardado.png",
+        "recorte": [
+          778,
+          588,
+          1321,
+          718
+        ],
+        "ancho": 6.3,
+        "salto_linea": true
+      }
+    ]
+  }
 }

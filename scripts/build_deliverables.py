@@ -29,7 +29,7 @@ ROOT = Path(__file__).resolve().parents[1]
 REFERENCES = ROOT / "docs" / "referencias"
 EVIDENCE = ROOT / "docs" / "entrega_3" / "evidencias"
 QA = ROOT / "tmp" / "documents"
-VERSION = "0.3.0"
+VERSION = "0.4.0"
 DATE = "8 de octubre de 2026"
 MEMBERS = (
     "Marco Antonio Osorio Hernandez; Ismael Hernández Jiménez; "
@@ -141,6 +141,8 @@ def image_in_paragraph(paragraph, path: Path, width=6.3, crop=None, append=False
         with Image.open(path) as source:
             source_width, source_height = source.size
         left, top, right, bottom = crop
+        if not (0 <= left < right <= source_width and 0 <= top < bottom <= source_height):
+            raise ValueError(f"Recorte fuera de la captura {path.name}: {crop} / {source.size}")
         blip_fill = picture._inline.xpath(".//pic:blipFill")[0]
         rect = OxmlElement("a:srcRect")
         for key,value in (("l",left/source_width),("t",top/source_height),
@@ -251,9 +253,9 @@ def build_02():
     p, t = list(doc.paragraphs), list(doc.tables)
     text(p[1], f"Entrega 2 · MESSI {VERSION} para Windows")
     metadata(t[0], ["MESSI Alerta y acompañamiento escolar", "Equipo MESSI", MEMBERS,
-                    "Aprendizaje supervisado · Red neuronal MLP", DATE, f"1.0 · Aplicación {VERSION}"])
+                    "Aprendizaje supervisado · Red neuronal MLP", DATE, f"1.1 · Aplicación {VERSION}"])
     text(p[3], "Este manual explica la aplicación local, sus módulos y la forma de modificarla y reconstruir el instalador. La versión usa SQLite y un modelo de demostración entrenado con datos ficticios.")
-    text(p[5], "El ejecutable abre una ventana de control y un servidor en 127.0.0.1; la interfaz se usa en el navegador de la misma computadora. El instalador incluye el entorno y los recursos.")
+    text(p[5], "El ejecutable abre una ventana de control y un servidor en 127.0.0.1; la interfaz se usa en el navegador de la misma computadora. presentation.py organiza las vistas, el progreso y los rótulos sin cambiar los registros. El instalador incluye el entorno y los recursos.")
     image_in_paragraph(t[1].cell(0,0).paragraphs[0], architecture_diagram())
     t[1].rows[0].height = None
     text(p[7], "Entrada: nota del primer parcial (0–10), asistencia y tareas entregadas (0–100 %), junto con un código ficticio EST- seguido de 3 a 8 dígitos. La solicitud de apoyo usa un código y un mensaje.")
@@ -262,6 +264,8 @@ def build_02():
     fill_table(t[2], [
         ("app.py", "main; show_teacher", "Presenta las vistas; valida ingreso y solicita inferencia.", "Sesión y datos ficticios", "Tablas y mensajes"),
         ("app.py", "show_student; show_tutor", "Guarda solicitudes, apoyos y seguimiento; muestra confirmación.", "Código, texto y estado", "ID y registros"),
+        ("messi/presentation.py", "setup_page; teacher_steps; empty_state; kicker", "Presenta marca, navegación, pasos de progreso y estados vacíos con CSS local.", "Streamlit y estado de sesión", "Interfaz guiada"),
+        ("messi/presentation.py", "readable_rows; support_label", "Traduce una copia de las filas, tipos de apoyo y fechas a hora local; no altera SQLite.", "Filas y rótulos internos", "Tablas legibles"),
         ("messi/data.py", "load_csv; load_excel; load_pasted", "Lee formatos y verifica columnas, rangos, IDs, tamaño y fórmulas.", "CSV, XLSX o texto", "list[dict] válida"),
         ("messi/data.py", "validate_records; record_from_counts", "Valida captura y convierte conteos en porcentajes.", "Nota y cantidades", "Registro normalizado"),
         ("messi/model.py", "score_records; _read_metadata", "Comprueba ruta/hash/metadatos del modelo y obtiene la puntuación.", "Registros y Path local", "Puntuación y alerta"),
@@ -310,7 +314,7 @@ def build_02():
     clear_instruction(p[21])
     answer(t[6], [
         "1. Preparar desarrollo. Clonar el repositorio y usar Python 3.11–3.13 x64. Crear el entorno con py -3.13 -m venv .venv y ejecutar .venv\\Scripts\\python.exe -m pip install -r requirements-build.txt. El cliente recibe el instalador. Antes de cambiar SQLite, guardar un respaldo para una restauración posterior.",
-        "2. Añadir una función. Ubicar la lógica en src/messi y documentar argumentos, retorno, errores y efectos persistentes. Conectarla a app.py y agregar un caso representativo de éxito y un error pertinente en tests. Mantener solicitudes/apoyos independientes del cálculo de riesgo.",
+        "2. Añadir una función. Ubicar la lógica en src/messi y documentar argumentos, retorno, errores y efectos persistentes. Conectarla a app.py y agregar un caso representativo de éxito y un error pertinente en tests. Para cambiar la presentación, editar presentation.py; mantener los nombres internos de datos, las copias de filas y los pasos de progreso coherentes con guardado/cálculo. Mantener solicitudes/apoyos independientes del cálculo de riesgo.",
         "3. Cambiar un campo o periodo. Ajustar FEATURES y validación en data.py, plantilla Excel/CSV, labels y report_csv en app.py, esquema/migración en sqlite_storage.py y metadatos del modelo. No borrar tablas existentes; incrementar la versión de esquema y probar actualización, reapertura y respaldo. Un indicador modificado debe invalidar su predicción anterior.",
         "4. Cambiar modelo o datos. Conservar separación de entrenamiento, validación y prueba; adaptar train_demo.py y metadatos, reentrenar y comprobar el hash. Cambiar umbral con validación, sin consultar la prueba para ajustarlo. La carga sólo acepta artefactos de models con hash y metadatos coherentes. Nunca abrir un joblib descargado sin confianza.",
         "5. Reproducir la demo. Ejecutar .venv\\Scripts\\python.exe scripts\\generate_synthetic.py y después scripts\\train_demo.py --seed 2026. Revisar models\\messi_demo.json y sus métricas. El joblib se genera localmente y no se versiona en Git. Usar otros datos sólo tras definir su procedencia y validación; el prototipo actual admite información ficticia.",
@@ -341,13 +345,47 @@ def build_02():
 
 
 def build_03():
+    # Las aprobaciones del paquete deben proceder de la versión actual,
+    # nunca del log fuente ni de una instalación anterior.
+    package_evidence = ROOT/"docs/entrega_2/evidencias"
+    for filename in ("paquete_self_test.json", "paquete_servidor.json", "instalado-self-test.json", "instalado-smoke-server.json"):
+        report=json.loads((package_evidence/filename).read_text(encoding="utf-8-sig"))
+        if report.get("version") != VERSION or report.get("ok") is not True:
+            raise RuntimeError(f"Paquete sin aprobación actual: {filename}")
+        if "servidor" in filename or "smoke" in filename:
+            if report.get("servidor_http") != 200 or report.get("servidor_cerrado") is not True:
+                raise RuntimeError(f"Servidor/cierre sin confirmar: {filename}")
+    update=json.loads((package_evidence/"actualizacion_instalador.json").read_text(encoding="utf-8-sig"))
+    if update.get("version") != VERSION or update.get("exit_code") != 0 or update.get("db_preserved") is not True:
+        raise RuntimeError("Actualización instalada sin confirmar para la versión actual")
+    # En el equipo de cierre, impedir que un cambio posterior de app.py
+    # se documente como empaquetado antes de reconstruir e instalar.
+    current_app=(ROOT/"app.py").read_bytes()
+    candidate_apps=[ROOT/"dist/MESSI/_internal/app.py"]
+    if update.get("exe"):
+        candidate_apps.append(Path(update["exe"]).parent/"_internal/app.py")
+    for candidate in candidate_apps:
+        if candidate.exists() and candidate.read_bytes()!=current_app:
+            raise RuntimeError(f"El paquete conserva una app anterior: {candidate}")
+    ci=json.loads((package_evidence/f"ci_github_{VERSION}.json").read_text(encoding="utf-8-sig"))
+    runs=ci.get("ejecuciones",[])
+    if ci.get("version")!=VERSION or len(runs)!=2 or any(run.get("conclusion")!="success" for run in runs):
+        raise RuntimeError("Falta CI aprobada de push y PR para la versión actual")
+    checks=[job for run in runs for job in run.get("resumen_pruebas",[])]
+    if len(checks)!=4 or any(job.get("conclusion")!="success" or job.get("fallidas")!=0 for job in checks):
+        raise RuntimeError("No están aprobados los cuatro checks documentados")
+    for job in checks:
+        if hashlib.sha256((package_evidence/job["log"]).read_bytes()).hexdigest()!=job["log_sha256"]:
+            raise RuntimeError("No coincide el hash del log de CI")
+    ci_commit=ci["commit"][:7]
+    ci_urls=" y ".join(run["url"] for run in runs)
     reference = REFERENCES / "03_Informe_de_pruebas_QA.docx"
     doc = Document(reference)
     p,t = list(doc.paragraphs),list(doc.tables)
     text(p[1], f"Entrega 2 · MESSI {VERSION} · Aseguramiento de la calidad")
     metadata(t[0], [f"MESSI Alerta y acompañamiento escolar {VERSION}", "Equipo MESSI", "Víctor Manuel Jiménez Suárez · QA previo; revalidación e integración asistidas por Codex", "7 y 8 de octubre de 2026"])
     clear_instruction(p[3])
-    text(p[5], "Qué se probó: contrato CSV/XLSX/pegado/captura, MLP y metadatos, persistencia y respaldo SQLite, tres vistas y mensajes con AppTest; revalidación del paquete Windows y recorrido en navegador. Base previa: main 6f24021; cierre versionado como MESSI 0.3.0.")
+    text(p[5], f"Qué se probó: contrato CSV/XLSX/pegado/captura, MLP y metadatos, persistencia y respaldo SQLite, tres vistas y mensajes con AppTest; progreso de la interfaz y tablas traducidas sin alterar registros. Revalidación del paquete Windows y recorrido en navegador. Base previa del informe de Víctor: main 6f24021; interfaz actual MESSI {VERSION}.")
     text(p[6], "Sistema operativo y versión: revalidación actual Windows 11 x64 (compilación 26200). El informe de Víctor del 7 de octubre identifica Windows 11 Pro 26H2, compilación 26300, en su equipo. La ejecución física Windows 10 y en una segunda computadora sigue pendiente.")
     text(p[7], "Software: Python 3.13; Streamlit 1.50.0; pandas 2.3.3; scikit-learn 1.7.2; NumPy 2.3.3; SciPy 1.16.2; joblib 1.5.2; openpyxl 3.1.5; pyarrow 21.0.0. Víctor usó Python 3.13.16 y AppTest; las capturas actuales del navegador constan en evidencias de entrega 3.")
     fill_table(t[1], [
@@ -360,30 +398,39 @@ def build_03():
         ("CP-07", "Confirmación seguimiento", "Apoyo EST-901; En seguimiento; nota ficticia.", "Mostrar confirmación tras rerun; guardar estado/historial.", "test_qa03_followup_keeps_visible_success_confirmation aprobado.", "Aprobado"),
         ("CP-08", "Captura inválida", "EST-904, nota 6, asistencia 80, tareas vacías; después tareas 70.", "Conservar campos tras error; limpiar sólo tras éxito.", "test_invalid_capture_preserves_inputs_then_success_clears_them aprobado.", "Aprobado"),
         ("CP-09", "API de tablas", "Streamlit 1.50.0; tablas en tres vistas.", "Usar width vigente sin argumento obsoleto.", "Tablas usan width=stretch; pruebas de interfaz aprobadas.", "Aprobado"),
-        ("CP-10", "Paquete y actualización", "0.3.0 sin Python en PATH; --self-test; --smoke-server; actualización instalada.", "Inferencia, SQLite, respaldo, HTTP200 y cierre; conservar base del usuario.", "Portable e instalado OK; HTTP200 y cierre; actualización exit0 conserva base. JSON en evidencias/.", "Aprobado"),
+        ("CP-10", "Paquete y actualización", f"{VERSION} sin Python en PATH; --self-test; --smoke-server; actualización instalada.", "Inferencia, SQLite, respaldo, HTTP200 y cierre; conservar base del usuario.", "Portable e instalado OK; HTTP200 y cierre; actualización exit0 conserva base. JSON en evidencias/.", "Aprobado"),
+        ("CP-11", "Progreso y atención del Tutor", "Pegado inválido; reemplazo de datos; tablas del Tutor; seleccionar solicitud y copiar código.", "Reiniciar progreso, invalidar resultado, traducir filas y copiar sólo ID sin crear apoyo.", "Cuatro regresiones AppTest nuevas aprobadas; progreso, filas y conservación del borrador verificados.", "Aprobado"),
     ])
     fill_table(t[2], [
         ("ER-01 QA-02", "pyarrow 25.0.1 falló al cargar DLL en Windows.", "CP-02,04", "Media", "Fijar pyarrow 21.0.0 e instalar versión compatible.", "Revalidado"),
         ("ER-02 QA-03", "Confirmación de seguimiento desaparecía tras actualizar.", "CP-07", "Baja", "Guardar mensaje para el rerun y mostrarlo al preparar formulario.", "Revalidado"),
         ("ER-03 QA-04", "Captura inválida limpiaba campos válidos.", "CP-08", "Media", "Limpiar campos sólo después de validar y aceptar captura.", "Revalidado"),
         ("ER-04 QA-05", "Tablas usaban use_container_width obsoleto.", "CP-09", "Baja", "Actualizar st.dataframe a width=stretch.", "Revalidado"),
-        ("ER-05 CI", "Aserción de test_desktop.py comparaba ruta larga con alias temporal 8.3; CI inicial falló.", "CP-10", "Baja", "Resolver ambos lados con Path.resolve(); mantener aislamiento y limpieza. Sin cambios en app o binarios.", "6/6 local; CI 4/4 en c8d6942"),
+        ("ER-05 CI", "Aserción de test_desktop.py comparaba ruta larga con alias temporal 8.3; CI inicial falló.", "CP-10", "Baja", "Resolver ambos lados con Path.resolve(); mantener aislamiento y limpieza. Sin cambios en app o binarios.", f"6/6 local; CI actual 4/4 en {ci_commit}"),
+        ("ER-06 UI", "Tras pegar datos inválidos, el progreso visible conservaba el estado de guardado anterior.", "CP-11", "Baja", "Borrar la marca de guardado y actualizar los pasos visibles al descartar el conjunto inválido.", "Regresión AppTest aprobada"),
     ])
     # El conteo actual se lee del log completo, no se adivina a partir de la matriz.
     current_log = ROOT/"docs/entrega_2/evidencias/pruebas_actuales.txt"
     contents = current_log.read_text(encoding="utf-8", errors="replace") if current_log.exists() else ""
     match = re.search(r"Ran (\d+) tests?", contents)
-    total = int(match.group(1)) if match else 151
+    if not match or f"MESSI {VERSION}" not in contents:
+        raise RuntimeError("Falta un log de pruebas verificable para la versión actual")
+    total = int(match.group(1))
     skipped_match = re.search(r"skipped=(\d+)", contents)
     skipped = int(skipped_match.group(1)) if skipped_match else 7
-    success = bool(re.search(r"\bOK(?: \(skipped=\d+\))?", contents)) if contents else True
+    for job in checks:
+        expected_skipped=0 if job["nombre"]=="mysql-integration" else skipped
+        if job["total"]!=total or job["omitidas"]!=expected_skipped or job["aprobadas"]!=total-expected_skipped:
+            raise RuntimeError("El conteo de CI no corresponde a la suite actual")
+    success = bool(re.search(r"\bOK(?: \(skipped=\d+\))?", contents))
     if not success:
         raise RuntimeError("El log actual no acredita suite aprobada; revisar antes de generar QA")
-    fill_table(t[3], [(f"10 casos de matriz\n{total} pruebas auto locales", f"10 casos revalidados\n{total-skipped} pruebas auto locales", "0 en suite local\nCI inicial: 1 aserción", "4 revalidados\n1 ajuste de prueba CI", "CI c8d6942: 4/4\nLímites en conclusiones")])
+    fill_table(t[3], [(f"11 casos de matriz\n{total} pruebas auto locales", f"11 casos revalidados\n{total-skipped} pruebas auto locales\nCI actual: 4/4 checks", "0 en suite local y CI actual\nCI0.3 inicial: 1 aserción", "5 revalidados\n1 ajuste de prueba CI", "Sin errores locales abiertos\nWin10/segunda PC: sin probar")])
     answer(t[4], [
         f"La suite local ejecutó {total} pruebas: {total-skipped} aprobadas, {skipped} omitidas por requerir MySQL opt-in y 0 fallidas. Las omisiones no se cuentan como aprobación. Los nueve casos de software del informe de Víctor quedan trazados a la suite actual; el caso de paquete distingue la evidencia histórica de instalación de la nueva verificación del ejecutable.",
-        "La ejecución inicial de GitHub Actions falló en una aserción de aislamiento: Windows entregó un directorio temporal con alias corto 8.3 y la prueba lo comparó con su ruta larga. El ajuste sólo normaliza ambos lados con resolve(); las seis pruebas de test_desktop.py aprobaron localmente con alias 8.3 real y con el entorno habitual. CI del commit c8d6942 aprobó cuatro checks de Windows y Linux con MySQL en push y PR: https://github.com/a3524110303-cpu/M.E.S.S.I-/actions/runs/37753609896 y https://github.com/a3524110303-cpu/M.E.S.S.I-/actions/runs/37753615435. Este resultado corresponde a c8d6942, anterior a esta actualización documental. Causa y reproducción en docs/entrega_2/evidencias/ajuste_ci_windows.md; no se modificaron la aplicación ni sus binarios.",
-        "El informe de Víctor del 7 de octubre probó AppTest y SQLite temporal; no realizó navegador real ni instalador. El cierre agrega capturas en navegador, self-test y smoke-server aprobados tanto en portable como instalado, y actualización 0.3.0 exit0 que conserva la base. La instalación/reinstalación/desinstalación aislada se omitió al detectar una instalación existente; no se cuenta como aprobada. El ciclo completo sólo tiene evidencia histórica 0.2.0.",
+        "Las cuatro regresiones nuevas verifican progreso tras pegado inválido, invalidación del resultado al reemplazar datos, tablas legibles sin modificar SQLite y selección de solicitud. Usar este código en el acuerdo copia sólo el ID, conserva borrador/tipo y no crea un apoyo hasta enviar el formulario. La suite incluye seis pruebas del lanzador; el self-test fuente comprobó ocho predicciones, persistencia, respaldo y reapertura. No sustituyen la prueba con persona ajena.",
+        f"CI de MESSI {VERSION}, commit {ci_commit}, aprobó los cuatro checks de push y PR. Windows ejecutó {total} pruebas: {total-skipped} aprobadas y {skipped} MySQL omitidas; Ubuntu con MySQL real aprobó {total}/{total}, sin omisiones ni fallos. Ejecuciones: {ci_urls}. Logs y hashes en ci_github_{VERSION}.json. El fallo anterior por alias Windows 8.3 quedó corregido en la aserción de la prueba; causa y reproducción en docs/entrega_2/evidencias/ajuste_ci_windows.md. La CI histórica 0.3.0 se conserva por separado.",
+        f"El informe de Víctor del 7 de octubre probó AppTest y SQLite temporal; no realizó navegador real ni instalador. El cierre agrega capturas en navegador, self-test y smoke-server aprobados tanto en portable como instalado, y actualización {VERSION} exit0 que conserva la base. La instalación/reinstalación/desinstalación aislada se omitió al detectar una instalación existente; no se cuenta como aprobada. El ciclo completo sólo tiene evidencia histórica 0.2.0.",
         "La versión funciona localmente con SQLite. El modelo sigue siendo sintético; QA demuestra comportamiento del programa y no eficacia educativa. No hay autenticación ni sincronización entre computadoras. Siguen pendientes la ejecución física en Windows 10/segunda computadora y la prueba independiente con persona ajena exigida en la entrega 3.",
     ])
     text(p[15], "Evidencia: docs/entrega_2/evidencias/pruebas_actuales.txt y estado técnico; pruebas del paquete y hashes en release; capturas reales en docs/entrega_3/evidencias. Para repetir: .venv\\Scripts\\python.exe -m unittest discover -s tests -v; MESSI.exe --self-test y --smoke-server usan datos temporales. Las pruebas humanas se registran por separado.")
@@ -395,15 +442,39 @@ def build_04():
     if not manifest_path.exists():
         raise FileNotFoundError("Se necesitan capturas reales en evidencias/capturas_manual.json")
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    if manifest.get("version_messi") != VERSION:
+        raise RuntimeError("El mapa de capturas no corresponde a la versión actual")
     def shot(name):
-        path = EVIDENCE/manifest[name]
+        entry = manifest[name]
+        path = EVIDENCE/(entry if isinstance(entry,str) else entry["archivo"])
         if not path.is_file():
             raise FileNotFoundError(path)
         return path
+    def views(name):
+        entry = manifest[name]
+        return entry.get("vistas",[{"ancho":6.3}]) if isinstance(entry,dict) else [{"ancho":6.3}]
+    def view_path(name,view):
+        if "archivo" not in view:
+            return shot(name)
+        path=EVIDENCE/view["archivo"]
+        if not path.is_file():
+            raise FileNotFoundError(path)
+        return path
+    def capture_after(paragraph,name):
+        first,*extra=views(name)
+        target=picture_after(paragraph,view_path(name,first),width=first.get("ancho",6.3),crop=first.get("recorte"))
+        for view in extra:
+            if view.get("salto_linea"):
+                target.paragraph_format.keep_with_next=True
+                target=clone_paragraph(target,"")
+                image_in_paragraph(target,view_path(name,view),width=view.get("ancho",6.3),crop=view.get("recorte"))
+            else:
+                image_in_paragraph(target,view_path(name,view),width=view.get("ancho",6.3),crop=view.get("recorte"),append=True)
+        return target
     reference = REFERENCES/"04_Manual_de_usuario.docx"
     doc = Document(reference)
     p,t = list(doc.paragraphs),list(doc.tables)
-    text(p[1], "Entrega 3 · Guía para usar MESSI en Windows")
+    text(p[1], f"Entrega 3 · Guía para usar MESSI {VERSION} en Windows")
     metadata(t[0], ["MESSI Alerta y acompañamiento escolar", "Equipo MESSI", VERSION, DATE])
     clear_instruction(p[3]); clear_instruction(p[5])
     answer(t[1], ["MESSI ayuda a revisar indicadores del primer parcial y a registrar solicitudes, acuerdos y seguimiento de apoyo. El docente ingresa datos, el estudiante pide ayuda y el tutor registra el acompañamiento. Esta versión es una demostración con datos ficticios: sus alertas orientan la revisión y no deciden calificaciones ni sanciones."])
@@ -417,39 +488,39 @@ def build_04():
         (p[15], "En Listo para instalar pulsa Instalar. Espera a que termine de copiar los archivos y después pulsa Finalizar.", "instalacion_instalar"),
     ]:
         text(paragraph,content)
-        installation_anchor=picture_after(paragraph,shot(name),width=4.6)
+        installation_anchor=capture_after(paragraph,name)
     installed = clone_paragraph(installation_anchor, "", source=p[15])
     # El cuarto paso usa la ventana real ya abierta; no simula la pantalla Finalizar.
-    text(installed,"Abre el acceso MESSI del escritorio o del menú Inicio. Mantén abierta esta ventana de control mientras trabajas; el navegador se abre en tu computadora. Si la pestaña se cerró, pulsa Abrir MESSI.")
-    picture_after(installed,shot("control"),width=4.2)
+    text(installed,"Abre el acceso MESSI del escritorio o del menú Inicio. Espera a que la ventana de control indique Todo listo. Mantén esa ventana abierta mientras trabajas; el navegador se abre en tu computadora. Si la pestaña se cerró, pulsa Abrir MESSI. Debajo del botón principal están las acciones para respaldar y revisar el funcionamiento.")
+    capture_after(installed,"control")
     # Los tres slots de ejecución permiten clonar pasos adicionales del maestro.
     steps = [
-        ("En la barra lateral elige Docente. En ¿Cómo quieres ingresar los datos? elige Pegar tabla. Para cargar un archivo puedes usar Excel o CSV y Descargar plantilla de Excel; cambia sus filas de ejemplo, conserva encabezados y guarda como .xlsx sin fórmulas.", "docente_entrada", (14,84,210,190),1.5),
-        ("En Tabla del primer parcial pega una fila por estudiante. Para practicar usa estas tres filas ficticias, separadas por punto y coma:\nEST-001;5,8;70;50\nEST-002;8,7;95;90\nEST-003;4,2;55;40\nPulsa Revisar tabla pegada. Las columnas son código, nota, asistencia y tareas; 80 representa 80 %. También puedes elegir Captura directa o Ejemplo sintético.", "docente_captura", (336,334,1020,603),6.3),
-        ("Comprueba Datos válidos: 3 estudiantes. Revisa los valores antes de continuar: nota de 0 a 10 y porcentajes de 0 a 100. Conserva el mismo código para cada estudiante. Si hay un error, corrige lo señalado y pulsa Revisar tabla pegada otra vez.", "docente_validado", (336,674,1180,889),6.3),
-        ("Pulsa Guardar indicadores para conservar los datos. Pulsa Calcular riesgo de demostración para obtener la tabla. La puntuación se guarda al calcularla. Pulsa Descargar reporte si quieres un archivo de resultados. Al abrir de nuevo, Cargar indicadores guardados recupera la lista.", "docente_resultado", (336,238,900,410),4.3),
-        ("En la barra lateral elige Estudiante. Escribe EST-001 y un mensaje ficticio, por ejemplo Caso ficticio: necesito apoyo para organizar las tareas del primer parcial. Pulsa Enviar solicitud y espera la confirmación. Puedes pedir apoyo aunque no exista una alerta.", "estudiante_solicitud", (336,337,1130,756),6.3),
-        ("Elige Tutor y revisa Solicitudes recibidas. Baja hasta el formulario: escribe EST-001, selecciona Tutoria y anota Caso ficticio: tutoría semanal y calendario de tareas acordado. Pulsa Registrar apoyo y comprueba que aparece en Apoyos registrados.", "tutor_apoyo", (336,121,1130,501),6.3),
-        ("En Apoyo para seguimiento elige el registro de EST-001. Cambia Estado del apoyo a En seguimiento y escribe Caso ficticio: se completó la primera tutoría y se acordó revisar las tareas en una semana. Pulsa Guardar seguimiento. Revisa la confirmación y el Historial del apoyo seleccionado.", "tutor_seguimiento", (336,195,1380,726),6.3),
-        ("Para terminar, en la ventana de control pulsa Guardar respaldo y elige dónde guardar la copia. Después pulsa Cerrar MESSI. Al volver a abrirlo, los registros guardados siguen en esa computadora; cerrar sólo la pestaña no cierra MESSI.", "control",None,4.2),
+        ("En la barra lateral elige Docente. Las tres tarjetas de progreso te guían: cargar y revisar, guardar indicadores, calcular y descargar. En ¿Cómo quieres ingresar los datos? elige Pegar tabla. Para cargar un archivo elige Excel o CSV y Descargar plantilla de Excel; cambia las filas de ejemplo, conserva encabezados y guarda como .xlsx sin fórmulas.", "docente_entrada"),
+        ("En Tabla del primer parcial pega una fila por estudiante. Para practicar usa estas tres filas ficticias, separadas por punto y coma:\nEST-401;5,8;70;50\nEST-402;8,2;92;88\nEST-403;7,0;85;80\nPulsa Revisar tabla pegada. Las columnas son código, nota, asistencia y tareas; 80 representa 80 %. También puedes elegir Captura directa o Ejemplo sintético.", "docente_captura"),
+        ("Comprueba Datos válidos: 3 estudiantes. Revisa nota de 0 a 10 y porcentajes de 0 a 100. Conserva el mismo código para cada estudiante. Si hay un error, corrige lo señalado y vuelve a revisar la tabla. Pulsa Guardar indicadores y comprueba Indicadores guardados para 3 estudiantes. La tarjeta de progreso también cambia a Guardados en la base local.", "docente_validado"),
+        ("Pulsa Calcular riesgo de demostración para obtener la tabla. Comprueba Resultados guardados en la base local. Si aparece un aviso de guardado, conserva el diagnóstico y descarga el resultado disponible antes de cerrar. Pulsa Descargar reporte para obtener el CSV. Al abrir de nuevo, Cargar indicadores guardados recupera la lista; vuelve a calcular para generar un reporte nuevo.", "docente_resultado"),
+        ("En la barra lateral elige Estudiante. Escribe EST-401 y el mensaje ficticio Solicitud ficticia: necesito organizar mis tareas para el siguiente parcial. Pulsa Enviar solicitud y espera el folio de confirmación. Puedes pedir apoyo aunque no exista una alerta. La guía ¿Qué ocurre después? explica el recorrido: el tutor debe abrir su vista para consultar la solicitud; no se envían notificaciones.", "estudiante_solicitud"),
+        ("Elige Tutor. En Leer una solicitud selecciona la de EST-401 y revisa el mensaje completo en Detalle de la solicitud. Pulsa Usar este código en el acuerdo para llenar sólo el identificador del formulario. Ver todas las solicitudes permite desplegar la tabla con folios y fechas. La captura muestra la selección y, debajo, el botón para pasar el código.", "tutor_solicitud"),
+        ("En Registrar un acuerdo de apoyo comprueba EST-401, selecciona Tutoría académica y anota Acuerdo ficticio: revisar tareas pendientes el viernes y organizar un plan semanal. Pulsa Registrar apoyo y comprueba que aparece en Apoyos registrados. Copiar el código no envía el acuerdo: este botón es el que lo guarda.", "tutor_apoyo"),
+        ("En Apoyo para seguimiento elige el registro de EST-401. Cambia Estado del apoyo a En seguimiento y escribe una nota ficticia sobre la primera revisión y el próximo acuerdo. Pulsa Guardar seguimiento. Revisa la confirmación y el Historial del apoyo seleccionado. Las capturas muestran el formulario antes de enviar y el historial guardado. Si no ves todas las columnas, amplía la tabla desde el icono de la esquina superior derecha.", "tutor_seguimiento"),
+        ("Para terminar, en Cuida tus registros de la ventana de control pulsa Guardar respaldo y elige dónde guardar la copia. Guardar diagnóstico genera un reporte técnico si necesitas ayuda. Después pulsa Cerrar MESSI. Al volver a abrirlo, los registros guardados siguen en esa computadora; cerrar sólo la pestaña no cierra MESSI.", "control"),
     ]
     # Reusar las tres filas de lista existentes; expandir después de la última.
-    for i,(content,name,crop,width) in enumerate(steps):
+    for i,(content,name) in enumerate(steps):
         paragraph = p[17+i] if i<3 else clone_paragraph(anchor,content,source=p[19])
         text(paragraph,content)
-        anchor=picture_after(paragraph,shot(name),crop=crop,width=width)
-        if i==0:
-            image_in_paragraph(anchor,shot(name),width=4.6,crop=(336,494,860,616),append=True)
-        elif i==3:
-            image_in_paragraph(anchor,shot(name),width=2.0,crop=(336,684,640,739),append=True)
+        anchor=capture_after(paragraph,name)
     clear_instruction(p[21])
-    image_in_paragraph(t[2].cell(0,0).paragraphs[0],shot("docente_resultado"),crop=(336,485,1174,630))
-    detail=clone_paragraph(t[2].cell(0,0).paragraphs[0],"")
-    image_in_paragraph(detail,shot("docente_resultado"),crop=(1174,485,1830,630))
+    result_views=views("resultado_detalle")
+    detail=t[2].cell(0,0).paragraphs[0]
+    for index,view in enumerate(result_views):
+        if index:
+            detail=clone_paragraph(detail,"")
+        image_in_paragraph(detail,shot("resultado_detalle"),width=view.get("ancho",6.3),crop=view.get("recorte"))
     t[2].rows[0].height=None
     answer(t[3], [
-        "Código del estudiante identifica la fila ficticia. Nota del primer parcial, Asistencia (%) y Tareas entregadas (%) son los datos que ingresaste; no explican por sí solos por qué la red produjo un resultado.",
-        "Puntuación de demostración va de 0 a 1. Un valor de 0.5 o más marca Revisar con tutor. En la captura EST-001 obtuvo 0.5866 y EST-003 0.5747: ambos tienen la marca. EST-002 obtuvo 0.4519, sin marca. No son probabilidades validadas de reprobar; una marca vacía tampoco garantiza que el estudiante no necesite ayuda.",
+        "La captura muestra dos fragmentos de la misma tabla, de izquierda a derecha. Código del estudiante identifica la fila ficticia. Nota del primer parcial, Asistencia (%) y Tareas entregadas (%) son los datos que ingresaste; no explican por sí solos por qué la red produjo un resultado.",
+        "Puntuación de demostración va de 0 a 1. Un valor de 0.5 o más marca Revisar con tutor. En la captura EST-401 obtuvo 0.5866 y EST-403 0.5622: ambos tienen la marca. EST-402 obtuvo 0.4831, sin marca. No son probabilidades validadas de reprobar; una marca vacía tampoco garantiza que el estudiante no necesite ayuda.",
         "Origen del modelo señala demo_sintetica. El tutor revisa el caso y acuerda el apoyo. La demostración aprendió de datos inventados y puede producir falsas alertas; no se debe usar para decisiones sobre estudiantes reales.",
     ])
     fill_table(t[4], [
