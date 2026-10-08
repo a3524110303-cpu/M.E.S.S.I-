@@ -3,7 +3,6 @@
 La comprobación visual y las interacciones reales requieren Streamlit instalado.
 """
 
-import contextlib
 from pathlib import Path
 import sys
 from types import SimpleNamespace
@@ -27,11 +26,20 @@ class FakeUI:
         self.counts = False
         self.reruns = 0
         self.uploaded = None
+        self.metrics = []
+        self.dataframes = []
+        self.markdowns = []
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        return False
 
     def radio(self, label, options, **kwargs):
-        if label == "Vista de demostración":
+        if list(options) == ["Docente", "Tutor", "Estudiante"]:
             return self.role
-        if label == "¿Cómo tienes la asistencia y las tareas?":
+        if list(options) == ["Porcentajes", "Cantidades registradas"]:
             return options[1 if self.counts else 0]
         return self.source
 
@@ -41,16 +49,37 @@ class FakeUI:
     form_submit_button = button
 
     def form(self, *args, **kwargs):
-        return contextlib.nullcontext()
+        return self
+
+    def columns(self, spec, **kwargs):
+        return [self] * (spec if isinstance(spec, int) else len(spec))
+
+    def container(self, *args, **kwargs):
+        return self
+
+    def expander(self, *args, **kwargs):
+        return self
+
+    def empty(self):
+        return self
+
+    def markdown(self, body, **kwargs):
+        self.markdowns.append(body)
+
+    def metric(self, label, value, delta=None, **kwargs):
+        self.metrics.append({"label": label, "value": value, "delta": delta})
+
+    def dataframe(self, data, **kwargs):
+        self.dataframes.append(data)
 
     def number_input(self, label, **kwargs):
-        return self.numeric.get(label)
+        return self.numeric.get(kwargs.get("key"), self.numeric.get(label))
 
     def text_input(self, label, **kwargs):
-        return self.text.get(label, "")
+        return self.text.get(kwargs.get("key"), self.text.get(label, ""))
 
     def text_area(self, label, **kwargs):
-        return self.text.get(label, "")
+        return self.text.get(kwargs.get("key"), self.text.get(label, ""))
 
     def file_uploader(self, *args, **kwargs):
         return self.uploaded
@@ -74,7 +103,7 @@ class FakeUI:
         self.messages.append(("success", message))
 
     def __getattr__(self, name):
-        if name in {"set_page_config", "title", "write", "caption", "header", "subheader", "download_button", "dataframe"}:
+        if name in {"set_page_config", "title", "write", "caption", "header", "subheader", "download_button", "divider"}:
             return lambda *args, **kwargs: None
         raise AttributeError(name)
 
@@ -95,10 +124,12 @@ class AppRegressionTests(unittest.TestCase):
 
     def test_changing_source_clears_old_data_and_predictions(self):
         ui = FakeUI(source="Excel o CSV")
-        ui.session_state.update(input_source="Ejemplo sintético", records=[{"old": 1}], predictions=[{"old": 1}])
+        ui.session_state.update(input_source="Ejemplo sintético", records=[{"old": 1}], predictions=[{"old": 1}], saved_fingerprint="old", predictions_saved=True)
         app.show_teacher(ui)
         self.assertNotIn("records", ui.session_state)
         self.assertNotIn("predictions", ui.session_state)
+        self.assertNotIn("saved_fingerprint", ui.session_state)
+        self.assertNotIn("predictions_saved", ui.session_state)
 
     def test_bad_paste_clears_previous_predictions(self):
         ui = FakeUI(source="Pegar tabla")
@@ -234,6 +265,7 @@ class AppSQLiteTests(unittest.TestCase):
         store.save_indicators.side_effect = app.DatabaseError("Servidor SQLite no disponible")
         app.show_teacher(ui, store)
         self.assertEqual(ui.session_state["records"], self.RECORDS)
+        self.assertNotIn("saved_fingerprint", ui.session_state)
         self.assertTrue(any(kind == "error" and "guardar" in message and "SQLite" in message for kind, message in ui.messages))
 
     def test_load_failure_keeps_current_records_and_reports_sqlite(self):
@@ -260,6 +292,8 @@ class AppSQLiteTests(unittest.TestCase):
         with patch.object(app, "score_records", return_value=self.PREDICTIONS.copy()):
             app.show_teacher(ui, store)
         self.assertEqual(ui.session_state["predictions"], self.PREDICTIONS)
+        self.assertTrue(ui.session_state["predictions_saved"])
+        self.assertEqual(ui.session_state["saved_fingerprint"], app.records_fingerprint(self.RECORDS))
         store.save_predictions.assert_called_once_with(self.PREDICTIONS, period="primer_parcial")
         ui.buttons.clear()
         app.show_teacher(ui, store)
@@ -273,7 +307,33 @@ class AppSQLiteTests(unittest.TestCase):
         with patch.object(app, "score_records", return_value=self.PREDICTIONS.copy()):
             app.show_teacher(ui, store)
         self.assertEqual(ui.session_state["predictions"], self.PREDICTIONS)
+        self.assertFalse(ui.session_state.get("predictions_saved", False))
+        self.assertNotIn("saved_fingerprint", ui.session_state)
         self.assertTrue(any(kind == "warning" and "sesión" in message and "SQLite" in message for kind, message in ui.messages))
+
+    def test_bad_paste_resets_saved_status_and_visible_progress(self):
+        ui = FakeUI(source="Pegar tabla")
+        ui.session_state.update(input_source=ui.source, records=self.RECORDS.copy(), predictions=self.PREDICTIONS.copy(), saved_fingerprint=app.records_fingerprint(self.RECORDS), predictions_saved=True)
+        ui.buttons.add("Revisar tabla pegada")
+        ui.text["Tabla del primer parcial"] = "EST-001;12;80;70"
+        with patch.object(app, "teacher_steps") as render_progress:
+            app.show_teacher(ui, self.store())
+        self.assertTrue(any(kind == "error" for kind, _ in ui.messages))
+        for key in ("records", "predictions", "saved_fingerprint", "predictions_saved"):
+            self.assertNotIn(key, ui.session_state)
+        render_progress.assert_called_with(ui, loaded=False, saved=False, calculated=False)
+
+    def test_replacing_saved_data_invalidates_result_and_guarded_progress(self):
+        ui = self.teacher()
+        ui.session_state.update(predictions=self.PREDICTIONS.copy(), saved_fingerprint=app.records_fingerprint(self.RECORDS), predictions_saved=True)
+        changed = [{**self.RECORDS[0], "nota_parcial": 7.0}]
+        app.accept_records(ui, changed)
+        with patch.object(app, "teacher_steps") as render_progress:
+            app.show_teacher(ui, self.store())
+        self.assertEqual(ui.session_state["records"], changed)
+        for key in ("predictions", "saved_fingerprint", "predictions_saved"):
+            self.assertNotIn(key, ui.session_state)
+        render_progress.assert_called_with(ui, loaded=True, saved=False, calculated=False)
 
     def test_model_unavailable_does_not_attempt_sqlite_save(self):
         ui = self.teacher()

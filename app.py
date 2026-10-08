@@ -17,6 +17,7 @@ from messi.paths import database_path
 from messi.model import ModelUnavailable, score_records
 from messi.storage import SUPPORT_STATUSES, SUPPORT_TYPES
 from messi.sqlite_storage import SQLiteStore
+from messi.presentation import empty_state, kicker, readable_rows, setup_page, support_label, teacher_steps
 
 PERIOD = "primer_parcial"
 
@@ -36,12 +37,7 @@ def main() -> None:
     import streamlit as st
 
     st.set_page_config(page_title="MESSI | Acompañamiento escolar", page_icon="📚", layout="wide")
-    st.title("MESSI")
-    st.write("Alerta y acompañamiento escolar")
-    st.warning("Demostración local con datos sintéticos. El selector de rol no autentica usuarios; usa sólo información ficticia.")
-    st.caption("Las alertas orientan la revisión de un tutor. No cambian calificaciones ni aplican sanciones.")
-    role = st.sidebar.radio("Vista de demostración", ["Docente", "Tutor", "Estudiante"])
-    st.sidebar.caption("Los apoyos funcionan incluso cuando no hay una predicción disponible.")
+    role = setup_page(st)
     store = None
     storage_error = None
     try:
@@ -72,8 +68,17 @@ def accept_records(st, records: list[dict], *, origin: str = "capture") -> None:
     """Actualizar los indicadores e invalidar resultados si cambiaron los datos."""
     if records != st.session_state.get("records"):
         st.session_state.pop("predictions", None)
+        st.session_state.pop("saved_fingerprint", None)
+        st.session_state.pop("predictions_saved", None)
     st.session_state["records"] = records
     st.session_state["records_origin"] = origin
+    if origin == "database":
+        st.session_state["saved_fingerprint"] = records_fingerprint(records)
+
+
+def records_fingerprint(records: list[dict]) -> str:
+    """Reconocer el conjunto que se confirmó guardado, sin usar datos personales."""
+    return hashlib.sha256(report_csv(records)).hexdigest()
 
 
 def prepare_form(st, name: str) -> None:
@@ -100,10 +105,14 @@ def show_indicators(st, records: list[dict]) -> None:
 
 def show_teacher(st, store: SQLiteStore | None = None, *, storage_error: DatabaseError | None = None) -> None:
     """Capturar, validar, guardar y puntuar indicadores del primer parcial."""
+    kicker(st, "Vista docente")
     st.header("Datos del primer parcial")
     prepare_form(st, "capture")
-    st.write("Puedes llenar una plantilla de Excel, escribir los datos aquí o pegar una tabla. Usa notas de 0 a 10 y porcentajes de 0 a 100.")
-    st.caption("En esta demostración usa sólo datos ficticios y códigos de estudiante, sin nombres ni información personal.")
+    st.write("Carga los indicadores, revisa que sean correctos y compártelos con el tutor.")
+    progress = st.empty()
+    existing = st.session_state.get("records", [])
+    teacher_steps(progress, loaded=bool(existing), saved=bool(existing) and st.session_state.get("saved_fingerprint") == records_fingerprint(existing), calculated=bool(st.session_state.get("predictions")))
+    st.subheader("1. Elige cómo ingresar los datos")
     source = st.radio("¿Cómo quieres ingresar los datos?", ["Excel o CSV", "Captura directa", "Pegar tabla", "Ejemplo sintético"], horizontal=True)
     if source != st.session_state.get("input_source"):
         st.session_state["input_source"] = source
@@ -111,6 +120,9 @@ def show_teacher(st, store: SQLiteStore | None = None, *, storage_error: Databas
         st.session_state.pop("predictions", None)
         st.session_state.pop("records_origin", None)
         st.session_state.pop("uploaded_fingerprint", None)
+        st.session_state.pop("saved_fingerprint", None)
+        st.session_state.pop("predictions_saved", None)
+        teacher_steps(progress, loaded=False, saved=False, calculated=False)
     try:
         if source == "Excel o CSV":
             template = ROOT / "data" / "synthetic" / "Plantilla_MESSI.xlsx"
@@ -130,21 +142,33 @@ def show_teacher(st, store: SQLiteStore | None = None, *, storage_error: Databas
                 if st.session_state.get("records_origin") != "database":
                     st.session_state.pop("records", None)
                     st.session_state.pop("predictions", None)
+                    st.session_state.pop("saved_fingerprint", None)
+                    st.session_state.pop("predictions_saved", None)
         elif source == "Captura directa":
             st.write("Agrega un estudiante por vez. Si dejas el código vacío, se asignará uno temporal para esta demostración.")
             use_counts = st.radio("¿Cómo tienes la asistencia y las tareas?", ["Porcentajes", "Cantidades registradas"], horizontal=True) == "Cantidades registradas"
             with st.form("capture_form", clear_on_submit=False):
-                student_id = st.text_input("Código del estudiante (opcional)", placeholder="EST-001", max_chars=12, key="capture_id")
-                grade = st.number_input("Nota del primer parcial", min_value=0.0, max_value=10.0, value=None, step=0.1, key="capture_grade")
+                left, right = st.columns(2)
+                with left:
+                    student_id = st.text_input("Código del estudiante (opcional)", placeholder="EST-001", max_chars=12, key="capture_id", help="EST- seguido de 3 a 8 dígitos. Vacío: se asigna un código temporal.")
+                with right:
+                    grade = st.number_input("Nota del primer parcial", min_value=0.0, max_value=10.0, value=None, step=0.1, key="capture_grade", placeholder="De 0 a 10")
                 if use_counts:
-                    attendance_count = st.number_input("Sesiones asistidas", min_value=0, value=None, step=1, key="capture_attendance_count")
-                    sessions_count = st.number_input("Sesiones impartidas", min_value=0, value=None, step=1, key="capture_sessions_count")
-                    homework_count = st.number_input("Tareas entregadas", min_value=0, value=None, step=1, key="capture_homework_count")
-                    assigned_count = st.number_input("Tareas solicitadas", min_value=0, value=None, step=1, key="capture_assigned_count")
+                    left, right = st.columns(2)
+                    with left:
+                        attendance_count = st.number_input("Sesiones asistidas", min_value=0, value=None, step=1, key="capture_attendance_count")
+                        sessions_count = st.number_input("Sesiones impartidas", min_value=0, value=None, step=1, key="capture_sessions_count")
+                    with right:
+                        homework_count = st.number_input("Tareas entregadas", min_value=0, value=None, step=1, key="capture_homework_count")
+                        assigned_count = st.number_input("Tareas solicitadas", min_value=0, value=None, step=1, key="capture_assigned_count")
                 else:
-                    attendance = st.number_input("Asistencia (%)", min_value=0.0, max_value=100.0, value=None, step=1.0, key="capture_attendance")
-                    homework = st.number_input("Tareas entregadas (%)", min_value=0.0, max_value=100.0, value=None, step=1.0, key="capture_homework")
-                submitted = st.form_submit_button("Agregar estudiante")
+                    left, right = st.columns(2)
+                    with left:
+                        attendance = st.number_input("Asistencia (%)", min_value=0.0, max_value=100.0, value=None, step=1.0, key="capture_attendance", placeholder="Ejemplo: 80")
+                    with right:
+                        homework = st.number_input("Tareas entregadas (%)", min_value=0.0, max_value=100.0, value=None, step=1.0, key="capture_homework", placeholder="Ejemplo: 75")
+                st.caption("Completa todos los indicadores. El código es el único campo opcional.")
+                submitted = st.form_submit_button("Agregar estudiante", type="primary")
             if submitted:
                 current = st.session_state.get("records", [])
                 if not student_id.strip():
@@ -164,11 +188,15 @@ def show_teacher(st, store: SQLiteStore | None = None, *, storage_error: Databas
             st.caption("También puedes separar las columnas con punto y coma: 5,8;70;50. Si incluyes códigos: EST-001;5,8;70;50. Una fila por estudiante.")
             with st.form("paste_form"):
                 pasted = st.text_area("Tabla del primer parcial", height=180, max_chars=100000)
-                submitted = st.form_submit_button("Revisar tabla pegada")
+                submitted = st.form_submit_button("Revisar tabla pegada", type="primary")
             if submitted:
                 accept_records(st, load_pasted(pasted))
         else:
-            if st.button("Cargar ejemplo sintético"):
+            with st.container(border=True):
+                st.write("**Explora MESSI con 8 estudiantes ficticios**")
+                st.caption("Un recorrido rápido para conocer las tablas y el reporte, sin preparar un archivo.")
+                load_sample = st.button("Cargar ejemplo sintético", type="primary")
+            if load_sample:
                 sample = ROOT / "data" / "synthetic" / "students_demo.csv"
                 accept_records(st, load_csv(sample))
     except (ValidationError, OSError, ImportError) as exc:
@@ -176,10 +204,14 @@ def show_teacher(st, store: SQLiteStore | None = None, *, storage_error: Databas
         # fallida conserva las filas que el docente ya había capturado.
         if source != "Captura directa":
             st.session_state.pop("records", None)
+            st.session_state.pop("saved_fingerprint", None)
         st.session_state.pop("predictions", None)
-        st.error(str(exc))
+        st.session_state.pop("predictions_saved", None)
+        st.error(f"Revisa los datos antes de continuar. {exc}")
         if source != "Captura directa":
+            teacher_steps(progress, loaded=False, saved=False, calculated=False)
             return
+    st.caption("¿Quieres continuar un registro anterior? Puedes recuperar los indicadores de la base local.")
     if st.button("Cargar indicadores guardados"):
         try:
             saved = require_store(store, storage_error).list_indicators(period=PERIOD)
@@ -195,19 +227,33 @@ def show_teacher(st, store: SQLiteStore | None = None, *, storage_error: Databas
             st.error(f"Los indicadores guardados no son válidos: {exc}")
     records = st.session_state.get("records", [])
     if not records:
-        st.info("Carga un archivo o el ejemplo sintético para revisar los indicadores.")
+        teacher_steps(progress, loaded=False, saved=False, calculated=False)
+        empty_state(st, "Tu lista aparecerá aquí", "Carga un archivo o el ejemplo sintético para revisar los indicadores.")
         return
-    st.success(f"Datos válidos: {len(records)} estudiantes.")
-    show_indicators(st, records)
-    st.caption("Conserva los códigos para identificar cada apoyo. Los códigos automáticos son temporales y no enlazan listas distintas de forma fiable.")
-    if st.button("Guardar indicadores"):
+    st.subheader("2. Revisa y guarda los indicadores")
+    metrics = st.columns(3)
+    metrics[0].metric("Estudiantes en la lista", len(records))
+    metrics[1].metric("Nota promedio", f"{sum(r['nota_parcial'] for r in records) / len(records):.1f} / 10")
+    metrics[2].metric("Asistencia promedio", f"{sum(r['asistencia'] for r in records) / len(records):.0f} %")
+    with st.container(border=True):
+        st.success(f"Datos válidos: {len(records)} estudiantes.")
+        show_indicators(st, records)
+        st.caption("Conserva los códigos para identificar cada apoyo. Los códigos automáticos son temporales y no enlazan listas distintas de forma fiable.")
+    save_clicked = st.button("Guardar indicadores", width="stretch")
+    if save_clicked:
         try:
             require_store(store, storage_error).save_indicators(records, period=PERIOD)
         except (DatabaseError, ValueError) as exc:
             st.error(f"No se pudieron guardar los indicadores en SQLite: {exc}")
         else:
+            st.session_state["saved_fingerprint"] = records_fingerprint(records)
             st.success(f"Indicadores guardados para {len(records)} estudiantes.")
-    if st.button("Calcular riesgo de demostración"):
+    saved = st.session_state.get("saved_fingerprint") == records_fingerprint(records)
+    st.caption("Guardados en la base local: el tutor puede consultarlos." if saved else "Estos indicadores están en esta sesión. Guárdalos para que el tutor pueda consultarlos.")
+    st.subheader("3. Genera el reporte de demostración")
+    st.caption("El cálculo intenta guardar indicadores y resultados en la base local. Si cambiaste datos ya guardados, guarda primero los indicadores nuevos.")
+    if st.button("Calcular riesgo de demostración", type="primary", width="stretch"):
+        st.session_state.pop("predictions_saved", None)
         try:
             st.session_state["predictions"] = score_records(records, ROOT / "models" / "messi_demo.joblib")
         except ModelUnavailable as exc:
@@ -221,24 +267,45 @@ def show_teacher(st, store: SQLiteStore | None = None, *, storage_error: Databas
                 require_store(store, storage_error).save_predictions(st.session_state["predictions"], period=PERIOD)
             except (DatabaseError, ValueError) as exc:
                 st.warning(f"La predicción está disponible en esta sesión, pero no se pudo guardar en SQLite: {exc}")
+            else:
+                st.session_state["saved_fingerprint"] = records_fingerprint(records)
+                st.session_state["predictions_saved"] = True
     predictions = st.session_state.get("predictions")
+    teacher_steps(progress, loaded=True, saved=st.session_state.get("saved_fingerprint") == records_fingerprint(records), calculated=bool(predictions))
     if predictions:
         st.subheader("Resultado de demostración")
+        review_count = sum(bool(row["alerta"]) for row in predictions)
+        summary = st.columns(2)
+        summary[0].metric("Casos para revisar con tutor", review_count)
+        summary[1].metric("Resultados calculados", len(predictions))
         st.warning("Modelo entrenado con datos sintéticos. Puntuación de 0 a 1 y umbral de demostración; no validado para estudiantes reales.")
         show_indicators(st, predictions)
         st.caption("Alerta = revisar el caso con un tutor. Los indicadores mostrados son datos observados, no causas ni explicación exacta de la red.")
-        st.download_button("Descargar reporte", report_csv(predictions), "reporte_messi_demo.csv", "text/csv")
+        st.caption("Resultados guardados en la base local." if st.session_state.get("predictions_saved") else "Resultado disponible en esta sesión. Descarga el reporte para conservar una copia.")
+        st.download_button("Descargar reporte", report_csv(predictions), "reporte_messi_demo.csv", "text/csv", type="primary")
 
 
 def show_student(st, store: SQLiteStore) -> None:
     """Registrar una solicitud ficticia independiente de cualquier alerta."""
+    kicker(st, "Vista estudiante")
     st.header("Solicitar apoyo")
     prepare_form(st, "request")
-    st.write("Puedes pedir ayuda aunque no tengas una alerta. Para esta demostración, escribe un identificador ficticio y un mensaje ficticio.")
-    with st.form("request_form", clear_on_submit=False):
-        student_id = st.text_input("Identificador del estudiante", placeholder="EST-001", max_chars=12, key="request_id")
-        message = st.text_area("¿En qué necesitas apoyo?", max_chars=1000, key="request_message")
-        submitted = st.form_submit_button("Enviar solicitud")
+    st.write("Pedir ayuda es el primer paso. Puedes hacerlo aunque no tengas una alerta.")
+    form_column, guide_column = st.columns([1.6, 1], gap="large")
+    with form_column:
+        with st.form("request_form", clear_on_submit=False):
+            st.subheader("Cuéntale al tutor qué necesitas")
+            student_id = st.text_input("Identificador del estudiante", placeholder="EST-001", max_chars=12, key="request_id", help="Usa el mismo código ficticio de la lista del docente: EST- y de 3 a 8 dígitos.")
+            message = st.text_area("¿En qué necesitas apoyo?", placeholder="Ejemplo ficticio: necesito organizar mis tareas para el siguiente parcial.", height=160, max_chars=1000, key="request_message")
+            st.caption("Usa un código y un mensaje ficticios. Evita nombres y datos personales.")
+            submitted = st.form_submit_button("Enviar solicitud", type="primary", width="stretch")
+    with guide_column:
+        with st.container(border=True):
+            st.subheader("¿Qué ocurre después?")
+            st.write("**1. Tu solicitud se registra**\n\nAl enviarla, recibirás un folio de confirmación.")
+            st.write("**2. El tutor la revisa**\n\nPodrá verla en la bandeja de solicitudes.")
+            st.write("**3. Acuerdan un apoyo**\n\nEl tutor registra el acuerdo y su seguimiento.")
+            st.caption("Esta demostración local no envía notificaciones. El tutor debe abrir su vista para consultar las solicitudes.")
     if submitted:
         try:
             request_id = store.create_request(student_id, message)
@@ -250,6 +317,7 @@ def show_student(st, store: SQLiteStore) -> None:
 
 def show_tutor(st, store: SQLiteStore) -> None:
     """Consultar indicadores y solicitudes, acordar apoyos y registrar seguimiento."""
+    kicker(st, "Vista tutor")
     st.header("Apoyos y seguimiento")
     prepare_form(st, "support")
     prepare_form(st, "followup")
@@ -263,24 +331,39 @@ def show_tutor(st, store: SQLiteStore) -> None:
             accept_records(st, records, origin="database")
         if predictions:
             st.session_state["predictions"] = predictions
-    if predictions:
-        st.subheader("Indicadores y alertas de demostración")
-        show_indicators(st, predictions)
-    elif records:
-        st.subheader("Indicadores disponibles")
-        show_indicators(st, records)
-        st.caption("Predicción pendiente; el registro de apoyos está disponible.")
-    st.subheader("Solicitudes recibidas")
+            st.session_state["predictions_saved"] = True
     requests = store.list_requests()
-    if requests:
-        st.dataframe(requests, hide_index=True, width="stretch")
+    supports = store.list_supports()
+    overview = st.columns(3)
+    overview[0].metric("Solicitudes recibidas", len(requests))
+    overview[1].metric("Apoyos activos", sum(s["status"] != "Cerrado" for s in supports))
+    overview[2].metric("Casos para revisar", sum(bool(p["alerta"]) for p in predictions or []))
+    st.caption("Solicitudes: total registrado. Apoyos activos: pendientes o en seguimiento. Casos: alertas del conjunto de indicadores visible.")
+    if predictions:
+        with st.expander("Indicadores y alertas de demostración"):
+            st.caption("Puntuaciones sintéticas para orientar una revisión; no cambian calificaciones ni aplican sanciones.")
+            show_indicators(st, predictions)
+    elif records:
+        with st.expander("Indicadores disponibles"):
+            show_indicators(st, records)
+            st.caption("Predicción pendiente; el registro de apoyos está disponible.")
     else:
-        st.info("Todavía no hay solicitudes.")
-    with st.form("support_form", clear_on_submit=False):
-        student_id = st.text_input("Identificador del estudiante", placeholder="EST-001", max_chars=12, key="support_student_id")
-        support_type = st.selectbox("Tipo de apoyo", SUPPORT_TYPES)
-        notes = st.text_area("Acuerdo de apoyo ficticio", max_chars=1000, key="support_notes")
-        submitted = st.form_submit_button("Registrar apoyo")
+        st.caption("Aún no hay indicadores. Puedes atender solicitudes y registrar apoyos desde ahora.")
+    inbox_column, agreement_column = st.columns([1.25, 1], gap="large")
+    with inbox_column:
+        st.subheader("Solicitudes recibidas")
+        if requests:
+            st.dataframe(readable_rows(requests), hide_index=True, width="stretch")
+            st.caption("Utiliza el código de la solicitud para registrar el acuerdo de apoyo.")
+        else:
+            empty_state(st, "La bandeja está vacía", "Las solicitudes enviadas desde la vista Estudiante aparecerán aquí.")
+    with agreement_column:
+        with st.form("support_form", clear_on_submit=False):
+            st.subheader("Registrar un acuerdo de apoyo")
+            student_id = st.text_input("Identificador del estudiante", placeholder="EST-001", max_chars=12, key="support_student_id")
+            support_type = st.selectbox("Tipo de apoyo", SUPPORT_TYPES, format_func=support_label, key="support_type")
+            notes = st.text_area("Acuerdo de apoyo ficticio", placeholder="Ejemplo: revisar tareas pendientes el viernes y acordar un plan.", max_chars=1000, key="support_notes")
+            submitted = st.form_submit_button("Registrar apoyo", type="primary", width="stretch")
     if submitted:
         try:
             support_id = store.create_support(student_id, support_type, notes)
@@ -288,19 +371,22 @@ def show_tutor(st, store: SQLiteStore) -> None:
             st.error(str(exc))
         else:
             confirm_form(st, "support", {"support_student_id": "", "support_notes": ""}, f"Apoyo {support_id} registrado.")
-    supports = store.list_supports()
+    st.divider()
     st.subheader("Apoyos registrados")
     if not supports:
-        st.info("Registra un apoyo para agregar su seguimiento.")
+        empty_state(st, "Comienza con un acuerdo", "Registra un apoyo para agregar su seguimiento.")
         return
-    st.dataframe(supports, hide_index=True, width="stretch")
-    options = {s["id"]: f'{s["id"]} · {s["student_id"]} · {s["support_type"]}' for s in supports}
+    st.dataframe(readable_rows(supports), hide_index=True, width="stretch")
+    st.subheader("Dar seguimiento a un apoyo")
+    options = {s["id"]: f'Apoyo {s["id"]} · {s["student_id"]} · {support_label(s["support_type"])} · {s["status"]}' for s in supports}
     support_id = st.selectbox("Apoyo para seguimiento", list(options), format_func=options.get, key="support_selection")
     current_status = next(s["status"] for s in supports if s["id"] == support_id)
-    with st.form("followup_form", clear_on_submit=False):
-        status = st.selectbox("Estado del apoyo", SUPPORT_STATUSES, index=SUPPORT_STATUSES.index(current_status), key=f"status_{support_id}_{current_status}")
-        notes = st.text_area("Nota ficticia de seguimiento", max_chars=1000, key="followup_notes")
-        submitted = st.form_submit_button("Guardar seguimiento")
+    followup_column, history_column = st.columns([1, 1.25], gap="large")
+    with followup_column:
+        with st.form("followup_form", clear_on_submit=False):
+            status = st.selectbox("Estado del apoyo", SUPPORT_STATUSES, index=SUPPORT_STATUSES.index(current_status), key=f"status_{support_id}_{current_status}")
+            notes = st.text_area("Nota ficticia de seguimiento", placeholder="¿Qué se revisó y cuál es el siguiente paso?", max_chars=1000, key="followup_notes")
+            submitted = st.form_submit_button("Guardar seguimiento", type="primary", width="stretch")
     if submitted:
         try:
             store.add_followup(support_id, notes, status)
@@ -308,12 +394,13 @@ def show_tutor(st, store: SQLiteStore) -> None:
             st.error(str(exc))
         else:
             confirm_form(st, "followup", {"followup_notes": ""}, "Seguimiento guardado.")
-    st.subheader("Historial del apoyo seleccionado")
-    followups = store.list_followups(support_id)
-    if followups:
-        st.dataframe(followups, hide_index=True, width="stretch")
-    else:
-        st.caption("Este apoyo aún no tiene seguimiento.")
+    with history_column:
+        st.subheader("Historial del apoyo seleccionado")
+        followups = store.list_followups(support_id)
+        if followups:
+            st.dataframe(readable_rows(followups), hide_index=True, width="stretch")
+        else:
+            empty_state(st, "Aquí verás los avances", "Este apoyo aún no tiene seguimiento. Registra la primera nota para comenzar.")
 
 
 if __name__ == "__main__":
