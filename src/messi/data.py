@@ -1,4 +1,12 @@
-"""Contrato de datos de MESSI, sin dependencias de aprendizaje automático."""
+"""Módulo de revisión y limpieza de datos (Demo M.E.S.S.I.).
+
+Este archivo revisa que toda la información que ingresa el usuario o el 
+sistema tenga el formato correcto antes de pasarla a la Inteligencia Artificial.
+
+- Revisa que las notas estén entre 0 y 10.
+- Revisa que los porcentajes (asistencia, tareas) estén entre 0 y 100.
+- Trabaja exclusivamente con los datos sintéticos (ficticios) de demostración.
+"""
 
 from __future__ import annotations
 
@@ -25,10 +33,11 @@ _ID_PATTERN = re.compile(r"EST-[0-9]{3,8}\Z")
 
 
 class ValidationError(ValueError):
-    """El archivo no cumple el contrato mínimo de datos."""
+    """Lanzamos este error cuando los datos ingresados no cumplen las reglas."""
 
 
 def _read_source(source: bytes | str | Path) -> str:
+    """Lee el archivo y asegura que no pese más de 5 MB."""
     try:
         if isinstance(source, Path):
             if source.stat().st_size > MAX_BYTES:
@@ -53,6 +62,7 @@ def _read_source(source: bytes | str | Path) -> str:
 
 
 def _coerce_record(row: dict, row_number: int, training: bool) -> dict:
+    """Obliga a que cada estudiante tenga sus datos completos y dentro de los límites."""
     expected = {ID_COLUMN, *FEATURES}
     if training:
         expected.add(TARGET)
@@ -92,11 +102,9 @@ def _coerce_record(row: dict, row_number: int, training: bool) -> dict:
 
 
 def load_csv(source: bytes | str | Path, training: bool = False) -> list[dict]:
-    """Valida CSV UTF-8 y devuelve registros normalizados.
+    """Carga la lista de estudiantes desde un archivo CSV.
 
-    Un str se interpreta como contenido CSV; para una ruta usa pathlib.Path.
-    Los porcentajes se expresan de 0 a 100, la nota de 0 a 10.
-    resultado_final sólo se admite con training=True y nunca es una entrada IA.
+    Revisa que no pasen de 10,000 alumnos y que tengan sus 3 calificaciones base.
     """
     contents = _read_source(source)
     if not contents.strip():
@@ -140,11 +148,7 @@ def load_csv(source: bytes | str | Path, training: bool = False) -> list[dict]:
 
 
 def validate_records(records: list[dict]) -> list[dict]:
-    """Valida registros canónicos de inferencia sin agregar columnas ni etiquetas.
-
-    Los IDs son obligatorios en esta API; load_excel y load_pasted generan IDs
-    temporales para las modalidades que permiten omitirlos.
-    """
+    """Da una última revisión rápida a los datos antes de predecir el riesgo."""
     if not isinstance(records, list) or not records:
         raise ValidationError("Ingresa al menos un estudiante.")
     if len(records) > MAX_ROWS:
@@ -170,10 +174,10 @@ def record_from_counts(
     tareas_entregadas: int,
     tareas_solicitadas: int,
 ) -> dict:
-    """Convierte conteos de captura manual en los porcentajes del contrato.
+    """Convierte los conteos manuales a porcentajes.
 
-    Los totales deben ser enteros positivos y lo realizado no puede superar
-    lo solicitado. Se conserva la precisión de las divisiones, sin redondear.
+    Por ejemplo: si un alumno entregó 8 de 10 tareas, esto lo convierte en un 80%
+    para que la inteligencia artificial lo pueda entender.
     """
     counts = {
         "asistencias": asistencias, "sesiones": sesiones,
@@ -224,7 +228,6 @@ def _normalize_headers(values: list) -> list[str]:
 
 
 def _decimal_value(value):
-    # Sólo el pegado/Excel permite coma decimal; CSV conserva su contrato con punto.
     if isinstance(value, str):
         text = value.strip()
         if text.count(",") == 1 and "." not in text:
@@ -234,7 +237,6 @@ def _decimal_value(value):
 
 
 def _fill_temporary_ids(records: list[dict]) -> list[dict]:
-    # Reserva también IDs de filas posteriores antes de generar los temporales.
     used_ids = {
         str(row[ID_COLUMN]).strip() for row in records if not _is_empty(row[ID_COLUMN])
     }
@@ -256,12 +258,9 @@ def _fill_temporary_ids(records: list[dict]) -> list[dict]:
 
 
 def load_pasted(text: str) -> list[dict]:
-    """Lee una tabla pegada con tabuladores o punto y coma.
+    """Lee datos cuando el usuario los pega directamente desde Excel.
 
-    Con encabezados se requieren las cuatro columnas amigables o canónicas.
-    Sin encabezados: tres columnas (nota, asistencia, tareas) o cuatro (ID y
-    las tres variables). Los IDs vacíos reciben identificadores temporales.
-    Se admite coma decimal; la coma nunca se interpreta como delimitador.
+    Genera identificadores anónimos automáticos si la tabla pegada viene sin IDs.
     """
     if not isinstance(text, str):
         raise ValidationError("Pega una tabla de texto.")
@@ -307,12 +306,10 @@ def load_pasted(text: str) -> list[dict]:
 
 
 def load_excel(source: bytes | Path) -> list[dict]:
-    """Lee .xlsx con openpyxl opcional y devuelve el mismo contrato que CSV.
+    """Carga y procesa libros completos de Excel (.xlsx).
 
-    Usa la hoja Datos o, si no existe, la única hoja del libro. Encabezados en
-    fila 1; cuatro columnas amigables o canónicas; porcentajes numéricos 0–100.
-    Las filas totalmente vacías se ignoran y los IDs vacíos son temporales.
-    Las fórmulas se rechazan incluso si Excel contiene resultados almacenados.
+    Ignora archivos que traigan fórmulas activas para asegurar que los datos no 
+    cambien o se corrompan antes de ser leídos por la IA.
     """
     try:
         if isinstance(source, Path):
@@ -349,7 +346,6 @@ def load_excel(source: bytes | Path) -> list[dict]:
             sheet = workbook[workbook.sheetnames[0]]
         else:
             raise ValidationError("Usa una hoja llamada Datos o un libro con una sola hoja.")
-        # También limita dimensiones físicas para no recorrer libros con millones de celdas vacías.
         if sheet.max_row and sheet.max_row > MAX_ROWS + 1:
             raise ValidationError("La hoja Excel supera el límite de 10,000 filas de datos.")
         if sheet.max_column and sheet.max_column > 100:

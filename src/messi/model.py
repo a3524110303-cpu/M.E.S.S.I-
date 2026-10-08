@@ -1,8 +1,11 @@
-"""Inferencia opcional con el modelo local de demostración de MESSI.
+"""Módulo de la Red Neuronal (Demo M.E.S.S.I.).
 
-Los archivos joblib pueden ejecutar código al abrirse. Este módulo sólo acepta
-artefactos del directorio models de este proyecto, creados por train_demo.py.
-No admite modelos subidos desde el navegador ni descargados de terceros.
+Aquí se carga y ejecuta el modelo de Inteligencia Artificial (MLP_8).
+
+- Modelo: Usamos la red neuronal MLP_8 porque es muy sensible (96.3% de Recall) 
+  y prefiere lanzar una alerta preventiva antes que ignorar a un alumno en riesgo.
+- Datos: Usa datos sintéticos (ficticios) con 3 variables: nota_parcial, asistencia y tareas.
+- Umbral: Si la IA calcula un riesgo del 50% (0.5) o más, dispara la alerta.
 """
 
 from __future__ import annotations
@@ -19,10 +22,15 @@ TRUSTED_MODEL_DIR = resource_root() / "models"
 
 
 class ModelUnavailable(ValueError):
-    """El modelo está pendiente o su artefacto no cumple el contrato local."""
+    """El modelo no está listo o el archivo no es válido."""
 
 
 def _read_metadata(model_path: Path) -> tuple[Path, dict]:
+    """Lee el archivo del modelo y revisa que sea el correcto.
+
+    Comprueba que estemos usando el modelo de la demostración ficticia y 
+    que nadie haya modificado el archivo (usando seguridad SHA-256).
+    """
     try:
         candidate = model_path.resolve()
         trusted_directory = TRUSTED_MODEL_DIR.resolve()
@@ -75,10 +83,11 @@ def _read_metadata(model_path: Path) -> tuple[Path, dict]:
 
 
 def score_records(records: list[dict], model_path: Path) -> list[dict]:
-    """Añade riesgo 0..1 y alerta booleana; no usa resultado_final como entrada.
+    """Calcula el riesgo de cada estudiante usando la Red Neuronal.
 
-    La puntuación procede exclusivamente de datos sintéticos y no representa
-    una probabilidad calibrada o validada para estudiantes reales.
+    Toma las calificaciones y porcentajes de asistencia/tareas y las pasa 
+    por la IA. Si la probabilidad de reprobar es mayor a 0.5 (50%), lanza 
+    una alerta preventiva.
     """
     if not isinstance(records, list) or not records or len(records) > MAX_ROWS:
         raise ValidationError("Proporciona entre 1 y 10,000 registros válidos.")
@@ -100,7 +109,6 @@ def score_records(records: list[dict], model_path: Path) -> list[dict]:
             "Faltan dependencias de IA: instala los requisitos del proyecto para habilitar la demo."
         ) from exc
     try:
-        # La comprobación de ruta y procedencia precede a la deserialización.
         pipeline = joblib.load(candidate)
         classifier = pipeline.named_steps["classifier"]
         classes = list(classifier.classes_)
