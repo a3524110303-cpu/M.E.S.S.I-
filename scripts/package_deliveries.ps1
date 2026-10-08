@@ -24,6 +24,10 @@ foreach ($taskName in @('MESSI_Demo_Entrega_3.mp4', 'MESSI_Demo_Entrega_3.srt'))
 foreach ($taskName in @('MESSI-Setup-Windows-x64.exe', 'MESSI-Setup-Windows-x64.sha256')) {
     Copy-Item -LiteralPath (Join-Path $taskReleaseDirectory $taskName) -Destination (Join-Path $taskDestination 'Aplicacion') -Force
 }
+$taskPortableZip = Join-Path $taskReleaseDirectory 'MESSI-Portable-Windows-x64.zip'
+if (Test-Path -LiteralPath $taskPortableZip) {
+    Copy-Item -LiteralPath $taskPortableZip -Destination (Join-Path $taskDestination 'Aplicacion') -Force
+}
 Copy-Item -LiteralPath (Join-Path $taskProjectRoot 'installer/LEEME-cliente.txt') -Destination (Join-Path $taskDestination 'Aplicacion') -Force
 Copy-Item -LiteralPath (Join-Path $taskProjectRoot 'docs/entrega_3/Verificacion_de_entregas_2_y_3.md') -Destination (Join-Path $taskDestination 'Codigo_y_evidencias') -Force
 Copy-Item -LiteralPath (Join-Path $taskProjectRoot 'docs/entrega_2/Revision_Ismael_y_Victor_2026-10-08.md') -Destination (Join-Path $taskDestination 'Codigo_y_evidencias') -Force
@@ -58,6 +62,7 @@ No presentar el formato pendiente como evidencia de una prueba realizada.
 Aplicacion: abrir MESSI-Setup-Windows-x64.exe y seguir el asistente.
 El cliente no necesita Python, MySQL ni internet durante el uso.
 Para instalar en otra computadora basta con el instalador.
+Portable: extrae el ZIP completo y abre MESSI/MESSI.exe, conservando _internal.
 Windows 11 x64 probado; Windows 10 y segunda computadora no probados fisicamente.
 Usar solo datos ficticios. Modelo sintetico; vistas de demostracion sin login.
 

@@ -102,7 +102,8 @@ class DiagnosticIsolationTests(unittest.TestCase):
                 path = database_path()
                 path.parent.mkdir(parents=True)
                 path.write_bytes(b"prueba")
-                self.assertTrue(path.is_relative_to(temporary))
+                # TMP puede usar un alias Windows 8.3; comparar rutas físicas.
+                self.assertTrue(path.resolve().is_relative_to(temporary.resolve()))
                 return {"ok": True}
 
             with patch.dict(os.environ, {"MESSI_DATA_DIR": str(original)}), \
