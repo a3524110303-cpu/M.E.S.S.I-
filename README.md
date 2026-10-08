@@ -93,6 +93,18 @@ El instalador resultante queda en `release/MESSI-Setup-Windows-x64.exe`.
 - [Informe de pruebas](docs/entrega_2/03_Informe_de_pruebas_QA.docx).
 - [Lista de cotejo de las entregas 2 y 3](docs/entrega_3/Verificacion_de_entregas_2_y_3.md).
 
+## Créditos y fuentes
+
+- Los datos de demostración se generan con [generate_synthetic.py](scripts/generate_synthetic.py),
+  con semilla 2026. Son artificiales, sin registros de alumnos reales.
+- Las versiones de las librerías están en [requirements.txt](requirements.txt) y
+  [requirements-build.txt](requirements-build.txt). Sus licencias y fuentes se
+  citan en la sección 6 del [manual del programador](docs/entrega_2/02_Manual_del_programador.docx).
+- Codex asistió en la generación de partes del código, documentos, pruebas y
+  video de demostración. Los aportes y correcciones del equipo se registran en
+  el [historial de commits](https://github.com/a3524110303-cpu/M.E.S.S.I-/commits/main/)
+  y en la [revisión de aportes](docs/entrega_2/Revision_Ismael_y_Victor_2026-10-08.md).
+
 Proyecto del equipo MESSI: Marco Antonio Osorio Hernandez, Ismael Hernández
 Jiménez, Víctor Manuel Jiménez Suárez, Yokio Yosafat Vazquez Carrillo y
 Salomón Alvarez Gomez.
