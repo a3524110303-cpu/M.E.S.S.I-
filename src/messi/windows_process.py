@@ -41,6 +41,7 @@ def protect_process(proceso):
 
 
 def close_job(job):
+    """Cerrar el Job de Windows y terminar cualquier servidor que quede activo."""
     import ctypes
     from ctypes import wintypes
     kernel = ctypes.WinDLL("kernel32")

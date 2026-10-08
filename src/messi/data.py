@@ -1,11 +1,9 @@
-"""Módulo de revisión y limpieza de datos (Demo M.E.S.S.I.).
+"""Valida y normaliza el contrato de datos de la demostración de MESSI.
 
-Este archivo revisa que toda la información que ingresa el usuario o el 
-sistema tenga el formato correcto antes de pasarla a la Inteligencia Artificial.
-
-- Revisa que las notas estén entre 0 y 10.
-- Revisa que los porcentajes (asistencia, tareas) estén entre 0 y 100.
-- Trabaja exclusivamente con los datos sintéticos (ficticios) de demostración.
+La nota parcial se expresa de 0 a 10 y asistencia/tareas de 0 a 100.
+La demo utiliza datos sintéticos; la validación de formato no acredita su
+procedencia. resultado_final sólo se admite para entrenamiento, nunca como
+entrada del modelo durante la predicción.
 """
 
 from __future__ import annotations
@@ -102,9 +100,11 @@ def _coerce_record(row: dict, row_number: int, training: bool) -> dict:
 
 
 def load_csv(source: bytes | str | Path, training: bool = False) -> list[dict]:
-    """Carga la lista de estudiantes desde un archivo CSV.
+    """Valida CSV UTF-8 y devuelve hasta 10,000 registros normalizados.
 
-    Revisa que no pasen de 10,000 alumnos y que tengan sus 3 calificaciones base.
+    Un str representa contenido CSV; para una ruta usa pathlib.Path.
+    Se requieren ID anónimo, nota parcial y dos porcentajes. La etiqueta
+    resultado_final sólo se admite con training=True.
     """
     contents = _read_source(source)
     if not contents.strip():
@@ -148,7 +148,11 @@ def load_csv(source: bytes | str | Path, training: bool = False) -> list[dict]:
 
 
 def validate_records(records: list[dict]) -> list[dict]:
-    """Da una última revisión rápida a los datos antes de predecir el riesgo."""
+    """Valida registros de inferencia sin agregar columnas ni etiquetas.
+
+    Los IDs son obligatorios; load_excel y load_pasted generan identificadores
+    temporales cuando la modalidad de entrada permite omitirlos.
+    """
     if not isinstance(records, list) or not records:
         raise ValidationError("Ingresa al menos un estudiante.")
     if len(records) > MAX_ROWS:
@@ -176,8 +180,9 @@ def record_from_counts(
 ) -> dict:
     """Convierte los conteos manuales a porcentajes.
 
-    Por ejemplo: si un alumno entregó 8 de 10 tareas, esto lo convierte en un 80%
-    para que la inteligencia artificial lo pueda entender.
+    Por ejemplo, 8 tareas entregadas de 10 solicitadas equivalen a 80%.
+    Los totales deben ser enteros positivos y lo realizado no puede superar
+    lo solicitado. Se conserva la precisión de la división, sin redondear.
     """
     counts = {
         "asistencias": asistencias, "sesiones": sesiones,
@@ -258,9 +263,11 @@ def _fill_temporary_ids(records: list[dict]) -> list[dict]:
 
 
 def load_pasted(text: str) -> list[dict]:
-    """Lee datos cuando el usuario los pega directamente desde Excel.
+    """Lee una tabla pegada con tabuladores o punto y coma.
 
-    Genera identificadores anónimos automáticos si la tabla pegada viene sin IDs.
+    Con encabezados se requieren las cuatro columnas amigables o canónicas.
+    Sin encabezados admite tres variables o ID y las tres variables. Los IDs
+    vacíos son temporales. Acepta coma decimal, nunca como delimitador.
     """
     if not isinstance(text, str):
         raise ValidationError("Pega una tabla de texto.")
@@ -306,10 +313,11 @@ def load_pasted(text: str) -> list[dict]:
 
 
 def load_excel(source: bytes | Path) -> list[dict]:
-    """Carga y procesa libros completos de Excel (.xlsx).
+    """Lee la hoja Datos o la única hoja de un libro .xlsx con openpyxl.
 
-    Ignora archivos que traigan fórmulas activas para asegurar que los datos no 
-    cambien o se corrompan antes de ser leídos por la IA.
+    Encabezados en fila 1; porcentajes numéricos de 0 a 100. Ignora filas
+    totalmente vacías y genera IDs temporales para IDs vacíos. Rechaza el
+    archivo si contiene fórmulas, aun con resultados almacenados por Excel.
     """
     try:
         if isinstance(source, Path):

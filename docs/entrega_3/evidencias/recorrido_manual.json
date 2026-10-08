@@ -1,0 +1,22 @@
+{
+  "version": "0.3.0",
+  "fecha_utc": "2026-10-08T08:52:48.3034113Z",
+  "tipo": "Recorrido técnico asistido en navegador real",
+  "persona_ajena": false,
+  "datos": "Ficticios",
+  "origen_capturas": "Aplicación MESSI real e instalador Windows",
+  "flujo": [
+    "Docente: tres filas pegadas, validadas y guardadas",
+    "MLP: tres resultados visibles",
+    "Estudiante: solicitud guardada",
+    "Tutor: apoyo y seguimiento guardados",
+    "Recarga de página: indicadores, predicciones y solicitud recuperados de SQLite",
+    "Ejecutable instalado: vista Tutor con datos ficticios recuperados"
+  ],
+  "ejecutable_instalado": "0.3.0",
+  "captura_final": "19_messi_instalado_tutor.png",
+  "limites": [
+    "Este recorrido no sustituye la prueba con persona ajena",
+    "Capturas del instalador muestran asistente; actualización real comprobada por JSON separado"
+  ]
+}

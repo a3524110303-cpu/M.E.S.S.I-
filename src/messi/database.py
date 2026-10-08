@@ -15,6 +15,7 @@ class DatabaseError(RuntimeError):
 
 @dataclass(frozen=True)
 class MySQLConfig:
+    """Configuración validada del adaptador MySQL opcional; oculta la contraseña en repr."""
     host: str = "127.0.0.1"
     port: int = 3306
     user: str = "messi"
@@ -33,6 +34,7 @@ class MySQLConfig:
 
     @classmethod
     def from_environment(cls, root: Path | None = None):
+        """Leer configuración del entorno o .env sin interpolar valores ni abrir conexiones."""
         root = Path(root) if root is not None else Path(__file__).resolve().parents[2]
         valores = {}
         ruta = root / ".env"
@@ -43,6 +45,7 @@ class MySQLConfig:
             except ImportError as error:
                 raise DatabaseError("Instala las dependencias de MESSI para leer .env.") from error
         def valor(nombre, defecto=None):
+            """Obtener un valor priorizando el entorno sobre el archivo de configuración."""
             return os.environ.get(nombre, valores.get(nombre, defecto))
         if valor("MESSI_MYSQL_PASSWORD") is None:
             raise DatabaseError("Configura MySQL: copia .env.example a .env y completa usuario y contraseña.")
@@ -62,18 +65,21 @@ class _Connection:
         self._cursors = []
 
     def execute(self, sql, params=()):
+        """Ejecutar una sentencia parametrizada y conservar el cursor hasta cerrar la conexión."""
         cursor = self.raw.cursor(dictionary=True, buffered=True)
         self._cursors.append(cursor)
         cursor.execute(sql, params)
         return cursor
 
     def executemany(self, sql, params):
+        """Ejecutar una sentencia sobre varios registros con un cursor de filas tipo dict."""
         cursor = self.raw.cursor(dictionary=True, buffered=True)
         self._cursors.append(cursor)
         cursor.executemany(sql, params)
         return cursor
 
     def close(self):
+        """Cerrar los cursores abiertos y la conexión aunque falle el cierre de un cursor."""
         try:
             for cursor in self._cursors:
                 cursor.close()
@@ -108,6 +114,7 @@ def _safe_error(error):
 
 
 class MySQLDatabase:
+    """Administrar conexiones y transacciones del adaptador histórico MySQL."""
     def __init__(self, config: MySQLConfig):
         self.config = config
 

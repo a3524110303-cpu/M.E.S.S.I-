@@ -1,0 +1,15 @@
+{
+  "version": "0.3.0",
+  "fecha": "2026-10-08",
+  "metodo": "Analisis AST del codigo fuente Python final",
+  "alcance": "app.py, messi_desktop.py y todos los modulos src/messi/*.py; clases y funciones publicas de modulo y metodos publicos",
+  "apis_publicas_revisadas": 66,
+  "docstrings_publicos_faltantes": [],
+  "clases_locales_sin_docstring_propio": [
+    "windows_process.protect_process.Basic",
+    "windows_process.protect_process.IO",
+    "windows_process.protect_process.Limits"
+  ],
+  "explicacion_clases_locales": "Estas tres estructuras ctypes implementan el contrato binario del Job de Windows dentro de protect_process. No se exportan desde el modulo ni forman parte de la API publica. El proposito del procedimiento esta documentado en su docstring y en el docstring del modulo.",
+  "codigo_modificado_por_auditoria": false
+}

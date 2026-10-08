@@ -11,6 +11,7 @@ sys.path.insert(0, str(ROOT / "src"))
 
 
 def main():
+    """Elegir ventana, servidor o verificación y devolver un código de salida."""
     parser = argparse.ArgumentParser(description="MESSI local")
     parser.add_argument("--serve", action="store_true", help=argparse.SUPPRESS)
     parser.add_argument("--port", type=int, default=8501, help=argparse.SUPPRESS)
@@ -27,29 +28,14 @@ def main():
     if sys.stderr is None:
         sys.stderr = sys.stdout
     try:
-        from messi.desktop import run_server, run_window, LocalServer
+        from messi.desktop import run_server, run_window
         if args.serve:
             run_server(args.port)
         elif args.self_test or args.diagnostico or args.smoke_server:
-            from messi.diagnostics import diagnose, self_test
-            result = self_test() if args.self_test else diagnose()
-            if args.smoke_server:
-                server = LocalServer()
-                try:
-                    server.start()
-                    import urllib.request
-                    opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
-                    with opener.open(server.url, timeout=5) as response:
-                        result["servidor_http"] = response.status
-                        result["frontend"] = b"<html" in response.read().lower()
-                except Exception as exc:
-                    result["servidor_error"] = str(exc)
-                    result["ok"] = False
-                finally:
-                    server.close()
-                    result["servidor_cerrado"] = server.process is None or server.process.poll() is not None
-                result["ok"] = result["ok"] and result.get("frontend", False) and result["servidor_cerrado"]
+            from messi.diagnostics import diagnose, self_test, smoke_server
+            result = self_test() if args.self_test else smoke_server() if args.smoke_server else diagnose()
             output = args.salida or data_directory() / "diagnostico.json"
+            output.parent.mkdir(parents=True, exist_ok=True)
             output.write_text(json.dumps(result, indent=2, ensure_ascii=False), encoding="utf-8")
             print(json.dumps(result, indent=2, ensure_ascii=False))
             return 0 if result["ok"] else 1

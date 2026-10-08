@@ -32,6 +32,7 @@ def report_csv(records: list[dict]) -> bytes:
 
 
 def main() -> None:
+    """Preparar la sesión y mostrar las vistas Docente, Tutor y Estudiante."""
     import streamlit as st
 
     st.set_page_config(page_title="MESSI | Acompañamiento escolar", page_icon="📚", layout="wide")
@@ -61,12 +62,14 @@ def main() -> None:
 
 
 def require_store(store: SQLiteStore | None, error: DatabaseError | None = None) -> SQLiteStore:
+    """Obtener SQLite disponible o conservar el mensaje del fallo inicial."""
     if store is None:
         raise error or DatabaseError("No pude abrir la base local. Revisa la carpeta de datos y el diagnóstico.")
     return store
 
 
 def accept_records(st, records: list[dict], *, origin: str = "capture") -> None:
+    """Actualizar los indicadores e invalidar resultados si cambiaron los datos."""
     if records != st.session_state.get("records"):
         st.session_state.pop("predictions", None)
     st.session_state["records"] = records
@@ -83,17 +86,20 @@ def prepare_form(st, name: str) -> None:
 
 
 def confirm_form(st, name: str, fields: dict[str, object], message: str) -> None:
+    """Programar limpieza y confirmación después de una escritura exitosa."""
     st.session_state[f"reset_{name}"] = fields
     st.session_state[f"success_{name}"] = message
     st.rerun()
 
 
 def show_indicators(st, records: list[dict]) -> None:
+    """Presentar indicadores y alertas con etiquetas comprensibles en español."""
     labels = {"id_estudiante": "Código del estudiante", "nota_parcial": "Nota del primer parcial", "asistencia": "Asistencia (%)", "tareas_entregadas": "Tareas entregadas (%)", "puntuacion_riesgo": "Puntuación de demostración", "alerta": "Revisar con tutor", "origen_modelo": "Origen del modelo"}
     st.dataframe([{labels.get(k, k): v for k, v in row.items()} for row in records], hide_index=True, width="stretch")
 
 
 def show_teacher(st, store: SQLiteStore | None = None, *, storage_error: DatabaseError | None = None) -> None:
+    """Capturar, validar, guardar y puntuar indicadores del primer parcial."""
     st.header("Datos del primer parcial")
     prepare_form(st, "capture")
     st.write("Puedes llenar una plantilla de Excel, escribir los datos aquí o pegar una tabla. Usa notas de 0 a 10 y porcentajes de 0 a 100.")
@@ -225,6 +231,7 @@ def show_teacher(st, store: SQLiteStore | None = None, *, storage_error: Databas
 
 
 def show_student(st, store: SQLiteStore) -> None:
+    """Registrar una solicitud ficticia independiente de cualquier alerta."""
     st.header("Solicitar apoyo")
     prepare_form(st, "request")
     st.write("Puedes pedir ayuda aunque no tengas una alerta. Para esta demostración, escribe un identificador ficticio y un mensaje ficticio.")
@@ -242,6 +249,7 @@ def show_student(st, store: SQLiteStore) -> None:
 
 
 def show_tutor(st, store: SQLiteStore) -> None:
+    """Consultar indicadores y solicitudes, acordar apoyos y registrar seguimiento."""
     st.header("Apoyos y seguimiento")
     prepare_form(st, "support")
     prepare_form(st, "followup")

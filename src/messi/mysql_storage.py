@@ -36,6 +36,7 @@ class MySQLStore:
         )
 
     def create_request(self, student_id: str, message: str) -> int:
+        """Validar y guardar una solicitud de ayuda; devolver su identificador."""
         student_id = _student_id(student_id)
         message = _text(message, "El mensaje")
         now = _utc_now()
@@ -48,6 +49,7 @@ class MySQLStore:
             return int(cursor.lastrowid)
 
     def list_requests(self, student_id: str | None = None) -> list[dict]:
+        """Recuperar solicitudes, opcionalmente filtradas por código de estudiante."""
         if student_id is not None:
             student_id = _student_id(student_id)
         with self._connection() as connection:
@@ -60,6 +62,7 @@ class MySQLStore:
         return [dict(row) for row in rows]
 
     def create_support(self, student_id: str, support_type: str, notes: str) -> int:
+        """Guardar un apoyo validado con estado inicial Pendiente y devolver su ID."""
         student_id = _student_id(student_id)
         support_type = _choice(support_type, SUPPORT_TYPES, "El tipo de apoyo")
         notes = _text(notes, "La nota")
@@ -74,6 +77,7 @@ class MySQLStore:
             return int(cursor.lastrowid)
 
     def list_supports(self, student_id: str | None = None) -> list[dict]:
+        """Consultar apoyos en orden reciente, con filtro opcional de estudiante."""
         if student_id is not None:
             student_id = _student_id(student_id)
         with self._connection() as connection:
@@ -86,6 +90,7 @@ class MySQLStore:
         return [dict(row) for row in rows]
 
     def add_followup(self, support_id: int, notes: str, status: str) -> int:
+        """Guardar el seguimiento y actualizar el estado del apoyo en una transacción."""
         support_id = _support_id(support_id)
         notes = _text(notes, "La nota de seguimiento")
         status = _choice(status, SUPPORT_STATUSES, "El estado")
@@ -103,6 +108,7 @@ class MySQLStore:
             return int(cursor.lastrowid)
 
     def list_followups(self, support_id: int) -> list[dict]:
+        """Listar las notas de seguimiento del apoyo indicado, de más reciente a antigua."""
         support_id = _support_id(support_id)
         with self._connection() as connection:
             rows = connection.execute(
@@ -133,6 +139,7 @@ class MySQLStore:
         )
 
     def save_indicators(self, records: list[dict], period: str = "primer_parcial") -> int:
+        """Guardar un lote validado por periodo e invalidar predicciones si cambian sus entradas."""
         records = validate_records(records)
         period = _period(period)
         now = _utc_now()
@@ -147,6 +154,7 @@ class MySQLStore:
         return len(records)
 
     def list_indicators(self, period: str = "primer_parcial") -> list[dict]:
+        """Recuperar las tres variables académicas y el código para un periodo."""
         period = _period(period)
         with self._connection() as connection:
             rows = connection.execute(
@@ -156,6 +164,7 @@ class MySQLStore:
         return [{ID_COLUMN: row[ID_COLUMN], **{feature: float(row[feature]) for feature in FEATURES}} for row in rows]
 
     def save_predictions(self, records: list[dict], period: str = "primer_parcial") -> int:
+        """Persistir puntuaciones sólo si coinciden con los indicadores vigentes; devolver el total."""
         records = _prediction_records(records)
         period = _period(period)
         now = _utc_now()
@@ -182,6 +191,7 @@ class MySQLStore:
         return len(records)
 
     def list_predictions(self, period: str = "primer_parcial") -> list[dict]:
+        """Recuperar indicadores y puntuaciones persistidos, con alerta booleana, por periodo."""
         period = _period(period)
         with self._connection() as connection:
             rows = connection.execute(

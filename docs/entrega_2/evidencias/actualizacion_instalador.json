@@ -1,0 +1,11 @@
+{
+  "version": "0.3.0",
+  "actualizacion_exit": 0,
+  "base_usuario_conservada": true,
+  "sin_python_en_path": true,
+  "self_test": "OK",
+  "smoke_server": "OK",
+  "desinstalacion": "No ejecutada; instalación habitual conservada",
+  "windows": "Microsoft Windows NT 10.0.26200.0",
+  "ok": true
+}

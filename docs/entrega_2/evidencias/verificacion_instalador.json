@@ -1,0 +1,14 @@
+﻿{
+    "version_objetivo":  "0.3.0",
+    "fecha":  "2026-10-08T02:41:00.2979847-06:00",
+    "plataforma":  "Microsoft Windows NT 10.0.26200.0",
+    "tipo":  "Instalacion, reinstalacion y desinstalacion en carpeta aislada",
+    "estado":  "omitida",
+    "ok":  false,
+    "errores":  [
+
+                ],
+    "instalacion_existente_detectada":  true,
+    "version_existente":  "0.3.0",
+    "motivo":  "Existe una instalacion MESSI. No se modificaron aplicacion, registro ni datos del usuario."
+}

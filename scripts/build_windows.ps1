@@ -1,3 +1,4 @@
+# Construye, verifica y empaqueta MESSI con datos de prueba aislados.
 param([string]$Python = '', [string]$ISCC = '', [switch]$SoloPortable)
 $ErrorActionPreference = 'Stop'
 $taskRoot = Split-Path -Parent $PSScriptRoot
@@ -28,8 +29,10 @@ Copy-Item -LiteralPath 'installer\TERCEROS.md' -Destination 'dist\MESSI\TERCEROS
 New-Item -ItemType Directory -Path 'release' -Force | Out-Null
 $taskOldData = $env:MESSI_DATA_DIR
 $taskOldPath = $env:PATH
+$taskProbeRoot = [IO.Path]::GetFullPath((Join-Path $taskRoot 'build'))
+$taskProbeData = Join-Path $taskProbeRoot ('prueba-paquete-' + [guid]::NewGuid().ToString('N'))
 try {
-    $env:MESSI_DATA_DIR = Join-Path $taskRoot 'build\prueba-paquete'
+    $env:MESSI_DATA_DIR = $taskProbeData
     $env:PATH = "$env:SystemRoot\System32;$env:SystemRoot"
     $taskExe = Join-Path $taskRoot 'dist\MESSI\MESSI.exe'
     foreach ($taskMode in @('--self-test','--smoke-server')) {
@@ -41,6 +44,15 @@ try {
     $env:PATH = $taskOldPath
     if ($null -eq $taskOldData) { Remove-Item Env:MESSI_DATA_DIR -ErrorAction SilentlyContinue }
     else { $env:MESSI_DATA_DIR = $taskOldData }
+    # Eliminar sólo la carpeta nueva de esta ejecución, nunca los datos del usuario.
+    if (Test-Path -LiteralPath $taskProbeData) {
+        $taskResolvedProbe = (Resolve-Path -LiteralPath $taskProbeData).Path
+        $taskAllowedPrefix = $taskProbeRoot + [IO.Path]::DirectorySeparatorChar
+        if (-not $taskResolvedProbe.StartsWith($taskAllowedPrefix, [StringComparison]::OrdinalIgnoreCase)) {
+            throw 'La carpeta temporal está fuera del directorio de construcción.'
+        }
+        Remove-Item -LiteralPath $taskResolvedProbe -Recurse -Force
+    }
 }
 if (-not $SoloPortable) {
     if (-not $ISCC) {
@@ -53,4 +65,5 @@ if (-not $SoloPortable) {
     $taskHash = Get-FileHash -LiteralPath 'release\MESSI-Setup-Windows-x64.exe' -Algorithm SHA256
     ($taskHash.Hash + '  MESSI-Setup-Windows-x64.exe') | Set-Content -LiteralPath 'release\MESSI-Setup-Windows-x64.sha256' -Encoding ascii
 }
-Write-Output 'Listo: release\MESSI-Setup-Windows-x64.exe. Para portable, copia toda la carpeta dist\MESSI.'
+if ($SoloPortable) { Write-Output 'Listo: copia toda la carpeta dist\MESSI para usar la versión portable.' }
+else { Write-Output 'Listo: release\MESSI-Setup-Windows-x64.exe. Para portable, copia toda la carpeta dist\MESSI.' }
