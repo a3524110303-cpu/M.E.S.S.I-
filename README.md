@@ -27,10 +27,12 @@ ajena sigue pendiente:** el equipo confirmó el 8 de octubre que aún no la ha
 realizado. El formato 05 contiene un protocolo preparado, sin resultados inventados.
 El [video de MESSI 0.4.0, de 4:25](https://github.com/a3524110303-cpu/M.E.S.S.I-/releases/download/v0.4.0-interfaz/MESSI_Demo_Entrega_3.mp4)
 ya está generado y validado con capturas de la interfaz actual, narración
-sintética y subtítulos. El instalador y portable también están listos;
-su publicación se prepara en la
+sintética y subtítulos. El instalador y portable están publicados en la
 [versión 0.4.0](https://github.com/a3524110303-cpu/M.E.S.S.I-/releases/tag/v0.4.0-interfaz).
-El acceso público nuevo se comprueba al terminar la subida. La
+La página y descargas principales respondieron HTTP 200 sin autenticación;
+el hash del video descargado coincide con el archivo final.
+[Comprobación de acceso público](docs/entrega_3/evidencias/publicacion_0.4.0.json).
+La
 [versión 0.3.0](https://github.com/a3524110303-cpu/M.E.S.S.I-/releases/tag/v0.3.0-entregas)
 se conserva como historial, con acceso HTTP 200 comprobado.
 
@@ -42,7 +44,7 @@ versión. Una alerta no cambia calificaciones ni aplica sanciones.
 ## Usar MESSI en Windows 10 y 11
 
 Para el cliente, entrega **`release/MESSI-Setup-Windows-x64.exe`**. El instalador
-[se prepara en la versión 0.4.0 de GitHub](https://github.com/a3524110303-cpu/M.E.S.S.I-/releases/tag/v0.4.0-interfaz).
+[se descarga de la versión 0.4.0 de GitHub](https://github.com/a3524110303-cpu/M.E.S.S.I-/releases/tag/v0.4.0-interfaz).
 El instalador
 incluye Python, librerías, SQLite y el modelo neuronal ya entrenado. Basta con
 Siguiente, Instalar y Finalizar; después abrir MESSI desde el acceso directo.

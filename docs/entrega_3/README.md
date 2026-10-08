@@ -8,13 +8,13 @@
   y 20 figuras con recortes dentro de Word.
 - [05_Nota_de_prueba_con_persona_ajena.docx](05_Nota_de_prueba_con_persona_ajena.docx):
   protocolo preparado de máximo media página, **pendiente de realizar la prueba**.
-- [Video de 0.4.0, de 4:25](https://github.com/a3524110303-cpu/M.E.S.S.I-/releases/download/v0.4.0-interfaz/MESSI_Demo_Entrega_3.mp4), con capturas actuales, narración sintética y
+- [Video público de 0.4.0, de 4:25](https://github.com/a3524110303-cpu/M.E.S.S.I-/releases/download/v0.4.0-interfaz/MESSI_Demo_Entrega_3.mp4), con capturas actuales, narración sintética y
   [subtítulos](MESSI_Demo_Entrega_3.srt). Sigue el orden exigido: problema,
   entrada/proceso/salida, resultados e interpretación, limitaciones y mejoras.
   [Guion](Guion_video_demo.md), [transcripción](Transcripcion_video_demo.md) y
   [verificación técnica](evidencias/verificacion_video_demo.json).
   Archivo validado: 265.23 segundos, 1920×1080, H.264/AAC y 6 402 163 bytes.
-  La publicación y su acceso sin autenticación se confirman tras la subida.
+  [Acceso HTTP 200 sin autenticación y hash de descarga comprobados](evidencias/publicacion_0.4.0.json).
 
 MESSI 0.4.0 organiza las vistas mediante navegación lateral, pasos de Docente,
 resúmenes de estudiantes/solicitudes/apoyos y tablas de Tutor en español. Permite
@@ -41,7 +41,7 @@ y el video no sustituyen esa prueba.
 
 La [lista de cotejo de entregas 2 y 3](Verificacion_de_entregas_2_y_3.md) muestra
 la evidencia de cada requisito. Las copias DOCX, el instalador y el video se
-reúnen en `MESSI_0.4.0` en el escritorio; los binarios se preparan para
+reúnen en `MESSI_0.4.0` en el escritorio; los binarios están publicados en
 la [versión 0.4.0 de GitHub](https://github.com/a3524110303-cpu/M.E.S.S.I-/releases/tag/v0.4.0-interfaz),
 fuera del historial Git. La [publicación 0.3.0](https://github.com/a3524110303-cpu/M.E.S.S.I-/releases/tag/v0.3.0-entregas)
 se conserva como historial; su acceso público se comprobó en la revisión anterior.

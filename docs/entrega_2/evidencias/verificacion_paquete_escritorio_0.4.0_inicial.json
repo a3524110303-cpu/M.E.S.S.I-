@@ -1,0 +1,131 @@
+{
+  "version": "0.4.0",
+  "fecha_utc": "2026-10-08T10:52:46.230368+00:00",
+  "commit_fuente": "9e369afa240460e7b67d88a39c54666f73c6b093",
+  "head_observado_al_auditar": "96ff5cb6a67cbd6607e12f52c8162f1902de3909",
+  "carpeta": "Desktop/MESSI_0.4.0",
+  "archivos": 22,
+  "archivos_manifestados": 21,
+  "manifesto_cubre_todos_los_archivos_salvo_si_mismo": true,
+  "hashes_manifesto_correctos": true,
+  "docx_y_pdf_coinciden_con_qa_visual": true,
+  "zip_entregables": {
+    "archivo": "release/MESSI_Entregas_2_y_3.zip",
+    "bytes": 11483177,
+    "sha256": "2f5c7e1194b1bba362f63dba2903d565bbc973186bcf4747e2a940295eae06e9",
+    "archivos": 16,
+    "crc_ok": true,
+    "contenido_igual_escritorio": true
+  },
+  "zip_fuente": {
+    "archivo": "Codigo_y_evidencias/MESSI_Codigo_0.4.0.zip",
+    "bytes": 4175994,
+    "sha256": "2665ae278f9a576397a6dd95b92b707a75e61f74d1263ab9b6c85aa5de3215e7",
+    "archivos": 198,
+    "commit_en_comentario": "9e369afa240460e7b67d88a39c54666f73c6b093",
+    "contenido_igual_al_commit_declarado": true,
+    "blobs_exactos": 142,
+    "textos_con_solo_conversion_crlf": 56,
+    "blobs_distintos": [],
+    "crc_ok": true,
+    "privados_encontrados": [],
+    "placeholder_vacio_permitido": "data/private/.gitkeep"
+  },
+  "hashes_archivos": {
+    "Aplicacion/LEEME-cliente.txt": {
+      "bytes": 1605,
+      "sha256": "cb2f14163c9d8af3ed3d8ed31456e9c6fede52fed1e1c9c283e9a03094cea2e2"
+    },
+    "Aplicacion/MESSI-Portable-Windows-x64.zip": {
+      "bytes": 123881330,
+      "sha256": "abdfc2c8930d3b3f7806c5b917a529306d3cfb0561ff6a29d6088c393da24593"
+    },
+    "Aplicacion/MESSI-Setup-Windows-x64.exe": {
+      "bytes": 109487250,
+      "sha256": "8eeaf05eb764e3cc1ee016eae984b2b8257c060d7367f9d535c6ceb34b613a9c"
+    },
+    "Aplicacion/MESSI-Setup-Windows-x64.sha256": {
+      "bytes": 95,
+      "sha256": "a292d00ade44e601ada73b1ec9cff8e93ceed61eafe2c2ecb98fb39b8a5a79a3"
+    },
+    "Aplicacion/Plantilla_MESSI.xlsx": {
+      "bytes": 6606,
+      "sha256": "dcda028ece37e6113a77416d9546ca2c3a8adcae89a80c82e585ffe059c3d378"
+    },
+    "Codigo_y_evidencias/Examen_Parcial_1.pdf": {
+      "bytes": 246668,
+      "sha256": "dfbcb87bb84f4f70ff3a3db914ec71991a731e20107773121f071d0a79cc113c"
+    },
+    "Codigo_y_evidencias/MESSI_Codigo_0.4.0.zip": {
+      "bytes": 4175994,
+      "sha256": "2665ae278f9a576397a6dd95b92b707a75e61f74d1263ab9b6c85aa5de3215e7"
+    },
+    "Codigo_y_evidencias/Revision_Ismael_y_Victor_2026-10-08.md": {
+      "bytes": 10416,
+      "sha256": "e389d4ed0e91a4961303dc8c540f4610633400af2cb7a69909cbf556afad9904"
+    },
+    "Codigo_y_evidencias/Verificacion_de_entregas_2_y_3.md": {
+      "bytes": 14600,
+      "sha256": "e13454022de89b55b402cc6013886c26035187376d1de68a1f0489b2769d3dfc"
+    },
+    "Entrega_2/02_Manual_del_programador.docx": {
+      "bytes": 84535,
+      "sha256": "720e68739e3930edf9a89fd8e527b84e3b944d046737444f5dc607328012674c"
+    },
+    "Entrega_2/03_Informe_de_pruebas_QA.docx": {
+      "bytes": 22601,
+      "sha256": "898a389d31577165982a9493cd4712b2f23faa568abdda787cc9d4cfff4e487b"
+    },
+    "Entrega_3/04_Manual_de_usuario.docx": {
+      "bytes": 647977,
+      "sha256": "234ef4e4df1e47cf1875521f05d1c3c52af00fa23fe2ff637763e37efb76b75c"
+    },
+    "Entrega_3/05_Nota_de_prueba_con_persona_ajena.docx": {
+      "bytes": 15873,
+      "sha256": "389c51b486992876816aa7963c2b9318a34c981ba37d2887c9c17ca46368f7ef"
+    },
+    "Entrega_3/Enlace_video.txt": {
+      "bytes": 242,
+      "sha256": "75ba69e57960fa089c9721aa3e4fd9dbece5ed7044330dca3b1d1c9d96b9af1e"
+    },
+    "Entrega_3/MESSI_Demo_Entrega_3.mp4": {
+      "bytes": 6402163,
+      "sha256": "7b14990c4e44f393596e61fd196ba20cf8dff5f1c4f829fd68080e41fd38fcf3"
+    },
+    "Entrega_3/MESSI_Demo_Entrega_3.srt": {
+      "bytes": 6465,
+      "sha256": "75abf05f1d5043c841f509fd4c2f9f5868ff4948a45f461daa6a736a5b452530"
+    },
+    "LEEME_ENTREGA.txt": {
+      "bytes": 1590,
+      "sha256": "343fa436a4736cfa6bc2f7d8058ce46fccc34e0df1992f09f6fa73b18b7cb8c9"
+    },
+    "PDF/02_Manual_del_programador.pdf": {
+      "bytes": 174832,
+      "sha256": "b2c3ccb8935f230a597ec15246bbd83e3c0497260013610ad9a97fef7cef0fa2"
+    },
+    "PDF/03_Informe_de_pruebas_QA.pdf": {
+      "bytes": 44518,
+      "sha256": "86bd08d9596c0542ab55b18749dc41f5f353c7ed7e75d16fba5cff0b2cabdcb0"
+    },
+    "PDF/04_Manual_de_usuario.pdf": {
+      "bytes": 424854,
+      "sha256": "85bca56d84f8aafef4bd7106334a47bdbc6259a82f0cadd6ce0728a61ddfc9c6"
+    },
+    "PDF/05_Nota_de_prueba_con_persona_ajena.pdf": {
+      "bytes": 12264,
+      "sha256": "959fe7c24019dfd709c9cd6d96bb39490be1ee516b49d0936c562815b34e25bc"
+    },
+    "SHA256SUMS.txt": {
+      "bytes": 2211,
+      "sha256": "0320b84ef1f93bc354bf47058f15d3ab7edb99380f0956961b7f1875f0e24d64"
+    }
+  },
+  "observaciones": [
+    "El ZIP de entregables contiene formatos, PDF, video y fuente; los binarios están separados en Aplicacion y assets de release.",
+    "La matriz de HEAD contiene un enlace QA de formatos incorrecto; está corregido sólo en fuente para el commit de recibo y refresco posterior."
+  ],
+  "errores": [],
+  "ok": true,
+  "fase": "Primer paquete del commit 9e369af, anterior al recibo de publicación. Sus hashes no describen el bundle final refrescado."
+}

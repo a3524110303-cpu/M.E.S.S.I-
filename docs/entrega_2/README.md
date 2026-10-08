@@ -37,9 +37,10 @@ solicitudes y contraste final incluidos. El self-test y servidor instalados
 pasaron sin Python en `PATH`; las comprobaciones CI de 0.3.0 se conservan como
 historial. Windows 10 y una segunda computadora no se han probado en esta sesión.
 [Comprobación final de fuente e instalación idénticas](evidencias/verificacion_instalado_final.json).
-El instalador y portable están preparados para la
+El instalador y portable están publicados en la
 [versión 0.4.0](https://github.com/a3524110303-cpu/M.E.S.S.I-/releases/tag/v0.4.0-interfaz)
-y la carpeta `MESSI_0.4.0` del escritorio.
+y reunidos en la carpeta `MESSI_0.4.0` del escritorio.
+[Acceso público HTTP 200 sin autenticación](../entrega_3/evidencias/publicacion_0.4.0.json).
 [Revisión de Ismael y Víctor](Revision_Ismael_y_Victor_2026-10-08.md).
 
 La entrega describe la versión actual con SQLite, MLP local e instalador Windows.

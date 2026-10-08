@@ -1,0 +1,79 @@
+{
+  "version": "0.4.0",
+  "checked_at_utc": "2026-10-08T04:52:05.649347-06:00",
+  "tag": "v0.4.0-interfaz",
+  "target_commit": "96ff5cb6a67cbd6607e12f52c8162f1902de3909",
+  "published_at": "2026-10-08T10:51:02Z",
+  "release_url": "https://github.com/a3524110303-cpu/M.E.S.S.I-/releases/tag/v0.4.0-interfaz",
+  "draft": false,
+  "asset_count": 7,
+  "checked_artifacts": [
+    {
+      "url": "https://github.com/a3524110303-cpu/M.E.S.S.I-/releases/tag/v0.4.0-interfaz",
+      "status": 200,
+      "without_authentication": true
+    },
+    {
+      "name": "MESSI-Portable-Windows-x64.zip",
+      "url": "https://github.com/a3524110303-cpu/M.E.S.S.I-/releases/download/v0.4.0-interfaz/MESSI-Portable-Windows-x64.zip",
+      "status": 200,
+      "content_length": 123881330,
+      "sha256": "abdfc2c8930d3b3f7806c5b917a529306d3cfb0561ff6a29d6088c393da24593",
+      "github_digest_matches_local": true,
+      "without_authentication": true
+    },
+    {
+      "name": "MESSI-Setup-Windows-x64.exe",
+      "url": "https://github.com/a3524110303-cpu/M.E.S.S.I-/releases/download/v0.4.0-interfaz/MESSI-Setup-Windows-x64.exe",
+      "status": 200,
+      "content_length": 109487250,
+      "sha256": "8eeaf05eb764e3cc1ee016eae984b2b8257c060d7367f9d535c6ceb34b613a9c",
+      "github_digest_matches_local": true,
+      "without_authentication": true
+    },
+    {
+      "name": "MESSI-Setup-Windows-x64.sha256",
+      "url": "https://github.com/a3524110303-cpu/M.E.S.S.I-/releases/download/v0.4.0-interfaz/MESSI-Setup-Windows-x64.sha256",
+      "status": 200,
+      "content_length": 95,
+      "sha256": "a292d00ade44e601ada73b1ec9cff8e93ceed61eafe2c2ecb98fb39b8a5a79a3",
+      "github_digest_matches_local": true,
+      "without_authentication": true
+    },
+    {
+      "name": "MESSI_Demo_Entrega_3.mp4",
+      "url": "https://github.com/a3524110303-cpu/M.E.S.S.I-/releases/download/v0.4.0-interfaz/MESSI_Demo_Entrega_3.mp4",
+      "status": 200,
+      "content_length": 6402163,
+      "sha256": "7b14990c4e44f393596e61fd196ba20cf8dff5f1c4f829fd68080e41fd38fcf3",
+      "github_digest_matches_local": true,
+      "without_authentication": true,
+      "public_download_hash_matches_local": true
+    },
+    {
+      "name": "MESSI_Demo_Entrega_3.srt",
+      "url": "https://github.com/a3524110303-cpu/M.E.S.S.I-/releases/download/v0.4.0-interfaz/MESSI_Demo_Entrega_3.srt",
+      "status": 200,
+      "content_length": 6465,
+      "sha256": "75abf05f1d5043c841f509fd4c2f9f5868ff4948a45f461daa6a736a5b452530",
+      "github_digest_matches_local": true,
+      "without_authentication": true
+    }
+  ],
+  "external_human_test_done": false,
+  "pull_request": "https://github.com/a3524110303-cpu/M.E.S.S.I-/pull/5",
+  "ci_final_source": [
+    {
+      "conclusion": "success",
+      "headSha": "9e369afa240460e7b67d88a39c54666f73c6b093",
+      "status": "completed",
+      "url": "https://github.com/a3524110303-cpu/M.E.S.S.I-/actions/runs/37765823833"
+    },
+    {
+      "conclusion": "success",
+      "headSha": "9e369afa240460e7b67d88a39c54666f73c6b093",
+      "status": "completed",
+      "url": "https://github.com/a3524110303-cpu/M.E.S.S.I-/actions/runs/37765831497"
+    }
+  ]
+}
