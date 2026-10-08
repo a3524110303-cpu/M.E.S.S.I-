@@ -367,6 +367,7 @@ def build_03():
         ("ER-02 QA-03", "Confirmación de seguimiento desaparecía tras actualizar.", "CP-07", "Baja", "Guardar mensaje para el rerun y mostrarlo al preparar formulario.", "Revalidado"),
         ("ER-03 QA-04", "Captura inválida limpiaba campos válidos.", "CP-08", "Media", "Limpiar campos sólo después de validar y aceptar captura.", "Revalidado"),
         ("ER-04 QA-05", "Tablas usaban use_container_width obsoleto.", "CP-09", "Baja", "Actualizar st.dataframe a width=stretch.", "Revalidado"),
+        ("ER-05 CI", "Aserción de test_desktop.py comparaba ruta larga con alias temporal 8.3; CI inicial falló.", "CP-10", "Baja", "Resolver ambos lados con Path.resolve(); mantener aislamiento y limpieza. Sin cambios en app o binarios.", "6/6 local; CI 4/4 en c8d6942"),
     ])
     # El conteo actual se lee del log completo, no se adivina a partir de la matriz.
     current_log = ROOT/"docs/entrega_2/evidencias/pruebas_actuales.txt"
@@ -378,9 +379,10 @@ def build_03():
     success = bool(re.search(r"\bOK(?: \(skipped=\d+\))?", contents)) if contents else True
     if not success:
         raise RuntimeError("El log actual no acredita suite aprobada; revisar antes de generar QA")
-    fill_table(t[3], [(f"10 casos de matriz\n{total} pruebas auto", f"10 casos revalidados\n{total-skipped} pruebas auto", "0 en suite", "4 revalidados", "0 defectos de software\nVer límites en conclusiones")])
+    fill_table(t[3], [(f"10 casos de matriz\n{total} pruebas auto locales", f"10 casos revalidados\n{total-skipped} pruebas auto locales", "0 en suite local\nCI inicial: 1 aserción", "4 revalidados\n1 ajuste de prueba CI", "CI c8d6942: 4/4\nLímites en conclusiones")])
     answer(t[4], [
-        f"La suite ejecutó {total} pruebas: {total-skipped} aprobadas, {skipped} omitidas por requerir MySQL opt-in y 0 fallidas. Las omisiones no se cuentan como aprobación. Los nueve casos de software del informe de Víctor quedan trazados a la suite actual; el caso de paquete distingue la evidencia histórica de instalación de la nueva verificación del ejecutable.",
+        f"La suite local ejecutó {total} pruebas: {total-skipped} aprobadas, {skipped} omitidas por requerir MySQL opt-in y 0 fallidas. Las omisiones no se cuentan como aprobación. Los nueve casos de software del informe de Víctor quedan trazados a la suite actual; el caso de paquete distingue la evidencia histórica de instalación de la nueva verificación del ejecutable.",
+        "La ejecución inicial de GitHub Actions falló en una aserción de aislamiento: Windows entregó un directorio temporal con alias corto 8.3 y la prueba lo comparó con su ruta larga. El ajuste sólo normaliza ambos lados con resolve(); las seis pruebas de test_desktop.py aprobaron localmente con alias 8.3 real y con el entorno habitual. CI del commit c8d6942 aprobó cuatro checks de Windows y Linux con MySQL en push y PR: https://github.com/a3524110303-cpu/M.E.S.S.I-/actions/runs/37753609896 y https://github.com/a3524110303-cpu/M.E.S.S.I-/actions/runs/37753615435. Este resultado corresponde a c8d6942, anterior a esta actualización documental. Causa y reproducción en docs/entrega_2/evidencias/ajuste_ci_windows.md; no se modificaron la aplicación ni sus binarios.",
         "El informe de Víctor del 7 de octubre probó AppTest y SQLite temporal; no realizó navegador real ni instalador. El cierre agrega capturas en navegador, self-test y smoke-server aprobados tanto en portable como instalado, y actualización 0.3.0 exit0 que conserva la base. La instalación/reinstalación/desinstalación aislada se omitió al detectar una instalación existente; no se cuenta como aprobada. El ciclo completo sólo tiene evidencia histórica 0.2.0.",
         "La versión funciona localmente con SQLite. El modelo sigue siendo sintético; QA demuestra comportamiento del programa y no eficacia educativa. No hay autenticación ni sincronización entre computadoras. Siguen pendientes la ejecución física en Windows 10/segunda computadora y la prueba independiente con persona ajena exigida en la entrega 3.",
     ])

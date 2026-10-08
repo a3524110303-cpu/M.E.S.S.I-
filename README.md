@@ -195,6 +195,10 @@ La suite actual descubrió **157 pruebas: 150 aprobadas, siete MySQL omitidas y
 cero fallidas**. Las omisiones requieren un servidor MySQL y no se cuentan como
 aprobaciones. La aplicación cliente usa SQLite.
 [Registro de pruebas](docs/entrega_2/evidencias/pruebas_actuales.txt).
+GitHub Actions aprobó además Windows (150 aprobadas, siete MySQL omitidas) y
+Linux con MySQL real (157 aprobadas, ninguna omitida). Se corrigió una
+comparación de alias temporales de Windows en una prueba, sin cambiar la app.
+[Evidencia CI](docs/entrega_2/evidencias/ci_github.json).
 
 Se verificaron el ejecutable empaquetado y la instalación actualizada: inferencia
 sintética, persistencia, respaldo, interfaz HTTP 200 y cierre del servidor.
