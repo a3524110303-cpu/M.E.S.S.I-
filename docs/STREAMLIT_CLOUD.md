@@ -9,6 +9,21 @@ Community Cloud ejecuta Streamlit; no inicia el servidor Django/Gunicorn ni
 MySQL de Compose. Django se utiliza como ORM y capa de permisos dentro del
 proceso. Los archivos de la instancia Cloud no se usan como base persistente.
 
+## Acceso del despliegue académico
+
+URL del portal: [MESSI en línea](https://messi-escolar-a3524110303.streamlit.app/).
+La instancia de Streamlit Community Cloud utiliza un servicio MySQL de Aiven
+separado. Los usuarios acceden con cuentas individuales y el primer
+administrador configura la escuela: periodos, grupos, inscripciones y tutores.
+Las credenciales de las cuentas de demostración se conservan sólo en un archivo
+local privado; no se publican en GitHub ni en esta guía.
+
+El modelo es demostrativo y utiliza datos sintéticos. El plan gratuito de
+Streamlit puede poner la aplicación en reposo por inactividad; al abrir el
+enlace, sigue la opción para reactivarla si aparece ese aviso. La información
+permanece en el MySQL externo durante ese reposo.
+[Reposo de aplicaciones en Community Cloud](https://docs.streamlit.io/deploy/streamlit-community-cloud/manage-your-app#app-hibernation).
+
 ## 1. Preparar una base MySQL en línea
 
 Necesitas un servicio MySQL accesible desde Community Cloud y una cuenta con

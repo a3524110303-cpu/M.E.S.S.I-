@@ -6,7 +6,17 @@ y tutores acceden desde sus propios dispositivos con cuentas y permisos.
 La entrada de Streamlit Community Cloud está en `cloud/app.py`: utiliza los
 servicios y permisos de Django, y una base MySQL externa conserva la información.
 
-## Publicar en Streamlit Community Cloud
+## Acceso en línea y publicación
+
+URL del portal: [Abrir MESSI en línea](https://messi-escolar-a3524110303.streamlit.app/).
+La interfaz se aloja en Streamlit Community Cloud y los registros se guardan
+en un servicio MySQL de Aiven separado. Cada persona entra con su cuenta;
+el primer administrador configura la escuela, sus grupos y las asignaciones.
+
+Este despliegue tiene un propósito académico y el modelo utiliza datos
+sintéticos. La instancia gratuita de Streamlit puede entrar en reposo por
+inactividad; si aparece ese aviso, sigue la opción para reactivarla.
+[Condiciones de reposo de Community Cloud](https://docs.streamlit.io/deploy/streamlit-community-cloud/manage-your-app#app-hibernation).
 
 En Community Cloud selecciona este repositorio, la rama `main` y el archivo
 `cloud/app.py`, con Python 3.13. Sus dependencias están en
@@ -17,6 +27,8 @@ Cada persona entra con su cuenta asignada por la escuela. El administrador
 crea cuentas, periodos, grupos, inscripciones y asignaciones desde el panel web.
 No hay cuentas públicas predeterminadas. Los registros compartidos permanecen
 en MySQL aunque el hosting de Streamlit se reinicie.
+Las credenciales de las cuentas de demostración se conservan únicamente en un
+archivo local privado, fuera del repositorio y de esta documentación.
 
 ## Portal web compartido
 
