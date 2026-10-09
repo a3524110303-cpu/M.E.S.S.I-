@@ -1,0 +1,23 @@
+FROM python:3.13-slim-bookworm
+
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
+WORKDIR /app
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential pkg-config default-libmysqlclient-dev \
+    && rm -rf /var/lib/apt/lists/*
+COPY requirements-web.txt ./
+RUN pip install --no-cache-dir -r requirements-web.txt
+# Lista explícita: no se incorporan bases, .env, respaldos ni artefactos locales.
+COPY src/ ./src/
+COPY scripts/train_demo.py ./scripts/train_demo.py
+COPY data/synthetic/training_synthetic.csv ./data/synthetic/training_synthetic.csv
+COPY web/ ./web/
+# Generación reproducible a partir de datos sintéticos, sin modelos externos.
+RUN python scripts/train_demo.py \
+    && MESSI_WEB_ENV=development MESSI_WEB_TEST_SQLITE=1 MESSI_WEB_BUILD_STATIC=1 python web/manage.py collectstatic --noinput \
+    && useradd --create-home --uid 10001 messi \
+    && chown -R messi:messi /app
+USER messi
+WORKDIR /app/web
+EXPOSE 8000
+CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "2", "--threads", "2", "--timeout", "60", "--access-logfile", "-", "--error-logfile", "-"]

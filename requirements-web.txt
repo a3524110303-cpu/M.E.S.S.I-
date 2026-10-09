@@ -1,0 +1,14 @@
+# Portal compartido. Python 3.13, separado del prototipo Streamlit.
+Django==5.2.18
+mysqlclient==2.3.0
+whitenoise==6.12.0
+gunicorn==26.2.0; platform_system != "Windows"
+waitress==3.0.2; platform_system == "Windows"
+python-dotenv==1.1.1
+tzdata==2026.2
+pandas==2.3.3
+scikit-learn==1.7.2
+numpy==2.3.3
+scipy==1.16.2
+joblib==1.5.2
+openpyxl==3.1.5

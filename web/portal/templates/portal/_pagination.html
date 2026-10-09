@@ -1,0 +1,3 @@
+{% if page.paginator.num_pages > 1 %}
+<nav class="pagination" aria-label="Paginación"><span>Página {{ page.number }} de {{ page.paginator.num_pages }} · {{ page.paginator.count }} registros</span><div>{% if page.has_previous %}<a href="?{{ param|default:'page' }}={{ page.previous_page_number }}{% if selected_group %}&amp;group={{ selected_group.pk }}&amp;cut={{ cut }}{% endif %}">← Anterior</a>{% endif %}{% if page.has_next %}<a href="?{{ param|default:'page' }}={{ page.next_page_number }}{% if selected_group %}&amp;group={{ selected_group.pk }}&amp;cut={{ cut }}{% endif %}">Siguiente →</a>{% endif %}</div></nav>
+{% endif %}

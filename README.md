@@ -1,8 +1,52 @@
 # MESSI — Alerta y acompañamiento escolar
 
-MESSI 0.4.0 es una aplicación local para registrar indicadores académicos,
-solicitudes de apoyo, acuerdos y seguimiento. Cuenta con vistas para Docente,
-Estudiante y Tutor.
+MESSI cuenta ahora con un **portal web compartido** para registrar indicadores
+académicos, solicitudes de apoyo, acuerdos y seguimiento. Docentes, estudiantes
+y tutores acceden desde sus propios dispositivos con cuentas y permisos.
+La entrada de Streamlit Community Cloud está en `cloud/app.py`: utiliza los
+servicios y permisos de Django, y una base MySQL externa conserva la información.
+
+## Publicar en Streamlit Community Cloud
+
+En Community Cloud selecciona este repositorio, la rama `main` y el archivo
+`cloud/app.py`, con Python 3.13. Sus dependencias están en
+`cloud/requirements.txt` y `packages.txt`. Configura MySQL externo y los secretos
+privados siguiendo [la guía de publicación](docs/STREAMLIT_CLOUD.md).
+
+Cada persona entra con su cuenta asignada por la escuela. El administrador
+crea cuentas, periodos, grupos, inscripciones y asignaciones desde el panel web.
+No hay cuentas públicas predeterminadas. Los registros compartidos permanecen
+en MySQL aunque el hosting de Streamlit se reinicie.
+
+## Portal web compartido
+
+El código del portal está en `web/`; sus dependencias y configuración están
+separadas del prototipo de escritorio. También puede funcionar con su propia
+interfaz Django y Docker. El administrador crea cuentas, periodos,
+grupos, inscripciones y asignaciones de docentes y tutores. La red neuronal sigue
+siendo una demostración con datos sintéticos y sus alertas requieren revisión humana.
+
+Para preparar un ensayo en Windows con Python 3.13 y MySQL:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\instalar_web.ps1
+# Completa MySQL y los hosts en web/.env antes de continuar.
+.\.venv-web\Scripts\python.exe web\manage.py migrate
+.\.venv-web\Scripts\python.exe web\manage.py createsuperuser
+powershell -ExecutionPolicy Bypass -File scripts\iniciar_web.ps1 -BindAddress 0.0.0.0
+```
+
+Los usuarios entran a `http://IP_DEL_SERVIDOR:8000` durante el ensayo controlado.
+Para publicar en internet, `Dockerfile.web` y `compose.web.yaml` incluyen
+Gunicorn, MySQL con volumen persistente y Caddy con HTTPS. Necesitas servidor,
+dominio y configuración privada; el repositorio no publica el servicio por sí solo.
+Consulta [la guía completa de MESSI web](docs/USO_WEB.md) para instalar MySQL,
+preparar la escuela, demostrar los tres roles, publicar y comprobar respaldos.
+También están disponibles [los resultados de validación](docs/VALIDACION_WEB.md)
+y [el guion de exposición del portal](docs/GUION_EXPOSICION_WEB.md).
+
+Los apartados siguientes documentan **el prototipo local anterior 0.4.0** y su
+instalador. Sus cuentas y registros no se importan al portal automáticamente.
 
 ## Instalar y abrir en Windows
 

@@ -1,0 +1,73 @@
+name: messi-web
+
+services:
+  db:
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${MESSI_WEB_DB_NAME:?Configura MESSI_WEB_DB_NAME}
+      MYSQL_USER: ${MESSI_WEB_DB_USER:?Configura MESSI_WEB_DB_USER}
+      MYSQL_PASSWORD: ${MESSI_WEB_DB_PASSWORD:?Configura MESSI_WEB_DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MESSI_WEB_DB_ROOT_PASSWORD:?Configura MESSI_WEB_DB_ROOT_PASSWORD}
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks: [database]
+    healthcheck:
+      test: ["CMD-SHELL", "MYSQL_PWD=\"$$MYSQL_PASSWORD\" mysql --user=\"$$MYSQL_USER\" --database=\"$$MYSQL_DATABASE\" --execute='SELECT 1' --silent >/dev/null"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    restart: unless-stopped
+    environment:
+      MESSI_WEB_ENV: production
+      MESSI_WEB_SECRET_KEY: ${MESSI_WEB_SECRET_KEY:?Configura MESSI_WEB_SECRET_KEY}
+      MESSI_WEB_ALLOWED_HOSTS: ${MESSI_WEB_DOMAIN:?Configura MESSI_WEB_DOMAIN}
+      MESSI_WEB_CSRF_TRUSTED_ORIGINS: https://${MESSI_WEB_DOMAIN:?Configura MESSI_WEB_DOMAIN}
+      MESSI_WEB_DB_NAME: ${MESSI_WEB_DB_NAME:?Configura MESSI_WEB_DB_NAME}
+      MESSI_WEB_DB_USER: ${MESSI_WEB_DB_USER:?Configura MESSI_WEB_DB_USER}
+      MESSI_WEB_DB_PASSWORD: ${MESSI_WEB_DB_PASSWORD:?Configura MESSI_WEB_DB_PASSWORD}
+      MESSI_WEB_DB_HOST: db
+      MESSI_WEB_DB_PORT: 3306
+    depends_on:
+      db:
+        condition: service_healthy
+    networks: [database, proxy]
+    expose: ["8000"]
+    healthcheck:
+      test: ["CMD", "python", "manage.py", "check", "--database", "default"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    environment:
+      MESSI_WEB_DOMAIN: ${MESSI_WEB_DOMAIN:?Configura MESSI_WEB_DOMAIN}
+      MESSI_WEB_TLS_EMAIL: ${MESSI_WEB_TLS_EMAIL:?Configura MESSI_WEB_TLS_EMAIL}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./web/config/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    networks: [proxy]
+    depends_on: [app]
+
+volumes:
+  mysql_data:
+  caddy_data:
+  caddy_config:
+
+networks:
+  database:
+    internal: true
+  proxy:

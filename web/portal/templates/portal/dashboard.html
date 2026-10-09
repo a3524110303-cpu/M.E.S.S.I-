@@ -1,0 +1,8 @@
+{% extends 'portal/base.html' %}
+{% block content %}
+<div class="page-heading"><div><span class="eyebrow">ORGANIZACIÓN ESCOLAR</span><h1>{% if role == 'admin' %}Un punto de encuentro para la escuela{% else %}Tu cuenta está lista para conectar{% endif %}</h1><p>{% if role == 'admin' %}Configura la estructura escolar y asigna el acceso de cada persona.{% else %}Necesitas un rol asignado para acceder al portal. Contacta al administrador de tu institución.{% endif %}</p></div></div>
+{% if role == 'admin' %}
+<div class="hero-panel"><div><span class="eyebrow">PRIMEROS PASOS</span><h2>Prepara el ciclo de acompañamiento</h2><p>Crea cuentas con su rol, periodos, grupos e inscripciones. Después asigna los docentes a sus grupos y un tutor a cada estudiante por periodo.</p><a class="button primary" href="{% url 'admin:index' %}">Abrir administración <span aria-hidden="true">→</span></a></div><div class="workflow"><span>01 · Cuentas y roles</span><span>02 · Periodos y grupos</span><span>03 · Inscripciones y tutores</span></div></div>
+<div class="card"><h2>Acceso de acuerdo con la responsabilidad</h2><p class="muted">El administrador organiza la institución. La captura académica corresponde al docente y las notas privadas al tutor asignado. Para demostrar cada recorrido, usa una cuenta de ese rol.</p></div>
+{% endif %}
+{% endblock %}

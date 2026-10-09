@@ -1,0 +1,23 @@
+{% extends 'portal/base.html' %}
+{% block title %}Ingresar · MESSI{% endblock %}
+{% block main_class %}login-main{% endblock %}
+{% block content %}
+<div class="login-layout">
+  <section class="login-intro">
+    <a class="brand" href="{% url 'portal:dashboard' %}"><span class="brand-mark">M</span><span>MESSI<small>Acompañamiento escolar</small></span></a>
+    <div class="intro-copy"><span class="eyebrow light">CONECTADOS PARA ACOMPAÑAR</span><h1>El apoyo comienza<br>con una conexión.</h1><p>Un espacio compartido para identificar necesidades, pedir ayuda y acompañar los avances de cada estudiante.</p>
+    <ol class="journey"><li><span>01</span><div><strong>Registrar</strong><p>Los docentes capturan indicadores de sus grupos.</p></div></li><li><span>02</span><div><strong>Escuchar</strong><p>Los estudiantes solicitan el apoyo que necesitan.</p></div></li><li><span>03</span><div><strong>Acompañar</strong><p>Los tutores acuerdan acciones y dan seguimiento.</p></div></li></ol></div>
+    <small class="intro-footer">Cada persona accede desde su dispositivo.</small>
+  </section>
+  <section class="login-form"><span class="eyebrow">TU ESPACIO ESCOLAR</span><h2>Bienvenido a MESSI</h2><p class="muted">Ingresa con la cuenta que te asignó tu institución.</p>
+    <form method="post" class="form-stack">{% csrf_token %}
+      {% if form.non_field_errors %}<div class="notice error" role="alert">{{ form.non_field_errors }}</div>{% endif %}
+      <div class="field"><label for="{{ form.username.id_for_label }}">Usuario</label>{{ form.username }}{{ form.username.errors }}</div>
+      <div class="field"><label for="{{ form.password.id_for_label }}">Contraseña</label>{{ form.password }}{{ form.password.errors }}</div>
+      {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+      <button class="button primary full" type="submit">Entrar a mi espacio <span aria-hidden="true">→</span></button>
+    </form>
+    <div class="login-help"><strong>¿Necesitas acceso?</strong><p>Solicita tu cuenta o el restablecimiento de tu contraseña al administrador de tu institución.</p></div>
+  </section>
+</div>
+{% endblock %}

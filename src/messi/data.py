@@ -312,12 +312,13 @@ def load_pasted(text: str) -> list[dict]:
     return _fill_temporary_ids(records)
 
 
-def load_excel(source: bytes | Path) -> list[dict]:
+def load_excel(source: bytes | Path, *, allow_temporary_ids: bool = True) -> list[dict]:
     """Lee la hoja Datos o la única hoja de un libro .xlsx con openpyxl.
 
     Encabezados en fila 1; porcentajes numéricos de 0 a 100. Ignora filas
-    totalmente vacías y genera IDs temporales para IDs vacíos. Rechaza el
-    archivo si contiene fórmulas, aun con resultados almacenados por Excel.
+    totalmente vacías. La demostración local genera IDs temporales por defecto;
+    un portal con inscripciones debe usar allow_temporary_ids=False y exigir
+    códigos explícitos. Rechaza fórmulas, aun con resultados almacenados por Excel.
     """
     try:
         if isinstance(source, Path):
@@ -377,7 +378,10 @@ def load_excel(source: bytes | Path) -> list[dict]:
                 raise ValidationError("Se supera el límite de 10,000 estudiantes.")
             row_values = values[:len(headers)]
             row_values.extend([None] * (len(headers) - len(row_values)))
-            records.append(dict(zip(headers, row_values, strict=True)))
+            record = dict(zip(headers, row_values, strict=True))
+            if not allow_temporary_ids and _is_empty(record[ID_COLUMN]):
+                raise ValidationError(f"Fila {row_number}: indica el código del estudiante inscrito; no se permiten IDs vacíos.")
+            records.append(record)
         return _fill_temporary_ids(records)
     except ValidationError:
         raise
