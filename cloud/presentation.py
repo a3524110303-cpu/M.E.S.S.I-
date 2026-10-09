@@ -8,6 +8,10 @@ def style(st):
         .stApp{background:#f6f7f3}
         [data-testid="stSidebar"]{background:#183d33;color:#f1f7f3}
         [data-testid="stSidebar"] h1,[data-testid="stSidebar"] p,[data-testid="stSidebar"] label{color:#f1f7f3}
+        [data-testid="stSidebar"] [data-testid="stButton"] button{background:#fff;color:#203d30;border-color:#c8d9cc}
+        [data-testid="stSidebar"] [data-testid="stButton"] button p{color:#203d30}
+        [data-testid="stSidebar"] [data-testid="stButton"] button:hover{background:#e8f3ed;color:#203d30;border-color:#91bbab}
+        [data-testid="stSidebar"] [data-testid="stButton"] button:focus-visible{background:#e8f3ed;color:#203d30;outline:3px solid #91bbab;outline-offset:2px}
         [data-testid="stMetric"]{background:#fff;border:1px solid #e1e8df;border-radius:14px;padding:19px}
         [data-testid="stMetricLabel"]{color:#627469}
         [data-testid="stForm"]{background:#fff;border:1px solid #dce5d9;border-radius:13px;padding:22px}
