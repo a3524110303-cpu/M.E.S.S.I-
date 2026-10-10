@@ -108,9 +108,12 @@ es única para cada proceso y no cambia de base entre usuarios.
 ## 4. Configurar escuela y probar
 
 Entra con el administrador y crea cuentas individuales con su rol, estudiantes,
-periodos, grupos/materias, inscripciones y asignaciones de tutores. Revisa el
-orden de configuración en [USO_WEB.md](USO_WEB.md). El acceso Cloud usa los
-mismos servicios de autorización del portal Django.
+periodos, grupos/materias, inscripciones y asignaciones de tutores. Sigue la
+[guía de configuración escolar y su diagrama de flujo](FLUJO_CONFIGURACION_ESCUELA.md),
+que incluye cómo asignar un docente ya creado a un grupo existente. En Cloud,
+el administrador usa las pestañas de la misma aplicación. El acceso Cloud usa
+los mismos servicios de autorización del portal Django. Para el servidor Django
+autohospedado, consulta [USO_WEB.md](USO_WEB.md).
 
 Comprueba el recorrido con navegadores o dispositivos independientes:
 

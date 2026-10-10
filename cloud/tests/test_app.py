@@ -139,6 +139,24 @@ class CloudStreamlitTests(SchoolFixture, TransactionTestCase):
         buttons[0].click().run()
         self.assertEqual(len(app.exception), 0)
 
+    def test_admin_assigns_teacher_to_existing_group_without_replacing_current_teacher(self):
+        app = self.app_for(self.admin)
+        self.assertEqual(len(app.exception), 0)
+        self.assertIn("Crear una cuenta de docente no la asigna a un grupo", self.output(app))
+        self.assertIn("Asignar docente a un grupo existente", self.output(app))
+        app.text_input(key=f"messi-ui-{self.admin.pk}-assign-teacher-search").set_value(self.other_teacher.username).run()
+        self.assertEqual(len(app.exception), 0)
+        self.assertTrue(any(f"(@{self.teacher.username})" in option for option in app.multiselect[0].options))
+        teacher_field = app.selectbox(key=f"messi-ui-{self.admin.pk}-assign-existing-teacher")
+        self.assertTrue(any(f"(@{self.other_teacher.username})" in option for option in teacher_field.options))
+        app.selectbox(key=f"messi-ui-{self.admin.pk}-assign-existing-group").set_value(self.group.pk)
+        teacher_field.set_value(self.other_teacher.pk)
+        self.click(app, "Asignar docente")
+        self.assertEqual(set(self.group.teachers.values_list("pk", flat=True)), {self.teacher.pk, self.other_teacher.pk})
+        self.assertTrue(services.visible_groups(self.other_teacher).filter(pk=self.group.pk).exists())
+        self.assertIn(f"(@{self.teacher.username})", self.output(app))
+        self.assertIn(f"(@{self.other_teacher.username})", self.output(app))
+
     def test_three_cloud_sessions_submit_complete_shared_support_workflow(self):
         teacher = self.app_for(self.teacher)
         prefix = f"messi-ui-{self.teacher.pk}-indicator-{self.enrollment.pk}"

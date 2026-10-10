@@ -95,6 +95,21 @@ def create_group(actor, name, subject, period_id, teacher_ids):
 
 
 @transaction.atomic
+def assign_teacher(actor, teacher_id, group_id):
+    _require(actor, "admin")
+    # El grupo serializa las altas de la relación, incluida la primera.
+    group = _record(CourseGroup, group_id, lock=True)
+    teacher = _record(get_user_model(), teacher_id, lock=True)
+    profile = Profile.objects.select_for_update().filter(user_id=teacher.pk).first()
+    if not teacher.is_active or profile is None or profile.role != Profile.Role.TEACHER:
+        raise ValidationError("Selecciona un docente con cuenta activa y ese rol.")
+    if not group.teachers.filter(pk=teacher.pk).exists():
+        group.teachers.add(teacher)
+        _audit(actor, "asignar_docente", group)
+    return group
+
+
+@transaction.atomic
 def enroll_student(actor, student_id, group_id):
     _require(actor, "admin")
     student = _record(Student, student_id, lock=True)

@@ -431,6 +431,7 @@ def _admin(user):
                     ui.error(st, exc)
                 else:
                     _done(user, "Cuenta creada. Entrega las credenciales al titular por el canal de tu institución.")
+        st.caption("Crear una cuenta de docente no la asigna a un grupo. Completa la asignación en Grupos.")
         search = st.text_input("Buscar cuenta", key=_key(user, "account-search"), max_chars=100)
         accounts = _page(user, User.objects.select_related("profile").filter(Q(username__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search)).order_by("username", "pk"), "admin-accounts")
         _table([{"Usuario": item.username, "Nombre": ui.person(item), "Rol": "Administrador" if item.is_superuser else item.profile.get_role_display() if hasattr(item, "profile") else "Sin perfil", "Activa": item.is_active} for item in accounts])
@@ -452,10 +453,12 @@ def _admin(user):
         periods = _page(user, Period.objects.order_by("-starts_on", "pk"), "admin-periods")
         _table([{"Periodo": item.name, "Inicio": item.starts_on, "Fin": item.ends_on, "Captura": "Abierta" if item.is_open else "Cerrada"} for item in periods])
     with groups_tab:
+        st.caption("Crear una cuenta no asigna automáticamente un grupo al docente.")
         st.subheader("Crear grupo y materia")
         period_choices = list(Period.objects.filter(is_open=True).order_by("-starts_on", "pk")[:CHOICE_LIMIT])
         teacher_search = st.text_input("Buscar docente para el grupo", key=_key(user, "admin-teacher-search"), max_chars=100)
         teacher_choices = list(User.objects.filter(profile__role="docente", is_active=True).filter(Q(username__icontains=teacher_search) | Q(first_name__icontains=teacher_search) | Q(last_name__icontains=teacher_search)).order_by("username")[:CHOICE_LIMIT])
+        creation_teachers = {item.pk: item for item in teacher_choices}
         if not period_choices:
             st.caption("Crea primero un periodo abierto.")
         else:
@@ -463,7 +466,7 @@ def _admin(user):
                 name = st.text_input("Nombre del grupo", max_chars=80)
                 subject = st.text_input("Materia", max_chars=100)
                 period_id = st.selectbox("Periodo del grupo", [item.pk for item in period_choices], format_func=lambda pk: str(next(item for item in period_choices if item.pk == pk)))
-                teacher_ids = st.multiselect("Docentes del grupo", [item.pk for item in teacher_choices], format_func=lambda pk: ui.person(next(item for item in teacher_choices if item.pk == pk)))
+                teacher_ids = st.multiselect("Docentes del grupo", list(creation_teachers), format_func=lambda pk: f"{ui.person(creation_teachers[pk])} (@{creation_teachers[pk].username})")
                 submitted = st.form_submit_button("Crear grupo", type="primary")
             if submitted:
                 try:
@@ -472,8 +475,32 @@ def _admin(user):
                     ui.error(st, exc)
                 else:
                     _done(user, "Grupo y materia creados con sus docentes.")
-        groups = _page(user, CourseGroup.objects.select_related("period").order_by("name", "subject", "pk"), "admin-groups")
-        _table([{"Grupo": item.name, "Materia": item.subject, "Periodo": item.period.name} for item in groups])
+        st.divider()
+        st.subheader("Asignar docente a un grupo existente")
+        st.caption("Esta acción agrega un docente y conserva los que ya están asignados al grupo.")
+        group_search = st.text_input("Buscar grupo existente", key=_key(user, "assign-group-search"), max_chars=100)
+        existing_groups = list(CourseGroup.objects.select_related("period").filter(Q(name__icontains=group_search) | Q(subject__icontains=group_search) | Q(period__name__icontains=group_search)).order_by("name", "subject", "pk")[:CHOICE_LIMIT])
+        assignment_search = st.text_input("Buscar docente para asignar", key=_key(user, "assign-teacher-search"), max_chars=150)
+        assignment_teachers = list(User.objects.filter(profile__role="docente", is_active=True).filter(Q(username__icontains=assignment_search) | Q(first_name__icontains=assignment_search) | Q(last_name__icontains=assignment_search)).order_by("username")[:CHOICE_LIMIT])
+        if existing_groups and assignment_teachers:
+            with st.form(_key(user, "assign-teacher")):
+                assignment_group = _pick(user, "Grupo existente", existing_groups, "assign-existing-group")
+                assignment_teacher = _pick(user, "Docente a asignar", assignment_teachers, "assign-existing-teacher", lambda item: f"{ui.person(item)} (@{item.username})")
+                submitted = st.form_submit_button("Asignar docente", type="primary")
+            if submitted:
+                try:
+                    organization.assign_teacher(user, assignment_teacher.pk, assignment_group.pk)
+                except Exception as exc:
+                    ui.error(st, exc)
+                else:
+                    _done(user, "Docente asignado. Ya puede consultar el grupo desde su cuenta.")
+        elif not existing_groups:
+            st.info("No hay grupos con este criterio. Crea un grupo o ajusta la búsqueda.")
+        else:
+            st.info("No hay docentes activos con este criterio. Ajusta la búsqueda o revisa la cuenta en Cuentas.")
+        st.subheader("Grupos y docentes asignados")
+        groups = _page(user, CourseGroup.objects.select_related("period").prefetch_related("teachers").order_by("name", "subject", "pk"), "admin-groups")
+        _table([{"Grupo": item.name, "Materia": item.subject, "Periodo": item.period.name, "Docentes asignados": ", ".join(f"{ui.person(teacher)} (@{teacher.username})" for teacher in item.teachers.all()) or "Sin docentes asignados"} for item in groups])
     with enrollments_tab:
         st.subheader("Inscribir a un estudiante")
         student_search = st.text_input("Buscar estudiante para inscripción", key=_key(user, "admin-enroll-search"), max_chars=100)

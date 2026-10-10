@@ -84,7 +84,12 @@ ya está abierto en el puerto 8000, usa la página existente.
 
 ## Configurar cuentas y escuela
 
-Abre `/admin/` con el administrador creado. Sólo un superusuario o una cuenta
+En **Streamlit Community Cloud**, entra con el administrador en la misma
+aplicación y usa **Cuentas**, **Periodos**, **Grupos**, **Inscripciones** y
+**Tutores**. Sigue la [guía y el flujo de configuración escolar](FLUJO_CONFIGURACION_ESCUELA.md).
+
+Los pasos siguientes corresponden al **servidor Django autohospedado**:
+abre `/admin/` con el administrador creado. Sólo un superusuario o una cuenta
 de administrador con permiso de personal puede entrar a esta consola.
 
 1. Crea los usuarios de docente, estudiante y tutor con contraseñas individuales.

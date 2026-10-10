@@ -7,7 +7,7 @@ from django.core.exceptions import PermissionDenied, ValidationError
 from django.test import TestCase, override_settings
 
 from portal import organization, services
-from portal.models import CourseGroup, Enrollment, Period, Profile, Student, TutorAssignment
+from portal.models import AuditEvent, CourseGroup, Enrollment, Period, Profile, Student, TutorAssignment
 from portal.tests.fixtures import SchoolFixture
 
 
@@ -30,6 +30,7 @@ class CloudOrganizationTests(SchoolFixture, TestCase):
                 lambda: organization.create_account(actor, "nuevo", self.password, "A", "B", "docente"),
                 lambda: organization.create_period(actor, "Nuevo", date(2027, 1, 1), date(2027, 6, 30)),
                 lambda: organization.create_group(actor, "Nuevo", "Materia", self.period.pk, [self.teacher.pk]),
+                lambda: organization.assign_teacher(actor, self.other_teacher.pk, self.group.pk),
                 lambda: organization.enroll_student(actor, self.other_student.pk, self.group.pk),
                 lambda: organization.assign_tutor(actor, self.tutor.pk, self.student.pk, self.period.pk),
             )
@@ -128,6 +129,62 @@ class CloudOrganizationTests(SchoolFixture, TestCase):
         with self.assertRaises(ValidationError):
             organization.create_group(self.admin, "Grupo inválido", "Materia", self.period.pk, [self.teacher.pk])
         self.assertFalse(CourseGroup.objects.filter(name="Grupo inválido").exists())
+
+    def test_assign_teacher_preserves_existing_teachers_and_grants_group_visibility(self):
+        self.assertFalse(services.visible_groups(self.other_teacher).filter(pk=self.group.pk).exists())
+        assigned = organization.assign_teacher(self.admin, self.other_teacher.pk, self.group.pk)
+        self.assertEqual(assigned.pk, self.group.pk)
+        self.assertEqual(set(self.group.teachers.values_list("pk", flat=True)), {
+            self.teacher.pk, self.other_teacher.pk,
+        })
+        self.assertTrue(services.visible_groups(self.teacher).filter(pk=self.group.pk).exists())
+        self.assertTrue(services.visible_groups(self.other_teacher).filter(pk=self.group.pk).exists())
+        self.assertTrue(services.visible_enrollments(self.other_teacher).filter(pk=self.enrollment.pk).exists())
+        self.assertTrue(AuditEvent.objects.filter(
+            author=self.admin, action="asignar_docente", entity="coursegroup", entity_id=self.group.pk,
+        ).exists())
+
+    def test_assign_teacher_is_idempotent_without_duplicate_relation_or_audit(self):
+        organization.assign_teacher(self.admin, self.other_teacher.pk, self.group.pk)
+        repeated = organization.assign_teacher(self.admin, self.other_teacher.pk, self.group.pk)
+        self.assertEqual(repeated.pk, self.group.pk)
+        self.assertEqual(self.group.teachers.count(), 2)
+        self.assertEqual(AuditEvent.objects.filter(
+            action="asignar_docente", entity="coursegroup", entity_id=self.group.pk,
+        ).count(), 1)
+
+    def test_assign_teacher_rejects_wrong_role_inactive_and_missing_profile_without_changes(self):
+        self.other_teacher.is_active = False
+        self.other_teacher.save(update_fields=["is_active"])
+        no_profile = get_user_model().objects.create_user("sin-perfil", password=self.password)
+        before_teachers = set(self.group.teachers.values_list("pk", flat=True))
+        before_audits = AuditEvent.objects.count()
+        for teacher in (self.tutor, self.student_user, self.admin, self.other_teacher, no_profile):
+            with self.subTest(teacher=teacher.username), self.assertRaises(ValidationError):
+                organization.assign_teacher(self.admin, teacher.pk, self.group.pk)
+            self.assertEqual(set(self.group.teachers.values_list("pk", flat=True)), before_teachers)
+            self.assertEqual(AuditEvent.objects.count(), before_audits)
+
+    def test_assign_teacher_rejects_missing_or_invalid_identifiers_without_changes(self):
+        before_teachers = set(self.group.teachers.values_list("pk", flat=True))
+        before_audits = AuditEvent.objects.count()
+        for teacher_id, group_id in (
+            (0, self.group.pk), (True, self.group.pk), ("invalid", self.group.pk),
+            (999999, self.group.pk), (self.other_teacher.pk, 999999),
+        ):
+            with self.subTest(teacher=teacher_id, group=group_id), self.assertRaises(ValidationError):
+                organization.assign_teacher(self.admin, teacher_id, group_id)
+            self.assertEqual(set(self.group.teachers.values_list("pk", flat=True)), before_teachers)
+            self.assertEqual(AuditEvent.objects.count(), before_audits)
+
+    def test_assign_teacher_rolls_back_membership_when_audit_fails(self):
+        before_teachers = set(self.group.teachers.values_list("pk", flat=True))
+        before_audits = AuditEvent.objects.count()
+        with patch("portal.organization._audit", side_effect=ValidationError("Fallo de auditoría")):
+            with self.assertRaises(ValidationError):
+                organization.assign_teacher(self.admin, self.other_teacher.pk, self.group.pk)
+        self.assertEqual(set(self.group.teachers.values_list("pk", flat=True)), before_teachers)
+        self.assertEqual(AuditEvent.objects.count(), before_audits)
 
     def test_duplicate_enrollment_does_not_create_duplicate(self):
         before = Enrollment.objects.count()
