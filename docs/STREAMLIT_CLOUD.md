@@ -124,6 +124,20 @@ Comprueba el recorrido con navegadores o dispositivos independientes:
 5. Verificar que otra cuenta no pueda consultar registros ajenos y que cerrar
    sesión borre los formularios y resultados de la cuenta anterior.
 
+En **Docente → Importar archivo**, la materia, el grupo y el periodo aparecen
+junto a una lista de alumnos inscritos con sus nombres y códigos. El código
+pertenece al estudiante y se conserva en sus distintas materias; no es un
+código de asignatura. **Descargar Excel con mis alumnos** prepara la hoja Datos
+con nombres y códigos, tres columnas de captura y una hoja de instrucciones.
+El CSV también incluye los códigos del grupo. Los nombres son referencias y
+no se usan para identificar alumnos ni calcular el modelo.
+
+Completa las tres variables de cada alumno que quieras importar. Las filas
+con los tres indicadores vacíos se omiten; los valores cero sí se importan y
+las filas parcialmente llenas se rechazan. La vista previa muestra los nombres
+registrados antes de confirmar. Si un código no está inscrito, el mensaje
+indica cuáles códigos revisar y remite a la lista o a la inscripción escolar.
+
 Las sesiones duran hasta ocho horas y se invalidan al cambiar contraseña,
 desactivar la cuenta o cambiar su rol. Las contraseñas se comprueban mediante
 Django y no se conservan en el estado autenticado de Streamlit. Los intentos

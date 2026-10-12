@@ -156,15 +156,36 @@ def _teacher_import(user, group):
     from messi.data import load_csv, load_excel
     from portal import services
     from django.core.exceptions import ValidationError
+    from django.db.models import Q
+    from cloud import import_templates
 
-    st.subheader("Importar indicadores del grupo")
-    st.caption("CSV UTF-8 o Excel .xlsx · Hasta 5 MB y 10,000 filas · Estudiantes previamente inscritos en esta materia.")
-    st.code("id_estudiante,nota_parcial,asistencia,tareas_entregadas", language=None)
-    st.download_button("Descargar plantilla CSV", "\ufeffid_estudiante,nota_parcial,asistencia,tareas_entregadas\n", file_name="plantilla_messi.csv", mime="text/csv", key=_key(user, f"template-{group.pk}"))
+    st.subheader(f"Importar el primer parcial de {group.subject}")
+    st.caption(f"Grupo {group.name} · Periodo {group.period.name}")
+    st.info("El código identifica al estudiante, no a la materia. Usa el que aparece junto a su nombre; el mismo alumno conserva su código en todas sus materias.")
+    roster = services.teacher_enrollments(user, group.pk)
+    if not roster.exists():
+        st.warning("Esta materia todavía no tiene alumnos inscritos. Pide al administrador que los agregue en Inscripciones antes de importar.")
+        return
+    st.markdown("**1. Identifica a tus alumnos y sus códigos**")
+    search = st.text_input("Buscar alumno por nombre o código", key=_key(user, f"import-roster-search-{group.pk}"), max_chars=100)
+    students = _page(user, roster.filter(Q(student__code__icontains=search) | Q(student__user__first_name__icontains=search) | Q(student__user__last_name__icontains=search) | Q(student__user__username__icontains=search)).order_by("student__code", "pk"), f"import-roster-{group.pk}")
+    _table([{"Estudiante": ui.person(item.student.user), "Código para la plantilla": item.student.code} for item in students])
+    st.markdown("**2. Descarga la plantilla y completa los indicadores**")
+    st.write("El Excel ya incluye los nombres y códigos de esta materia. Completa únicamente nota, asistencia y tareas. Las filas con los tres indicadores vacíos se omiten; completa las tres celdas de cada alumno que quieras importar.")
+    try:
+        template_rows = import_templates.group_rows(user, group)
+    except ValidationError as exc:
+        ui.error(st, exc)
+    else:
+        excel, csv_column = st.columns(2)
+        excel.download_button("Descargar Excel con mis alumnos", import_templates.excel_template(template_rows, group), file_name=import_templates.filename(group, "xlsx"), mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", key=_key(user, f"template-excel-{group.pk}"), type="primary")
+        csv_column.download_button("Descargar CSV con los códigos", import_templates.csv_template(template_rows), file_name=import_templates.filename(group, "csv"), mime="text/csv", key=_key(user, f"template-{group.pk}"))
+    st.caption("Nota: 0 a 10 · Asistencia y tareas: 0 a 100; escribe 80 para 80 %. CSV UTF-8 o Excel .xlsx · Hasta 5 MB y 10,000 filas.")
     if not group.period.is_open:
         st.info("La captura de este periodo está cerrada.")
         return
     prefix = _key(user, f"import-{group.pk}")
+    st.markdown("**3. Sube el archivo, revisa los alumnos y confirma**")
     with st.form(prefix + "-read"):
         upload = st.file_uploader("Archivo CSV o Excel", type=["csv", "xlsx"], key=prefix + "-file")
         submitted = st.form_submit_button("Revisar archivo")
@@ -176,20 +197,27 @@ def _teacher_import(user, group):
             if upload.size > 5 * 1024 * 1024:
                 raise ValidationError("El archivo supera el límite de 5 MB.")
             raw = upload.getvalue()
-            records = load_excel(raw, allow_temporary_ids=False) if upload.name.lower().endswith(".xlsx") else load_csv(raw)
+            records = load_excel(raw, allow_temporary_ids=False, allow_student_names=True, skip_blank_indicators=True) if upload.name.lower().endswith(".xlsx") else load_csv(raw, skip_blank_indicators=True)
             codes = [row["id_estudiante"] for row in records]
             enrolled = list(services.teacher_enrollments(user, group.pk).filter(student__code__in=codes)[:10001])
             if len(enrolled) != len(records):
-                raise ValidationError("El archivo contiene códigos que no están inscritos en esta materia. Revisa el grupo y los códigos.")
+                allowed_codes = {item.student.code for item in enrolled}
+                missing = [code for code in codes if code not in allowed_codes]
+                labels = ", ".join(missing[:10]) + (f" y {len(missing) - 10} más" if len(missing) > 10 else "")
+                raise ValidationError(f"Estos códigos no están inscritos en {group.subject}, grupo {group.name}: {labels}. Consulta la lista de alumnos de arriba o descarga la plantilla de esta materia. Si falta un alumno, pide al administrador que lo inscriba.")
             versions = {item.pk: 0 for item in enrolled}
             versions.update({item.enrollment_id: item.version for item in services.visible_indicators(user).filter(enrollment_id__in=list(versions), cut=CUT)[:10001]})
             st.session_state[prefix + "-preview"] = {"records": records, "versions": versions}
         except Exception as exc:
-            ui.error(st, exc)
+            if isinstance(exc, (ValidationError, ValueError)) and ("al menos un estudiante" in str(exc) or "requiere al menos un estudiante" in str(exc)):
+                st.error("El archivo no tiene indicadores completos. Llena nota, asistencia y tareas de al menos un alumno antes de subirlo.")
+            else:
+                ui.error(st, exc)
     preview = st.session_state.get(prefix + "-preview")
     if preview:
         st.success(f"Archivo validado: {len(preview['records'])} estudiantes. Vista previa de hasta 20 filas.")
-        _table(preview["records"][:PAGE_SIZE])
+        current_names = {item.student.code: ui.person(item.student.user) for item in services.teacher_enrollments(user, group.pk).filter(student__code__in=[row["id_estudiante"] for row in preview["records"][:PAGE_SIZE]])}
+        _table([{"Estudiante": current_names.get(row["id_estudiante"], "Ya no está inscrito"), "Código": row["id_estudiante"], "Nota primer parcial": row["nota_parcial"], "Asistencia (%)": row["asistencia"], "Tareas (%)": row["tareas_entregadas"]} for row in preview["records"][:PAGE_SIZE]])
         st.warning("Guardar actualiza los indicadores de los estudiantes incluidos. Si alguien los cambió después de esta revisión, se rechazará toda la importación.")
         with st.form(prefix + "-commit"):
             commit = st.form_submit_button("Guardar importación", type="primary")

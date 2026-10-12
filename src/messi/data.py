@@ -99,12 +99,14 @@ def _coerce_record(row: dict, row_number: int, training: bool) -> dict:
     return normalized
 
 
-def load_csv(source: bytes | str | Path, training: bool = False) -> list[dict]:
+def load_csv(source: bytes | str | Path, training: bool = False, *, skip_blank_indicators: bool = False) -> list[dict]:
     """Valida CSV UTF-8 y devuelve hasta 10,000 registros normalizados.
 
     Un str representa contenido CSV; para una ruta usa pathlib.Path.
     Se requieren ID anónimo, nota parcial y dos porcentajes. La etiqueta
     resultado_final sólo se admite con training=True.
+    El portal puede omitir filas de su plantilla con los tres indicadores
+    vacíos; una fila parcialmente capturada conserva la validación estricta.
     """
     contents = _read_source(source)
     if not contents.strip():
@@ -134,6 +136,8 @@ def load_csv(source: bytes | str | Path, training: bool = False) -> list[dict]:
                 raise ValidationError("El CSV supera el límite de 10,000 estudiantes.")
             if None in row or any(value is None for value in row.values()):
                 raise ValidationError(f"Fila {row_number}: cantidad incorrecta de campos.")
+            if skip_blank_indicators and not training and all(_is_empty(row[name]) for name in FEATURES):
+                continue
             record = _coerce_record(row, row_number, training)
             student_id = record[ID_COLUMN]
             if student_id in seen_ids:
@@ -218,16 +222,20 @@ def _trim_trailing_empty(values: list) -> list:
     return values
 
 
-def _normalize_headers(values: list) -> list[str]:
+def _normalize_headers(values: list, *, allow_student_names: bool = False) -> list[str]:
     headers = [str(value).strip() if value is not None else "" for value in values]
-    if len(headers) != 4 or any(header not in _HEADER_MAP for header in headers):
+    mapping = dict(_HEADER_MAP)
+    if allow_student_names:
+        mapping["Estudiante"] = "nombre_estudiante"
+    if len(headers) not in ((4, 5) if allow_student_names else (4,)) or any(header not in mapping for header in headers):
         raise ValidationError(
-            "Usa las cuatro columnas de la plantilla: " + ", ".join(FRIENDLY_HEADERS) + "."
+            "Conserva los encabezados de la plantilla: " + ", ".join(FRIENDLY_HEADERS)
+            + (" y, si está incluida, Estudiante." if allow_student_names else ".")
         )
-    normalized = [_HEADER_MAP[header] for header in headers]
+    normalized = [mapping[header] for header in headers]
     if len(normalized) != len(set(normalized)):
         raise ValidationError("Hay encabezados duplicados.")
-    if set(normalized) != set(_INPUT_COLUMNS):
+    if set(normalized) - {"nombre_estudiante"} != set(_INPUT_COLUMNS):
         raise ValidationError("Faltan columnas requeridas de la plantilla.")
     return normalized
 
@@ -312,13 +320,17 @@ def load_pasted(text: str) -> list[dict]:
     return _fill_temporary_ids(records)
 
 
-def load_excel(source: bytes | Path, *, allow_temporary_ids: bool = True) -> list[dict]:
+def load_excel(source: bytes | Path, *, allow_temporary_ids: bool = True,
+               allow_student_names: bool = False, skip_blank_indicators: bool = False) -> list[dict]:
     """Lee la hoja Datos o la única hoja de un libro .xlsx con openpyxl.
 
     Encabezados en fila 1; porcentajes numéricos de 0 a 100. Ignora filas
     totalmente vacías. La demostración local genera IDs temporales por defecto;
     un portal con inscripciones debe usar allow_temporary_ids=False y exigir
     códigos explícitos. Rechaza fórmulas, aun con resultados almacenados por Excel.
+    allow_student_names permite la columna descriptiva Estudiante, que nunca
+    se utiliza como identidad ni entrada de IA. skip_blank_indicators omite
+    alumnos de la plantilla que todavía no tengan ningún indicador capturado.
     """
     try:
         if isinstance(source, Path):
@@ -366,7 +378,7 @@ def load_excel(source: bytes | Path, *, allow_temporary_ids: bool = True) -> lis
                 raise ValidationError(f"Fila {row_number}: usa valores numéricos; no se admiten fórmulas.")
             values = [cell.value for cell in cells]
             if row_number == 1:
-                headers = _normalize_headers(_trim_trailing_empty(values))
+                headers = _normalize_headers(_trim_trailing_empty(values), allow_student_names=allow_student_names)
                 continue
             if all(_is_empty(value) for value in values):
                 continue
@@ -379,6 +391,11 @@ def load_excel(source: bytes | Path, *, allow_temporary_ids: bool = True) -> lis
             row_values = values[:len(headers)]
             row_values.extend([None] * (len(headers) - len(row_values)))
             record = dict(zip(headers, row_values, strict=True))
+            # El nombre sólo ayuda a reconocer al alumno en la plantilla. La
+            # identidad y los permisos siguen dependiendo del código inscrito.
+            record.pop("nombre_estudiante", None)
+            if skip_blank_indicators and all(_is_empty(record[name]) for name in FEATURES):
+                continue
             if not allow_temporary_ids and _is_empty(record[ID_COLUMN]):
                 raise ValidationError(f"Fila {row_number}: indica el código del estudiante inscrito; no se permiten IDs vacíos.")
             records.append(record)
