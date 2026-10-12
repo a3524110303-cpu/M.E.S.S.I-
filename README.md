@@ -32,6 +32,28 @@ archivo local privado, fuera del repositorio y de esta documentación.
 
 ## Portal web compartido
 
+### Inscripción de una lista en Community Cloud
+
+En **Administrador → Inscripciones**, descarga la plantilla Excel o CSV.
+Completa una fila por alumno nuevo con sus `nombres` y `apellidos`; puedes dejar
+`codigo` y `usuario` vacíos para generarlos automáticamente. Para alumnos que ya
+tienen cuenta, escribe su código `EST-` y deja los otros campos vacíos, o usa sus
+datos exactos. No se cambian nombres, usuarios ni contraseñas de cuentas existentes.
+
+Selecciona un periodo abierto y las materias donde se inscribirá toda la lista,
+sube el archivo y pulsa **Revisar lista de inscripción**. Revisa códigos, nombres,
+cuentas nuevas e inscripciones antes de **Guardar cuentas e inscripciones**.
+Si una fila falla o los datos cambian desde la revisión, se cancela el lote completo;
+las inscripciones que ya existen se omiten. Se admiten hasta 1000 alumnos,
+30 materias y archivos de 5 MB, sin fórmulas.
+
+Después de guardar, descarga **Accesos de las cuentas nuevas**: incluye las claves
+aleatorias generadas para que puedas entregarlas individualmente. Las contraseñas
+se guardan cifradas mediante hash en la base; el archivo de accesos está disponible
+únicamente en tu sesión. Conserva los códigos generados y úsalos en futuras cargas:
+dejar el código vacío significa crear un alumno nuevo, no buscarlo por nombre.
+La opción individual sigue disponible debajo de la carga por archivo.
+
 El código del portal está en `web/`; sus dependencias y configuración están
 separadas del prototipo de escritorio. También puede funcionar con su propia
 interfaz Django y Docker. El administrador crea cuentas, periodos,

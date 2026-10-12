@@ -427,6 +427,78 @@ def _case_detail(user, case, tutor_mode):
             _done(user, "Seguimiento guardado y estado actualizado.", prefix)
 
 
+def _admin_enrollment_import(user):
+    import hashlib
+    from cloud import enrollment_files
+    from portal import enrollment_import
+    from portal.models import CourseGroup, Period
+
+    prefix = _key(user, "enrollment-file")
+    st.subheader("Inscribir una lista desde Excel o CSV")
+    st.write("Completa nombres y apellidos en un solo archivo. MESSI genera código, usuario y contraseña para los alumnos nuevos y los inscribe en todas las materias que selecciones.")
+    st.caption("Para alumnos existentes, escribe su código EST-. Se conservan sus cuentas y se omiten las inscripciones que ya existen. Máximo 1000 alumnos y 30 materias por lote.")
+    excel, csv_column = st.columns(2)
+    excel.download_button("Descargar plantilla de inscripción Excel", enrollment_files.workbook(), file_name="inscripciones_messi.xlsx", mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", key=prefix + "-template-xlsx")
+    csv_column.download_button("Descargar plantilla de inscripción CSV", enrollment_files.csv_template(), file_name="inscripciones_messi.csv", mime="text/csv", key=prefix + "-template-csv")
+    periods = list(Period.objects.filter(is_open=True).order_by("-starts_on", "pk"))
+    period = _pick(user, "Periodo para la inscripción por archivo", periods, "bulk-period")
+    if not period:
+        st.info("Crea un periodo abierto y sus grupos antes de subir una lista.")
+        return
+    groups = list(CourseGroup.objects.select_related("period").filter(period=period).order_by("name", "subject", "pk"))
+    options = {item.pk: str(item) for item in groups}
+    selection_key = prefix + "-groups"
+    if selection_key in st.session_state:
+        st.session_state[selection_key] = [pk for pk in st.session_state[selection_key] if pk in options]
+    group_ids = st.multiselect("Materias donde se inscribirá toda la lista", list(options), format_func=options.get, key=selection_key, max_selections=30)
+    uploaded = st.file_uploader("Lista de alumnos (.xlsx o .csv)", type=["xlsx", "csv"], key=prefix + "-upload")
+    fingerprint = None
+    if uploaded is not None:
+        fingerprint = hashlib.sha256(uploaded.getvalue() + str(sorted(group_ids)).encode()).hexdigest()
+    if st.session_state.get(prefix + "-fingerprint") != fingerprint:
+        st.session_state.pop(prefix + "-preview", None)
+    if st.button("Revisar lista de inscripción", key=prefix + "-review", disabled=uploaded is None or not group_ids):
+        st.session_state.pop(prefix + "-preview", None)
+        try:
+            if fingerprint == st.session_state.get(prefix + "-saved-fingerprint"):
+                from django.core.exceptions import ValidationError
+                raise ValidationError("Esta lista ya se guardó. Para inscribir en otras materias, usa los códigos del archivo de accesos.")
+            records = enrollment_files.parse(uploaded.getvalue(), uploaded.name)
+            preview = enrollment_import.prepare(user, records, group_ids)
+        except Exception as exc:
+            ui.error(st, exc)
+        else:
+            st.session_state[prefix + "-preview"] = preview
+            st.session_state[prefix + "-fingerprint"] = fingerprint
+    preview = st.session_state.get(prefix + "-preview")
+    if preview:
+        st.success(f"{len(preview['rows'])} alumnos · {preview['new_accounts']} cuentas nuevas · {preview['new_enrollments']} inscripciones nuevas · {preview['skipped']} inscripciones ya existentes.")
+        st.write("Materias: " + "; ".join(options[pk] for pk in preview["group_ids"]))
+        st.dataframe([{"Código": row["codigo"], "Nombres": row["nombres"], "Apellidos": row["apellidos"], "Usuario": row["usuario"], "Cuenta": "Nueva" if row["student_id"] is None else "Existente"} for row in preview["rows"]], hide_index=True, width="stretch")
+        st.caption("Se guarda el lote completo. Si una fila falla o los datos cambian, se cancela la carga y puedes corregir el archivo.")
+        if st.button("Guardar cuentas e inscripciones", type="primary", key=prefix + "-commit"):
+            try:
+                with st.spinner("Creando cuentas e inscribiendo la lista…"):
+                    result = enrollment_import.commit(user, preview)
+            except Exception as exc:
+                st.session_state.pop(prefix + "-preview", None)
+                ui.error(st, exc)
+            else:
+                st.session_state.pop(prefix + "-preview", None)
+                st.session_state[prefix + "-result"] = result
+                st.session_state[prefix + "-saved-fingerprint"] = fingerprint
+                st.rerun()
+    result = st.session_state.get(prefix + "-result")
+    if result:
+        st.success(f"Carga completada: {len(result['credentials'])} cuentas creadas y {result['enrolled']} inscripciones guardadas. Se omitieron {result['skipped']} inscripciones existentes.")
+        if result["credentials"]:
+            st.info("Descarga los accesos nuevos antes de cerrar sesión. El archivo contiene contraseñas; compártelas individualmente con cada alumno. Conserva sus códigos para futuras inscripciones.")
+            st.download_button("Descargar accesos de las cuentas nuevas", enrollment_files.workbook(result["credentials"], credentials=True), file_name="accesos_alumnos_messi.xlsx", mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", key=prefix + "-credentials")
+        if st.button("Limpiar resultado de esta carga", key=prefix + "-clear"):
+            st.session_state.pop(prefix + "-result", None)
+            st.rerun()
+
+
 def _admin(user):
     from django.contrib.auth import get_user_model
     from django.db.models import Q
@@ -530,6 +602,8 @@ def _admin(user):
         groups = _page(user, CourseGroup.objects.select_related("period").prefetch_related("teachers").order_by("name", "subject", "pk"), "admin-groups")
         _table([{"Grupo": item.name, "Materia": item.subject, "Periodo": item.period.name, "Docentes asignados": ", ".join(f"{ui.person(teacher)} (@{teacher.username})" for teacher in item.teachers.all()) or "Sin docentes asignados"} for item in groups])
     with enrollments_tab:
+        _admin_enrollment_import(user)
+        st.divider()
         st.subheader("Inscribir a un estudiante")
         student_search = st.text_input("Buscar estudiante para inscripción", key=_key(user, "admin-enroll-search"), max_chars=100)
         students = list(Student.objects.select_related("user").filter(user__is_active=True).filter(Q(code__icontains=student_search) | Q(user__first_name__icontains=student_search) | Q(user__last_name__icontains=student_search)).order_by("code")[:CHOICE_LIMIT])
